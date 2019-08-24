@@ -886,8 +886,7 @@ Twinkle.config.sections = [
 
 Twinkle.config.init = function twinkleconfigInit() {
 
-	if (((mw.config.get('wgNamespaceNumber') === mw.config.get('wgNamespaceIds').project && mw.config.get('wgTitle') === 'Twinkle/Preferences') ||
-			(mw.config.get('wgNamespaceNumber') === mw.config.get('wgNamespaceIds').user && mw.config.get('wgTitle').lastIndexOf('/Twinkle preferences') === (mw.config.get('wgTitle').length - 20))) &&
+	if ((mw.config.get('wgServer') + mw.util.getUrl() === Twinkle.getPref('configPage')) &&
 			mw.config.get('wgAction') === 'view') {
 		// create the config page at Wikipedia:Twinkle/Preferences, and at user subpages (for testing purposes)
 
@@ -1705,7 +1704,7 @@ Twinkle.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 		'// End of twinkleoptions.js\n';
 
 	pageobj.setPageText(text);
-	pageobj.setEditSummary('Saving Twinkle preferences: automatic edit from [[:' + Morebits.pageNameNorm + ']] ([[WP:TW|TW]])');
+	pageobj.setEditSummary('Saving Twinkle preferences: automatic edit from [[:' + Morebits.pageNameNorm + ']]');
 	pageobj.setCreateOption('recreate');
 	pageobj.save(Twinkle.config.saveSuccess);
 };
