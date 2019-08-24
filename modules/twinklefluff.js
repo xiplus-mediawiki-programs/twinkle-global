@@ -392,7 +392,7 @@ Twinkle.fluff.callbacks = {
 				}
 				userHasAlreadyConfirmedAction = true;
 
-				summary = Twinkle.fluff.formatSummary('Reverted [[WP:AGF|good faith]] edits by $USER', self.params.user, extra_summary);
+				summary = Twinkle.fluff.formatSummary('Reverted good faith edits by $USER', self.params.user, extra_summary);
 				break;
 
 			case 'vand':
