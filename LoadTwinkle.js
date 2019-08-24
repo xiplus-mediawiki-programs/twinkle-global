@@ -53,13 +53,13 @@ var load = function(p) {
 };
 
 var message = function(text) {
-	console.log('[Twinkle_global_xiplus]', text);
+	console.log('[Twinkle_global_xiplus]', text);  // eslint-disable-line no-console
 	//    $('#simpleSearch input[type="search"]').attr('placeHolder', text);
 };
 
 tests.push({ name: 'morebits.js', test: true });
 tests.push({ name: 'twinkle.js', test: true });
-// tests.push({name: 'modules/twinklearv.js',           test: true});
+tests.push({ name: 'modules/twinklearv.js', test: true });
 // tests.push({name: 'modules/twinklewarn.js',          test: true});
 // tests.push({name: 'modules/friendlyshared.js',       test: true});
 // tests.push({name: 'modules/friendlytag.js',          test: true});

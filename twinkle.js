@@ -122,7 +122,8 @@ Twinkle.defaultConfig.twinkle = {
 	batchProtectChunks: 50,
 	batchundeleteChunks: 50,
 	proddeleteChunks: 50,
-	configPage: '//meta.wikimedia.org/wiki/User:Xiplus/Twinkle/Preferences'
+	configPage: '//meta.wikimedia.org/wiki/User:Xiplus/Twinkle/Preferences',
+	metaApi: '//meta.wikipedia.org/w/api.php'
 };
 
 // now some skin dependent config.
@@ -413,7 +414,7 @@ Twinkle.load = function () {
 
 	// Load the modules in the order that the tabs should appear
 	// User/user talk-related
-	// Twinkle.arv();
+	Twinkle.arv();
 	// Twinkle.warn();
 	if (Morebits.userIsInGroup('sysop')) {
 		// Twinkle.block();
