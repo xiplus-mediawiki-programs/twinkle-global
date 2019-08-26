@@ -123,7 +123,7 @@ Twinkle.defaultConfig.twinkle = {
 	batchundeleteChunks: 50,
 	proddeleteChunks: 50,
 	configPage: '//meta.wikimedia.org/wiki/User:Xiplus/Twinkle/Preferences',
-	metaApi: '//meta.wikipedia.org/w/api.php'
+	metaApi: 'https://meta.wikipedia.org/w/api.php'
 };
 
 // now some skin dependent config.
