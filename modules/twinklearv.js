@@ -30,6 +30,11 @@ Twinkle.arv.callback = function (uid) {
 	var Window = new Morebits.simpleWindow(600, 500);
 	Window.setTitle('Advance Reporting and Vetting'); // Backronym
 	Window.setScriptName('Twinkle');
+	if (mw.util.isIPAddress(uid)) {
+		Window.addFooterLink('Global blocks', 'm:Global blocks');
+	} else {
+		Window.addFooterLink('Global locks', 'm:Global locks');
+	}
 
 	var form = new Morebits.quickForm(Twinkle.arv.callback.evaluate);
 	var categories = form.append({
