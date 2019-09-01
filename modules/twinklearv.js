@@ -197,7 +197,7 @@ Twinkle.arv.callback.evaluate = function(e) {
 
 			var statusIndicator = new Morebits.status('Reporting to Steward requests/Global', 'Fetching page...');
 
-			var metaapi = new mw.ForeignApi(Twinkle.getPref('metaApi'));
+			var metaapi = new Twinkle.getPref('metaApi');
 			metaapi.edit('Steward requests/Global', function(revision) {
 				var text = revision.content;
 				if (new RegExp('{{\\s*(Luxotool|LockHide)\\s*\\|\\s*(1=)?\\s*' + RegExp.escape(uid, true) + '\\s*(\\||}})').test(text)) {

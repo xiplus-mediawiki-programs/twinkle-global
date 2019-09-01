@@ -123,7 +123,9 @@ Twinkle.defaultConfig.twinkle = {
 	batchundeleteChunks: 50,
 	proddeleteChunks: 50,
 	configPage: '//meta.wikimedia.org/wiki/User:Xiplus/Twinkle/Preferences',
-	metaApi: 'https://meta.wikimedia.org/w/api.php'
+	metaApi: mw.config.get('wgServer') === '//meta.wikimedia.org'
+		? mw.api()
+		: mw.ForeignApi('https://meta.wikimedia.org/w/api.php')
 };
 
 // now some skin dependent config.
