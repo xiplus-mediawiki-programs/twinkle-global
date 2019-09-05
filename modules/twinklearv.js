@@ -205,10 +205,10 @@ Twinkle.arv.callback.evaluate = function(e) {
 					Morebits.status.printUserText(reason, 'The comments you typed are provided below, in case you wish to manually post them under the existing report for this user at SRG:');
 					return $.Deferred().reject('dup');
 				}
-				if (mw.util.isIPAddress(mw.config.get('wgRelevantUserName'))) {
-					text = text.replace(/(\n== Requests for global \(un\)lock and \(un\)hiding == *\n)/, '\n' + header + reason + '$1');
+				if (mw.util.isIPAddress(Morebits.wiki.flow.relevantUserName())) {
+					text = text.replace(/\n+(== Requests for global \(un\)lock and \(un\)hiding == *\n)/, '\n\n' + header + reason + '\n$1');
 				} else {
-					text = text.replace(/(\n== See also == *\n)/, '\n' + header + reason + '$1');
+					text = text.replace(/\n+(== See also == *\n)/, '\n\n' + header + reason + '\n$1');
 				}
 				return {
 					text: text,
