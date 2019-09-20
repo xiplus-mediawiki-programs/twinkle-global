@@ -168,34 +168,34 @@ TwinkleGlobal.config.sections = [
 
 			// TwinkleConfig.deletionSummaryAd (string)
 			// Text to be appended to the edit summary of deletions made using Twinkle
-			{
+			/* {
 				name: 'deletionSummaryAd',
 				label: 'Summary ad to use for deletion summaries',
 				helptip: 'Normally the same as the edit summary ad above.',
 				adminOnly: true,
 				type: 'string'
-			},
+			}, */
 
 			// TwinkleConfig.protectionSummaryAd (string)
 			// Text to be appended to the edit summary of page protections made using Twinkle
-			{
+			/* {
 				name: 'protectionSummaryAd',
 				label: 'Summary ad to use for page protections',
 				helptip: 'Normally the same as the edit summary ad above.',
 				adminOnly: true,
 				type: 'string'
-			},
+			}, */
 
 			// TwinkleConfig.userTalkPageMode may take arguments:
 			// 'window': open a new window, remember the opened window
 			// 'tab': opens in a new tab, if possible.
 			// 'blank': force open in a new window, even if such a window exists
-			{
+			/* {
 				name: 'userTalkPageMode',
 				label: 'When opening a user talk page, open it',
 				type: 'enum',
 				enumValues: TwinkleGlobal.config.commonEnums.talkPageMode
-			},
+			}, */
 
 			// TwinkleConfig.dialogLargeFont (boolean)
 			{
@@ -206,7 +206,7 @@ TwinkleGlobal.config.sections = [
 		]
 	},
 
-	{
+	/* {
 		title: 'ARV',
 		preferences: [
 			{
@@ -216,9 +216,9 @@ TwinkleGlobal.config.sections = [
 				enumValues: TwinkleGlobal.config.commonEnums.watchlist
 			}
 		]
-	},
+	}, */
 
-	{
+	/* {
 		title: 'Block user',
 		adminOnly: true,
 		preferences: [
@@ -231,9 +231,9 @@ TwinkleGlobal.config.sections = [
 				type: 'boolean'
 			}
 		]
-	},
+	}, */
 
-	{
+	/* {
 		title: 'Image deletion (DI)',
 		preferences: [
 		// TwinkleConfig.notifyUserOnDeli (boolean)
@@ -262,9 +262,9 @@ TwinkleGlobal.config.sections = [
 				enumValues: TwinkleGlobal.config.commonEnums.watchlist
 			}
 		]
-	},
+	}, */
 
-	{
+	/* {
 		title: 'Proposed deletion (PROD)',
 		preferences: [
 		// TwinkleConfig.watchProdPages (boolean)
@@ -296,7 +296,7 @@ TwinkleGlobal.config.sections = [
 				type: 'string'
 			}
 		]
-	},
+	}, */
 
 	{
 		title: 'Revert and rollback',  // twinklefluff module
@@ -374,7 +374,7 @@ TwinkleGlobal.config.sections = [
 		]
 	},
 
-	{
+	/* {
 		title: 'Shared IP tagging',
 		inFriendlyConfig: true,
 		preferences: [
@@ -384,9 +384,9 @@ TwinkleGlobal.config.sections = [
 				type: 'boolean'
 			}
 		]
-	},
+	}, */
 
-	{
+	/* {
 		title: 'Speedy deletion (CSD)',
 		preferences: [
 			{
@@ -521,9 +521,9 @@ TwinkleGlobal.config.sections = [
 				setDisplayOrder: TwinkleGlobal.config.commonSets.csdAndDICriteriaDisplayOrder
 			}
 		]
-	},
+	}, */
 
-	{
+	/* {
 		title: 'Tag',
 		inFriendlyConfig: true,
 		preferences: [
@@ -583,9 +583,9 @@ TwinkleGlobal.config.sections = [
 				customListLabelTitle: 'Text to show in Tag dialog'
 			}
 		]
-	},
+	}, */
 
-	{
+	/* {
 		title: 'Talkback',
 		inFriendlyConfig: true,
 		preferences: [
@@ -616,9 +616,9 @@ TwinkleGlobal.config.sections = [
 				type: 'string'
 			}
 		]
-	},
+	}, */
 
-	{
+	/* {
 		title: 'Unlink',
 		preferences: [
 		// TwinkleConfig.unlinkNamespaces (array)
@@ -631,9 +631,9 @@ TwinkleGlobal.config.sections = [
 				setValues: TwinkleGlobal.config.commonSets.namespacesNoSpecial
 			}
 		]
-	},
+	}, */
 
-	{
+	/* {
 		title: 'Warn user',
 		preferences: [
 		// TwinkleConfig.defaultWarningGroup (int)
@@ -689,9 +689,9 @@ TwinkleGlobal.config.sections = [
 				customListLabelTitle: 'Text to show in warning list (also used as edit summary)'
 			}
 		]
-	},
+	}, */
 
-	{
+	/* {
 		title: 'Welcome user',
 		inFriendlyConfig: true,
 		preferences: [
@@ -740,9 +740,9 @@ TwinkleGlobal.config.sections = [
 				type: 'boolean'
 			}
 		]
-	},
+	}, */
 
-	{
+	/* {
 		title: 'XFD (deletion discussions)',
 		preferences: [
 		// TwinkleConfig.xfdWatchPage (string)
@@ -806,7 +806,7 @@ TwinkleGlobal.config.sections = [
 				type: 'boolean'
 			}
 		]
-	},
+	}, */
 
 	{
 		title: 'Hidden',
@@ -1695,7 +1695,7 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 		'// panel.  If modifying this file, make sure to use correct JavaScript.\n' +
 		'// <no' + 'wiki>\n' +
 		'\n' +
-		'window.Twinkle.prefs = ';
+		'window.TwinkleGlobal.prefs = ';
 	text += JSON.stringify(newConfig, null, 2);
 	text +=
 		';\n' +
