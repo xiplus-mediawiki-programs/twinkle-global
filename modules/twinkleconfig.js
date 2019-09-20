@@ -819,6 +819,21 @@ TwinkleGlobal.config.sections = [
 	}, */
 
 	{
+		title: 'Diff',
+		preferences: [
+			// Disable diff on these wikis.
+			{
+				name: 'diffDisabledWikis',
+				label: 'Disable diff function on these wikis',
+				helptip: 'Use wiki\'s database name.',
+				type: 'customList',
+				customListValueTitle: 'Database name',
+				customListLabelTitle: '(unused)'
+			}
+		]
+	},
+
+	{
 		title: 'Hidden',
 		hidden: true,
 		preferences: [

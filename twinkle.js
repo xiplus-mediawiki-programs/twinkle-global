@@ -123,6 +123,16 @@ TwinkleGlobal.defaultConfig.twinkle = {
 	xfdWatchRelated: 'default',
 	markXfdPagesAsPatrolled: true,
 
+	// Diff
+	diffDisabledWikis: [
+		{ 'value': 'enwiki', 'label': '' },
+		{ 'value': 'zhwiki', 'label': '' },
+		{ 'value': 'zhwikibooks', 'label': '' },
+		{ 'value': 'zhwikiquote', 'label': '' },
+		{ 'value': 'zhwikiversity', 'label': '' },
+		{ 'value': 'zhwiktionary', 'label': '' }
+	],
+
 	// Hidden preferences
 	revertMaxRevisions: 50,
 	batchdeleteChunks: 50,

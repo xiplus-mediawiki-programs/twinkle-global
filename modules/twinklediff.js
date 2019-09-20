@@ -18,6 +18,14 @@ TwinkleGlobal.diff = function twinklediff() {
 		return;
 	}
 
+	var disabledWikis = $.map(TwinkleGlobal.getPref('diffDisabledWikis'), function(el) {
+		return el.value.trim();
+	});
+
+	if (disabledWikis.indexOf(mw.config.get('wgDBname')) !== -1) {
+		return;
+	}
+
 	var query = {
 		'title': mw.config.get('wgPageName'),
 		'diff': 'cur',
