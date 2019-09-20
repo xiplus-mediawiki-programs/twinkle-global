@@ -19,6 +19,13 @@ TwinkleGlobal.arv = function twinklearv() {
 		return;
 	}
 
+	var disabledWikis = $.map(TwinkleGlobal.getPref('arvDisabledWikis'), function(el) {
+		return el.value.trim();
+	});
+	if (disabledWikis.indexOf(mw.config.get('wgDBname')) !== -1) {
+		return;
+	}
+
 	var title = mw.util.isIPAddress(username) ? 'Report IP to administrators' : 'Report user to administrators';
 
 	TwinkleGlobal.addPortletLink(function() {

@@ -206,17 +206,27 @@ TwinkleGlobal.config.sections = [
 		]
 	},
 
-	/* {
+	{
 		title: 'ARV',
 		preferences: [
-			{
+			/* {
 				name: 'spiWatchReport',
 				label: 'Add sockpuppet report pages to watchlist',
 				type: 'enum',
 				enumValues: TwinkleGlobal.config.commonEnums.watchlist
+			} */
+
+			// Disable arv on these wikis.
+			{
+				name: 'arvDisabledWikis',
+				label: 'Disable ARV function on these wikis',
+				helptip: 'Use wiki\'s database name.',
+				type: 'customList',
+				customListValueTitle: 'Database name',
+				customListLabelTitle: '(unused)'
 			}
 		]
-	}, */
+	},
 
 	/* {
 		title: 'Block user',

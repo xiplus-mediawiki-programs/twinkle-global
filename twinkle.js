@@ -53,6 +53,10 @@ TwinkleGlobal.defaultConfig.twinkle = {
 
 	// ARV
 	spiWatchReport: 'yes',
+	arvDisabledWikis: [
+		{ 'value': 'zhwiki', 'label': '' },
+		{ 'value': 'zhwiktionary', 'label': '' }
+	],
 
 	// Block
 	blankTalkpageOnIndefBlock: false,
