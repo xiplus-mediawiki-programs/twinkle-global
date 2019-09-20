@@ -370,6 +370,16 @@ TwinkleGlobal.config.sections = [
 				label: 'Show rollback links on these pages',
 				type: 'set',
 				setValues: { diff: 'Diff pages', others: 'Contributions pages of other users', mine: 'My contributions page' }
+			},
+
+			// Disable fluff on these wikis.
+			{
+				name: 'fluffDisabledWikis',
+				label: 'Disable revert function on these wikis',
+				helptip: 'Use wiki\'s database name.',
+				type: 'customList',
+				customListValueTitle: 'Database name',
+				customListLabelTitle: '(unused)'
 			}
 		]
 	},

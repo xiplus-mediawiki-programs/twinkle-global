@@ -65,6 +65,14 @@ TwinkleGlobal.defaultConfig.twinkle = {
 	offerReasonOnNormalRevert: true,
 	confirmOnFluff: false,
 	showRollbackLinks: [ 'diff', 'others' ],
+	fluffDisabledWikis: [
+		{ 'value': 'enwiki', 'label': '' },
+		{ 'value': 'zhwiki', 'label': '' },
+		{ 'value': 'zhwikibooks', 'label': '' },
+		{ 'value': 'zhwikiquote', 'label': '' },
+		{ 'value': 'zhwikiversity', 'label': '' },
+		{ 'value': 'zhwiktionary', 'label': '' }
+	],
 
 	// DI (twinkleimage)
 	notifyUserOnDeli: true,
