@@ -13,20 +13,20 @@
  * Config directives in:   TwinkleConfig
  */
 
-Twinkle.image = function twinkleimage() {
+TwinkleGlobal.image = function twinkleimage() {
 	if (mw.config.get('wgNamespaceNumber') === 6 && mw.config.get('wgArticleId') && !document.getElementById('mw-sharedupload') && !Morebits.wiki.isPageRedirect()) {
-		Twinkle.addPortletLink(Twinkle.image.callback, 'DI', 'tw-di', 'Nominate file for delayed speedy deletion');
+		TwinkleGlobal.addPortletLink(TwinkleGlobal.image.callback, 'DI', 'tw-di', 'Nominate file for delayed speedy deletion');
 	}
 };
 
-Twinkle.image.callback = function twinkleimageCallback() {
+TwinkleGlobal.image.callback = function twinkleimageCallback() {
 	var Window = new Morebits.simpleWindow(600, 330);
 	Window.setTitle('File for dated speedy deletion');
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Speedy deletion policy', 'WP:CSD#Files');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#image');
 
-	var form = new Morebits.quickForm(Twinkle.image.callback.evaluate);
+	var form = new Morebits.quickForm(TwinkleGlobal.image.callback.evaluate);
 	form.append({
 		type: 'checkbox',
 		list: [
@@ -35,7 +35,7 @@ Twinkle.image.callback = function twinkleimageCallback() {
 				value: 'notify',
 				name: 'notify',
 				tooltip: "Uncheck this if you are planning to make multiple nominations from the same user, and don't want to overload their talk page with too many notifications.",
-				checked: Twinkle.getPref('notifyUserOnDeli')
+				checked: TwinkleGlobal.getPref('notifyUserOnDeli')
 			}
 		]
 	}
@@ -47,7 +47,7 @@ Twinkle.image.callback = function twinkleimageCallback() {
 	field.append({
 		type: 'radio',
 		name: 'type',
-		event: Twinkle.image.callback.choice,
+		event: TwinkleGlobal.image.callback.choice,
 		list: [
 			{
 				label: 'No source (CSD F4)',
@@ -109,7 +109,7 @@ Twinkle.image.callback = function twinkleimageCallback() {
 	result.type[0].dispatchEvent(evt);
 };
 
-Twinkle.image.callback.choice = function twinkleimageCallbackChoose(event) {
+TwinkleGlobal.image.callback.choice = function twinkleimageCallbackChoose(event) {
 	var value = event.target.values;
 	var root = event.target.form;
 	var work_area = new Morebits.quickForm.element({
@@ -178,7 +178,7 @@ Twinkle.image.callback.choice = function twinkleimageCallbackChoose(event) {
 	root.replaceChild(work_area.render(), $(root).find('div[name="work_area"]')[0]);
 };
 
-Twinkle.image.callback.evaluate = function twinkleimageCallbackEvaluate(event) {
+TwinkleGlobal.image.callback.evaluate = function twinkleimageCallbackEvaluate(event) {
 	var type, non_free, source, reason, replacement, derivative;
 
 	var notify = event.target.notify.checked;
@@ -229,7 +229,7 @@ Twinkle.image.callback.evaluate = function twinkleimageCallbackEvaluate(event) {
 			throw new Error('Twinkle.image.callback.evaluate: unknown criterion');
 	}
 
-	var lognomination = Twinkle.getPref('logSpeedyNominations') && Twinkle.getPref('noLogOnSpeedyNomination').indexOf(csdcrit.toLowerCase()) === -1;
+	var lognomination = TwinkleGlobal.getPref('logSpeedyNominations') && TwinkleGlobal.getPref('noLogOnSpeedyNomination').indexOf(csdcrit.toLowerCase()) === -1;
 	var templatename = derivative ? 'dw ' + type : type;
 
 	var params = {
@@ -251,16 +251,16 @@ Twinkle.image.callback.evaluate = function twinkleimageCallbackEvaluate(event) {
 	// Tagging image
 	var wikipedia_page = new Morebits.wiki.page(mw.config.get('wgPageName'), 'Tagging file with deletion tag');
 	wikipedia_page.setCallbackParameters(params);
-	wikipedia_page.load(Twinkle.image.callbacks.taggingImage);
+	wikipedia_page.load(TwinkleGlobal.image.callbacks.taggingImage);
 
 	// Notifying uploader
 	if (notify) {
-		wikipedia_page.lookupCreation(Twinkle.image.callbacks.userNotification);
+		wikipedia_page.lookupCreation(TwinkleGlobal.image.callbacks.userNotification);
 	} else {
 		// add to CSD log if desired
 		if (lognomination) {
 			params.fromDI = true;
-			Twinkle.speedy.callbacks.user.addToLog(params, null);
+			TwinkleGlobal.speedy.callbacks.user.addToLog(params, null);
 		}
 		// No auto-notification, display what was going to be added.
 		var noteData = document.createElement('pre');
@@ -269,7 +269,7 @@ Twinkle.image.callback.evaluate = function twinkleimageCallbackEvaluate(event) {
 	}
 };
 
-Twinkle.image.callbacks = {
+TwinkleGlobal.image.callbacks = {
 	taggingImage: function(pageobj) {
 		var text = pageobj.getPageText();
 		var params = pageobj.getCallbackParameters();
@@ -301,8 +301,8 @@ Twinkle.image.callbacks = {
 		tag += '|help=off}}\n';
 
 		pageobj.setPageText(tag + text);
-		pageobj.setEditSummary('This file is up for deletion, per [[WP:CSD#' + params.normalized + '|CSD ' + params.normalized + ']] (' + params.type + ').' + Twinkle.getPref('summaryAd'));
-		switch (Twinkle.getPref('deliWatchPage')) {
+		pageobj.setEditSummary('This file is up for deletion, per [[WP:CSD#' + params.normalized + '|CSD ' + params.normalized + ']] (' + params.type + ').' + TwinkleGlobal.getPref('summaryAd'));
+		switch (TwinkleGlobal.getPref('deliWatchPage')) {
 			case 'yes':
 				pageobj.setWatchlist(true);
 				break;
@@ -331,9 +331,9 @@ Twinkle.image.callbacks = {
 			}
 			notifytext += '}} ~~~~';
 			usertalkpage.setAppendText(notifytext);
-			usertalkpage.setEditSummary('Notification: tagging for deletion of [[:' + Morebits.pageNameNorm + ']].' + Twinkle.getPref('summaryAd'));
+			usertalkpage.setEditSummary('Notification: tagging for deletion of [[:' + Morebits.pageNameNorm + ']].' + TwinkleGlobal.getPref('summaryAd'));
 			usertalkpage.setCreateOption('recreate');
-			switch (Twinkle.getPref('deliWatchUser')) {
+			switch (TwinkleGlobal.getPref('deliWatchUser')) {
 				case 'yes':
 					usertalkpage.setWatchlist(true);
 					break;
@@ -351,7 +351,7 @@ Twinkle.image.callbacks = {
 		// add this nomination to the user's userspace log, if the user has enabled it
 		if (params.lognomination) {
 			params.fromDI = true;
-			Twinkle.speedy.callbacks.user.addToLog(params, initialContrib);
+			TwinkleGlobal.speedy.callbacks.user.addToLog(params, initialContrib);
 		}
 	}
 };

@@ -1,9 +1,9 @@
-/* global Twinkle, Morebits */
+/* global TwinkleGlobal, Morebits */
 
 // Script depends on jQuery dialog widget
 mw.loader.using('jquery.ui.dialog', function() {
 	// Construct object (to prevent namespace conflicts)
-	Twinkle.morebitsTest = {
+	TwinkleGlobal.morebitsTest = {
 
 		launchDialog: function(userInterface) {
 			userInterface.dialog('open');
@@ -53,7 +53,7 @@ mw.loader.using('jquery.ui.dialog', function() {
 			page.setCreateOption(window.morebits_test_createOption);
 
 			if ($('#runTestForm input[name="lookupCreation"]').attr('checked')) {
-				page.lookupCreation(Twinkle.morebitsTest.lookupCreationCallback);
+				page.lookupCreation(TwinkleGlobal.morebitsTest.lookupCreationCallback);
 			}
 		},
 
@@ -66,13 +66,13 @@ mw.loader.using('jquery.ui.dialog', function() {
 				return;
 			}
 			page.setPageText(text.substr(0, pos) + params['newText'] + text.substr(pos));
-			page.save(Twinkle.morebitsTest.finalSaveCallback);
+			page.save(TwinkleGlobal.morebitsTest.finalSaveCallback);
 		},
 
 		loadCallbackReplace: function(page) {
 			var params = page.getCallbackParameters();
 			page.setPageText(params['newText']);
-			page.save(Twinkle.morebitsTest.finalSaveCallback);
+			page.save(TwinkleGlobal.morebitsTest.finalSaveCallback);
 		},
 
 		lookupCreationCallback: function(page) {
@@ -92,7 +92,7 @@ mw.loader.using('jquery.ui.dialog', function() {
 
 			window.morebits_test_createOption = null;
 
-			Twinkle.morebitsTest.$runTests = $('<div id="runTestForm" style="position:relative;"></div>')
+			TwinkleGlobal.morebitsTest.$runTests = $('<div id="runTestForm" style="position:relative;"></div>')
 				.append($('<div style="margin-top:0.4em;"></div>').html('Text to be added:<br/>').append($('<textarea id="message" id="runTestMessage" style="width:99%" rows="4" cols="60"></textarea>')))
 				.append($('<div style="margin-top:0.4em;"></div>').html('Insert text before (for insert mode only):<br/>').append($('<textarea id="beforeText" style="width:99%" rows="4" cols="60"></textarea>')))
 				.append($('<div style="margin-top:0.4em;"></div>').html('Edit summary:<br/>').append($('<textarea id="editSummary" style="width:99%" rows="4" cols="60"></textarea>')))
@@ -115,21 +115,21 @@ mw.loader.using('jquery.ui.dialog', function() {
 					buttons: {
 						'Append': function() {
 							$(this).dialog('close');
-							Twinkle.morebitsTest.initSimpleWindow();
+							TwinkleGlobal.morebitsTest.initSimpleWindow();
 
 							var page = new Morebits.wiki.page(mw.config.get('wgPageName'));
 							page.setAppendText($('#message').val());
-							Twinkle.morebitsTest.setPageOptions(page);
-							page.append(Twinkle.morebitsTest.finalSaveCallback);
+							TwinkleGlobal.morebitsTest.setPageOptions(page);
+							page.append(TwinkleGlobal.morebitsTest.finalSaveCallback);
 						},
 						'Prepend': function() {
 							$(this).dialog('close');
-							Twinkle.morebitsTest.initSimpleWindow();
+							TwinkleGlobal.morebitsTest.initSimpleWindow();
 
 							var page = new Morebits.wiki.page(mw.config.get('wgPageName'));
 							page.setPrependText($('#message').val());
-							Twinkle.morebitsTest.setPageOptions(page);
-							page.prepend(Twinkle.morebitsTest.finalSaveCallback);
+							TwinkleGlobal.morebitsTest.setPageOptions(page);
+							page.prepend(TwinkleGlobal.morebitsTest.finalSaveCallback);
 						},
 						'Insert': function() {
 							if ($('#beforeText').val() === '') {
@@ -137,26 +137,26 @@ mw.loader.using('jquery.ui.dialog', function() {
 								return;
 							}
 							$(this).dialog('close');
-							Twinkle.morebitsTest.initSimpleWindow();
+							TwinkleGlobal.morebitsTest.initSimpleWindow();
 
 							var page = new Morebits.wiki.page(mw.config.get('wgPageName'));
 							page.setCallbackParameters({
 								beforeText: $('#beforeText').val(),
 								newText: $('#message').val()
 							});
-							Twinkle.morebitsTest.setPageOptions(page);
-							page.load(Twinkle.morebitsTest.loadCallbackInsert);
+							TwinkleGlobal.morebitsTest.setPageOptions(page);
+							page.load(TwinkleGlobal.morebitsTest.loadCallbackInsert);
 						},
 						'Replace': function() {
 							$(this).dialog('close');
-							Twinkle.morebitsTest.initSimpleWindow();
+							TwinkleGlobal.morebitsTest.initSimpleWindow();
 
 							var page = new Morebits.wiki.page(mw.config.get('wgPageName'));
 							page.setCallbackParameters({
 								newText: $('#message').val()
 							});
-							Twinkle.morebitsTest.setPageOptions(page);
-							page.load(Twinkle.morebitsTest.loadCallbackReplace);
+							TwinkleGlobal.morebitsTest.setPageOptions(page);
+							page.load(TwinkleGlobal.morebitsTest.loadCallbackReplace);
 						}
 					}
 				}); // close .dialog
@@ -165,18 +165,18 @@ mw.loader.using('jquery.ui.dialog', function() {
 
 	}; // close Twinkle.morebitsTest object
 
-	Twinkle.morebitsTest.initialize();
+	TwinkleGlobal.morebitsTest.initialize();
 }); // close mw.loader
 
-Twinkle.morebitsTestInit = function () {
+TwinkleGlobal.morebitsTestInit = function () {
 	if (mw.config.get('wgAction') === 'view' && mw.config.get('skin') === 'vector' && mw.config.get('wgNamespaceNumber') >= 0) {
-		Twinkle.addPortlet('javascript:Twinkle.morebitsTest.launchDialog(Twinkle.morebitsTest.$runTests)', 'Test', 'tw-test', 'Test morebits.js', '');
+		TwinkleGlobal.addPortlet('javascript:Twinkle.morebitsTest.launchDialog(Twinkle.morebitsTest.$runTests)', 'Test', 'tw-test', 'Test morebits.js', '');
 	}
 };
 
 // register initialization callback
-var Twinkle;
-if (typeof Twinkle === 'undefined') {
+var TwinkleGlobal;
+if (typeof TwinkleGlobal === 'undefined') {
 	throw new Error('Attempt to load module "morebits-test" without having loaded Twinkle previously.');
 }
-Twinkle.addInitCallback(Twinkle.morebitsTestInit);
+TwinkleGlobal.addInitCallback(TwinkleGlobal.morebitsTestInit);

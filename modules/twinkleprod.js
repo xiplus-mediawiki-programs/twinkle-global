@@ -14,20 +14,20 @@
  * Config directives in:   TwinkleConfig
  */
 
-Twinkle.prod = function twinkleprod() {
+TwinkleGlobal.prod = function twinkleprod() {
 	if ((([0, 6, 108].indexOf(mw.config.get('wgNamespaceNumber')) === -1) && (mw.config.get('wgNamespaceNumber') !== 2 || mw.config.get('wgCategories').indexOf('Wikipedia books (user books)') === -1))
 		|| !mw.config.get('wgCurRevisionId') || Morebits.wiki.isPageRedirect()) {
 		return;
 	}
 
-	Twinkle.addPortletLink(Twinkle.prod.callback, 'PROD', 'tw-prod', 'Propose deletion via WP:PROD');
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.prod.callback, 'PROD', 'tw-prod', 'Propose deletion via WP:PROD');
 };
 
 // Used in edit summaries, for comparisons, etc.
 var namespace;
 
-Twinkle.prod.callback = function twinkleprodCallback() {
-	Twinkle.prod.defaultReason = Twinkle.getPref('prodReasonDefault');
+TwinkleGlobal.prod.callback = function twinkleprodCallback() {
+	TwinkleGlobal.prod.defaultReason = TwinkleGlobal.getPref('prodReasonDefault');
 
 	switch (mw.config.get('wgNamespaceNumber')) {
 		case 0:
@@ -47,7 +47,7 @@ Twinkle.prod.callback = function twinkleprodCallback() {
 	Window.setTitle('Proposed deletion (PROD)');
 	Window.setScriptName('Twinkle');
 
-	var form = new Morebits.quickForm(Twinkle.prod.callback.evaluate);
+	var form = new Morebits.quickForm(TwinkleGlobal.prod.callback.evaluate);
 
 	if (namespace === 'article') {
 		Window.addFooterLink('Proposed deletion policy', 'WP:PROD');
@@ -67,7 +67,7 @@ Twinkle.prod.callback = function twinkleprodCallback() {
 	field.append({
 		type: 'radio',
 		name: 'prodtype',
-		event: Twinkle.prod.callback.prodtypechanged,
+		event: TwinkleGlobal.prod.callback.prodtypechanged,
 		list: [
 			{
 				label: 'PROD (proposed deletion)',
@@ -110,7 +110,7 @@ Twinkle.prod.callback = function twinkleprodCallback() {
 };
 
 
-Twinkle.prod.callback.prodtypechanged = function(event) {
+TwinkleGlobal.prod.callback.prodtypechanged = function(event) {
 	// prepare frame for prod type dependant controls
 	var field = new Morebits.quickForm.element({
 		type: 'field',
@@ -136,14 +136,14 @@ Twinkle.prod.callback.prodtypechanged = function(event) {
 				type: 'textarea',
 				name: 'reason',
 				label: 'Reason for proposed deletion:',
-				value: Twinkle.prod.defaultReason
+				value: TwinkleGlobal.prod.defaultReason
 			});
 			break;
 
 		case 'prodblp':
 			// first, remember the prod value that the user entered in the textarea, in case they want to switch back. We can abuse the config field for that.
 			if (event.target.form.reason) {
-				Twinkle.prod.defaultReason = event.target.form.reason.value;
+				TwinkleGlobal.prod.defaultReason = event.target.form.reason.value;
 			}
 
 			field.append({
@@ -175,7 +175,7 @@ Twinkle.prod.callback.prodtypechanged = function(event) {
 	event.target.form.replaceChild(field.render(), $(event.target.form).find('fieldset[name="parameters"]')[0]);
 };
 
-Twinkle.prod.callbacks = {
+TwinkleGlobal.prod.callbacks = {
 	checkpriors: function(apiobj) {
 		var xmlDoc = apiobj.responseXML;
 		var statelem = apiobj.statelem;
@@ -204,7 +204,7 @@ Twinkle.prod.callbacks = {
 		var ts = new Morebits.wiki.page(mw.config.get('wgPageName'));
 		ts.setFollowRedirect(true);  // for NPP, and also because redirects are ineligible for PROD
 		ts.setCallbackParameters(params);
-		ts.lookupCreation(Twinkle.prod.callbacks.creationInfo);
+		ts.lookupCreation(TwinkleGlobal.prod.callbacks.creationInfo);
 	},
 
 	creationInfo: function(pageobj) {
@@ -218,7 +218,7 @@ Twinkle.prod.callbacks = {
 		var wikipedia_page = new Morebits.wiki.page(mw.config.get('wgPageName'), 'Tagging page');
 		wikipedia_page.setFollowRedirect(true);  // for NPP, and also because redirects are ineligible for PROD
 		wikipedia_page.setCallbackParameters(params);
-		wikipedia_page.load(Twinkle.prod.callbacks.main);
+		wikipedia_page.load(TwinkleGlobal.prod.callbacks.main);
 	},
 
 	main: function(pageobj) {
@@ -261,8 +261,8 @@ Twinkle.prod.callbacks = {
 				// Disallow warning yourself
 				if (params.initialContrib === mw.config.get('wgUserName')) {
 					statelem.warn('You (' + params.initialContrib + ') created this page; skipping user notification');
-					if (Twinkle.getPref('logProdPages')) {
-						Twinkle.prod.callbacks.addToLog(params);
+					if (TwinkleGlobal.getPref('logProdPages')) {
+						TwinkleGlobal.prod.callbacks.addToLog(params);
 					}
 				} else {
 					// [[Template:Proposed deletion notify]] supports File namespace
@@ -278,25 +278,25 @@ Twinkle.prod.callbacks = {
 
 					var usertalkpage = new Morebits.wiki.page('User talk:' + params.initialContrib, 'Notifying initial contributor (' + params.initialContrib + ')');
 					usertalkpage.setAppendText(notifytext);
-					usertalkpage.setEditSummary('Notification: proposed deletion of [[:' + Morebits.pageNameNorm + ']].' + Twinkle.getPref('summaryAd'));
+					usertalkpage.setEditSummary('Notification: proposed deletion of [[:' + Morebits.pageNameNorm + ']].' + TwinkleGlobal.getPref('summaryAd'));
 					usertalkpage.setCreateOption('recreate');
 					usertalkpage.setFollowRedirect(true);
 					usertalkpage.setCallbackParameters(params);
 					usertalkpage.append(function onNotifySuccess() {
 						// add nomination to the userspace log, if the user has enabled it
-						if (Twinkle.getPref('logProdPages')) {
+						if (TwinkleGlobal.getPref('logProdPages')) {
 							params.logInitialContrib = params.initialContrib;
-							Twinkle.prod.callbacks.addToLog(params);
+							TwinkleGlobal.prod.callbacks.addToLog(params);
 						}
 					}, function onNotifyError() {
 						// if user could not be notified, log nomination without mentioning that notification was sent
-						if (Twinkle.getPref('logProdPages')) {
-							Twinkle.prod.callbacks.addToLog(params);
+						if (TwinkleGlobal.getPref('logProdPages')) {
+							TwinkleGlobal.prod.callbacks.addToLog(params);
 						}
 					});
 				}
-			} else if (Twinkle.getPref('logProdPages')) { // If not notifying, log this PROD
-				Twinkle.prod.callbacks.addToLog(params);
+			} else if (TwinkleGlobal.getPref('logProdPages')) { // If not notifying, log this PROD
+				TwinkleGlobal.prod.callbacks.addToLog(params);
 			}
 			if (params.blp) {
 				summaryText = 'Proposing article for deletion per [[WP:BLPPROD]].';
@@ -314,7 +314,7 @@ Twinkle.prod.callbacks = {
 			var talktitle = new mw.Title(mw.config.get('wgPageName')).getTalkPage().getPrefixedText();
 			var talkpage = new Morebits.wiki.page(talktitle, 'Placing {{Old prod}} on talk page');
 			talkpage.setPrependText(oldprodfull);
-			talkpage.setEditSummary('Placing {{Old prod}} on the talk page' + Twinkle.getPref('summaryAd'));
+			talkpage.setEditSummary('Placing {{Old prod}} on the talk page' + TwinkleGlobal.getPref('summaryAd'));
 			talkpage.setFollowRedirect(true);  // match behavior for page tagging
 			talkpage.setCreateOption('recreate');
 			talkpage.prepend();
@@ -339,23 +339,23 @@ Twinkle.prod.callbacks = {
 				'article is a [[WP:BLPPROD|biography of a living person with no sources]]' :
 				Morebits.string.formatReasonText(params.reason)) + '}}\n');
 
-			if (Twinkle.getPref('logProdPages')) {
+			if (TwinkleGlobal.getPref('logProdPages')) {
 				params.logEndorsing = true;
-				Twinkle.prod.callbacks.addToLog(params);
+				TwinkleGlobal.prod.callbacks.addToLog(params);
 			}
 		}
 
 		pageobj.setPageText(text);
-		pageobj.setEditSummary(summaryText + Twinkle.getPref('summaryAd'));
-		pageobj.setWatchlist(Twinkle.getPref('watchProdPages'));
+		pageobj.setEditSummary(summaryText + TwinkleGlobal.getPref('summaryAd'));
+		pageobj.setWatchlist(TwinkleGlobal.getPref('watchProdPages'));
 		pageobj.setCreateOption('nocreate');
 		pageobj.save();
 	},
 
 	addToLog: function(params) {
-		var wikipedia_page = new Morebits.wiki.page('User:' + mw.config.get('wgUserName') + '/' + Twinkle.getPref('prodLogPageName'), 'Adding entry to userspace log');
+		var wikipedia_page = new Morebits.wiki.page('User:' + mw.config.get('wgUserName') + '/' + TwinkleGlobal.getPref('prodLogPageName'), 'Adding entry to userspace log');
 		wikipedia_page.setCallbackParameters(params);
-		wikipedia_page.load(Twinkle.prod.callbacks.saveLog);
+		wikipedia_page.load(TwinkleGlobal.prod.callbacks.saveLog);
 	},
 
 	saveLog: function(pageobj) {
@@ -397,13 +397,13 @@ Twinkle.prod.callbacks = {
 		}
 
 		pageobj.setPageText(text);
-		pageobj.setEditSummary(summarytext + Twinkle.getPref('summaryAd'));
+		pageobj.setEditSummary(summarytext + TwinkleGlobal.getPref('summaryAd'));
 		pageobj.setCreateOption('recreate');
 		pageobj.save();
 	}
 };
 
-Twinkle.prod.callback.evaluate = function twinkleprodCallbackEvaluate(e) {
+TwinkleGlobal.prod.callback.evaluate = function twinkleprodCallbackEvaluate(e) {
 	var form = e.target;
 	var prodtype;
 
@@ -440,7 +440,7 @@ Twinkle.prod.callback.evaluate = function twinkleprodCallbackEvaluate(e) {
 		'tltemplates': blocking_templates
 	};
 
-	var wikipedia_api = new Morebits.wiki.api('Checking talk page for prior nominations', query, Twinkle.prod.callbacks.checkpriors);
+	var wikipedia_api = new Morebits.wiki.api('Checking talk page for prior nominations', query, TwinkleGlobal.prod.callbacks.checkpriors);
 	wikipedia_api.params = params;
 	wikipedia_api.post();
 };

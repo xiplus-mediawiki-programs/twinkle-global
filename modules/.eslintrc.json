@@ -1,6 +1,6 @@
 {
 	"globals": {
-		"Twinkle": true,
+		"TwinkleGlobal": true,
 		"Morebits": true
 	}
 }

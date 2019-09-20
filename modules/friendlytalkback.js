@@ -13,16 +13,16 @@
  * Config directives in:   FriendlyConfig
  */
 
-Twinkle.talkback = function() {
+TwinkleGlobal.talkback = function() {
 
 	if (!mw.config.get('wgRelevantUserName')) {
 		return;
 	}
 
-	Twinkle.addPortletLink(Twinkle.talkback.callback, 'TB', 'friendly-talkback', 'Easy talkback');
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.talkback.callback, 'TB', 'friendly-talkback', 'Easy talkback');
 };
 
-Twinkle.talkback.callback = function() {
+TwinkleGlobal.talkback.callback = function() {
 	if (mw.config.get('wgRelevantUserName') === mw.config.get('wgUserName') && !confirm("Is it really so bad that you're talking back to yourself?")) {
 		return;
 	}
@@ -91,31 +91,31 @@ Twinkle.talkback.callback = function() {
 		elquery: 'userjs.invalid/noTalkback',
 		ellimit: '1'
 	};
-	var wpapi = new Morebits.wiki.api('Fetching talkback opt-out status', query, Twinkle.talkback.callback.optoutStatus);
+	var wpapi = new Morebits.wiki.api('Fetching talkback opt-out status', query, TwinkleGlobal.talkback.callback.optoutStatus);
 	wpapi.post();
 };
 
-Twinkle.talkback.optout = null;
+TwinkleGlobal.talkback.optout = null;
 
-Twinkle.talkback.callback.optoutStatus = function(apiobj) {
+TwinkleGlobal.talkback.callback.optoutStatus = function(apiobj) {
 	var xml = apiobj.getXML();
 	var $el = $(xml).find('el');
 
 	if ($el.length) {
-		Twinkle.talkback.optout = mw.config.get('wgRelevantUserName') + ' prefers not to receive talkbacks';
+		TwinkleGlobal.talkback.optout = mw.config.get('wgRelevantUserName') + ' prefers not to receive talkbacks';
 		var url = $el.text();
 		if (url.indexOf('reason=') > -1) {
-			Twinkle.talkback.optout += ': ' + decodeURIComponent(url.substring(url.indexOf('reason=') + 7)) + '.';
+			TwinkleGlobal.talkback.optout += ': ' + decodeURIComponent(url.substring(url.indexOf('reason=') + 7)) + '.';
 		} else {
-			Twinkle.talkback.optout += '.';
+			TwinkleGlobal.talkback.optout += '.';
 		}
 	} else {
-		Twinkle.talkback.optout = false;
+		TwinkleGlobal.talkback.optout = false;
 	}
 
 	var $status = $('#twinkle-talkback-optout-message');
 	if ($status.length) {
-		$status.append(Twinkle.talkback.optout);
+		$status.append(TwinkleGlobal.talkback.optout);
 	}
 };
 
@@ -314,8 +314,8 @@ var callback_change_target = function(e) {
 		root.message.value = prev_message;
 	}
 
-	if (Twinkle.talkback.optout) {
-		$('#twinkle-talkback-optout-message').append(Twinkle.talkback.optout);
+	if (TwinkleGlobal.talkback.optout) {
+		$('#twinkle-talkback-optout-message').append(TwinkleGlobal.talkback.optout);
 	}
 };
 
@@ -363,58 +363,58 @@ var callback_evaluate = function(e) {
 		switch (page) {
 			case 'afchd':
 				text = '\n\n{{subst:AFCHD/u|' + section + '}} ~~~~';
-				talkpage.setEditSummary('You have replies at the [[Wikipedia:AFCHD|Articles for Creation Help Desk]]' + Twinkle.getPref('summaryAd'));
+				talkpage.setEditSummary('You have replies at the [[Wikipedia:AFCHD|Articles for Creation Help Desk]]' + TwinkleGlobal.getPref('summaryAd'));
 				break;
 			case 'an':
-				text = '\n\n== ' + Twinkle.getFriendlyPref('adminNoticeHeading') + ' ==\n';
+				text = '\n\n== ' + TwinkleGlobal.getFriendlyPref('adminNoticeHeading') + ' ==\n';
 				text += '{{subst:ANI-notice|thread=' + section + "|noticeboard=Wikipedia:Administrators' noticeboard}} ~~~~";
-				talkpage.setEditSummary("Notice of discussion at [[Wikipedia:Administrators' noticeboard]]" + Twinkle.getPref('summaryAd'));
+				talkpage.setEditSummary("Notice of discussion at [[Wikipedia:Administrators' noticeboard]]" + TwinkleGlobal.getPref('summaryAd'));
 				break;
 			case 'an3':
 				text = '\n\n{{subst:An3-notice|' + section + '}} ~~~~';
-				talkpage.setEditSummary("Notice of discussion at [[Wikipedia:Administrators' noticeboard/Edit warring]]" + Twinkle.getPref('summaryAd'));
+				talkpage.setEditSummary("Notice of discussion at [[Wikipedia:Administrators' noticeboard/Edit warring]]" + TwinkleGlobal.getPref('summaryAd'));
 				break;
 			case 'ani':
-				text = '\n\n== ' + Twinkle.getFriendlyPref('adminNoticeHeading') + ' ==\n';
+				text = '\n\n== ' + TwinkleGlobal.getFriendlyPref('adminNoticeHeading') + ' ==\n';
 				text += '{{subst:ANI-notice|thread=' + section + "|noticeboard=Wikipedia:Administrators' noticeboard/Incidents}} ~~~~";
-				talkpage.setEditSummary("Notice of discussion at [[Wikipedia:Administrators' noticeboard/Incidents]]" + Twinkle.getPref('summaryAd'));
+				talkpage.setEditSummary("Notice of discussion at [[Wikipedia:Administrators' noticeboard/Incidents]]" + TwinkleGlobal.getPref('summaryAd'));
 				break;
 			case 'coin':
 				text = '\n\n{{subst:Coin-notice|thread=' + section + '}} ~~~~';
-				talkpage.setEditSummary('Notice of discussion at [[Wikipedia:Conflict of interest noticeboard]]' + Twinkle.getPref('summaryAd'));
+				talkpage.setEditSummary('Notice of discussion at [[Wikipedia:Conflict of interest noticeboard]]' + TwinkleGlobal.getPref('summaryAd'));
 				break;
 			case 'drn':
 				text = '\n\n{{subst:DRN-notice|thread=' + section + '}} ~~~~';
-				talkpage.setEditSummary('Notice of discussion at [[Wikipedia:Dispute resolution noticeboard]]' + Twinkle.getPref('summaryAd'));
+				talkpage.setEditSummary('Notice of discussion at [[Wikipedia:Dispute resolution noticeboard]]' + TwinkleGlobal.getPref('summaryAd'));
 				break;
 			case 'hd':
 				text = '\n\n== Your question at the Help desk ==\n';
 				text += '{{helpdeskreply|1=' + section + '|ts=~~~~~}}';
-				talkpage.setEditSummary('You have replies at the [[Wikipedia:Help desk|Wikipedia help desk]]' + Twinkle.getPref('summaryAd'));
+				talkpage.setEditSummary('You have replies at the [[Wikipedia:Help desk|Wikipedia help desk]]' + TwinkleGlobal.getPref('summaryAd'));
 				break;
 			case 'otrs':
 				text = '\n\n{{OTRSreply|1=' + section + '|2=~~~~}}';
-				talkpage.setEditSummary('You have replies at the [[Wikipedia:OTRS noticeboard|OTRS noticeboard]]' + Twinkle.getPref('summaryAd'));
+				talkpage.setEditSummary('You have replies at the [[Wikipedia:OTRS noticeboard|OTRS noticeboard]]' + TwinkleGlobal.getPref('summaryAd'));
 				break;
 			case 'th':
 				text = "\n\n== Teahouse talkback: you've got messages! ==\n{{WP:Teahouse/Teahouse talkback|WP:Teahouse/Questions|" + section + '|ts=~~~~}}';
-				talkpage.setEditSummary('You have replies at the [[Wikipedia:Teahouse/Questions|Teahouse question board]]' + Twinkle.getPref('summaryAd'));
+				talkpage.setEditSummary('You have replies at the [[Wikipedia:Teahouse/Questions|Teahouse question board]]' + TwinkleGlobal.getPref('summaryAd'));
 				break;
 			default:
 				throw 'Twinkle.talkback, function callback_evaluate: default case reached';
 		}
 
 	} else if (tbtarget === 'mail') {
-		text = '\n\n==' + Twinkle.getFriendlyPref('mailHeading') + "==\n{{you've got mail|subject=";
+		text = '\n\n==' + TwinkleGlobal.getFriendlyPref('mailHeading') + "==\n{{you've got mail|subject=";
 		text += section + '|ts=~~~~~}}';
 
 		if (message) {
 			text += '\n' + message.trim() + '  ~~~~';
-		} else if (Twinkle.getFriendlyPref('insertTalkbackSignature')) {
+		} else if (TwinkleGlobal.getFriendlyPref('insertTalkbackSignature')) {
 			text += '\n~~~~';
 		}
 
-		talkpage.setEditSummary("Notification: You've got mail" + Twinkle.getPref('summaryAd'));
+		talkpage.setEditSummary("Notification: You've got mail" + TwinkleGlobal.getPref('summaryAd'));
 
 	} else if (tbtarget === 'see') {
 		text = '\n\n{{subst:Please see|location=' + tbPageName;
@@ -423,11 +423,11 @@ var callback_evaluate = function(e) {
 		}
 		text += '|more=' + message.trim() + '}}';
 		talkpage.setEditSummary('Please check the discussion at [[:' + tbPageName +
-			(section ? '#' + section : '') + ']]' + Twinkle.getPref('summaryAd'));
+			(section ? '#' + section : '') + ']]' + TwinkleGlobal.getPref('summaryAd'));
 
 	} else {  // tbtarget one of mytalk, usertalk, other
 		// clean talkback heading: strip section header markers that were erroneously suggested in the documentation
-		text = '\n\n==' + Twinkle.getFriendlyPref('talkbackHeading').replace(/^\s*=+\s*(.*?)\s*=+$\s*/, '$1') + '==\n{{talkback|';
+		text = '\n\n==' + TwinkleGlobal.getFriendlyPref('talkbackHeading').replace(/^\s*=+\s*(.*?)\s*=+$\s*/, '$1') + '==\n{{talkback|';
 		text += tbPageName;
 
 		if (section) {
@@ -438,7 +438,7 @@ var callback_evaluate = function(e) {
 
 		if (message) {
 			text += '\n' + message.trim() + ' ~~~~';
-		} else if (Twinkle.getFriendlyPref('insertTalkbackSignature')) {
+		} else if (TwinkleGlobal.getFriendlyPref('insertTalkbackSignature')) {
 			text += '\n~~~~';
 		}
 
@@ -447,12 +447,12 @@ var callback_evaluate = function(e) {
 			editSummary += 'User talk:';
 		}
 		editSummary += tbPageName + (section ? '#' + section : '') + ']])';
-		talkpage.setEditSummary(editSummary + Twinkle.getPref('summaryAd'));
+		talkpage.setEditSummary(editSummary + TwinkleGlobal.getPref('summaryAd'));
 	}
 
 	talkpage.setAppendText(text);
 	talkpage.setCreateOption('recreate');
-	talkpage.setMinorEdit(Twinkle.getFriendlyPref('markTalkbackAsMinor'));
+	talkpage.setMinorEdit(TwinkleGlobal.getFriendlyPref('markTalkbackAsMinor'));
 	talkpage.setFollowRedirect(true);
 	talkpage.append();
 };

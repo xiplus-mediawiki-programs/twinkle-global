@@ -13,7 +13,7 @@
  * Config directives in:   TwinkleConfig
  */
 
-Twinkle.diff = function twinklediff() {
+TwinkleGlobal.diff = function twinklediff() {
 	if (mw.config.get('wgNamespaceNumber') < 0 || !mw.config.get('wgArticleId')) {
 		return;
 	}
@@ -24,15 +24,15 @@ Twinkle.diff = function twinklediff() {
 		'oldid': 'prev'
 	};
 
-	Twinkle.addPortletLink(mw.util.wikiScript('index') + '?' + $.param(query), 'Last', 'tw-lastdiff', 'Show most recent diff');
+	TwinkleGlobal.addPortletLink(mw.util.wikiScript('index') + '?' + $.param(query), 'Last', 'tw-lastdiff', 'Show most recent diff');
 
 	// Show additional tabs only on diff pages
 	if (Morebits.queryString.exists('diff')) {
-		Twinkle.addPortletLink(function() {
-			Twinkle.diff.evaluate(false);
+		TwinkleGlobal.addPortletLink(function() {
+			TwinkleGlobal.diff.evaluate(false);
 		}, 'Since', 'tw-since', 'Show difference between last diff and the revision made by previous user');
-		Twinkle.addPortletLink(function() {
-			Twinkle.diff.evaluate(true);
+		TwinkleGlobal.addPortletLink(function() {
+			TwinkleGlobal.diff.evaluate(true);
 		}, 'Since mine', 'tw-sincemine', 'Show difference between last diff and my last revision');
 
 		var oldid = /oldid=(.+)/.exec($('#mw-diff-ntitle1').find('strong a').first().attr('href'))[1];
@@ -41,11 +41,11 @@ Twinkle.diff = function twinklediff() {
 			'diff': 'cur',
 			'oldid': oldid
 		};
-		Twinkle.addPortletLink(mw.util.wikiScript('index') + '?' + $.param(query), 'Current', 'tw-curdiff', 'Show difference to current revision');
+		TwinkleGlobal.addPortletLink(mw.util.wikiScript('index') + '?' + $.param(query), 'Current', 'tw-curdiff', 'Show difference to current revision');
 	}
 };
 
-Twinkle.diff.evaluate = function twinklediffEvaluate(me) {
+TwinkleGlobal.diff.evaluate = function twinklediffEvaluate(me) {
 
 	var user;
 	if (me) {
@@ -68,12 +68,12 @@ Twinkle.diff.evaluate = function twinklediffEvaluate(me) {
 		'rvuser': user
 	};
 	Morebits.status.init(document.getElementById('mw-content-text'));
-	var wikipedia_api = new Morebits.wiki.api('Grabbing data of initial contributor', query, Twinkle.diff.callbacks.main);
+	var wikipedia_api = new Morebits.wiki.api('Grabbing data of initial contributor', query, TwinkleGlobal.diff.callbacks.main);
 	wikipedia_api.params = { user: user };
 	wikipedia_api.post();
 };
 
-Twinkle.diff.callbacks = {
+TwinkleGlobal.diff.callbacks = {
 	main: function(self) {
 		var xmlDoc = self.responseXML;
 		var revid = $(xmlDoc).find('rev').attr('revid');

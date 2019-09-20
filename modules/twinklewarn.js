@@ -14,12 +14,12 @@
  * Config directives in:   TwinkleConfig
  */
 
-Twinkle.warn = function twinklewarn() {
+TwinkleGlobal.warn = function twinklewarn() {
 	if (mw.config.get('wgRelevantUserName')) {
-		Twinkle.addPortletLink(Twinkle.warn.callback, 'Warn', 'tw-warn', 'Warn/notify user');
-		if (Twinkle.getPref('autoMenuAfterRollback') && mw.config.get('wgNamespaceNumber') === 3 &&
+		TwinkleGlobal.addPortletLink(TwinkleGlobal.warn.callback, 'Warn', 'tw-warn', 'Warn/notify user');
+		if (TwinkleGlobal.getPref('autoMenuAfterRollback') && mw.config.get('wgNamespaceNumber') === 3 &&
 				mw.util.getParamValue('vanarticle') && !mw.util.getParamValue('friendlywelcome') && !mw.util.getParamValue('noautowarn')) {
-			Twinkle.warn.callback();
+			TwinkleGlobal.warn.callback();
 		}
 	}
 
@@ -59,7 +59,7 @@ Twinkle.warn = function twinklewarn() {
 	}
 };
 
-Twinkle.warn.callback = function twinklewarnCallback() {
+TwinkleGlobal.warn.callback = function twinklewarnCallback() {
 	if (mw.config.get('wgRelevantUserName') === mw.config.get('wgUserName') &&
 			!confirm('You are about to warn yourself! Are you sure you want to proceed?')) {
 		return;
@@ -71,7 +71,7 @@ Twinkle.warn.callback = function twinklewarnCallback() {
 	Window.addFooterLink('Choosing a warning level', 'WP:UWUL#Levels');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#warn');
 
-	var form = new Morebits.quickForm(Twinkle.warn.callback.evaluate);
+	var form = new Morebits.quickForm(TwinkleGlobal.warn.callback.evaluate);
 	var main_select = form.append({
 		type: 'field',
 		label: 'Choose type of warning/notice to issue',
@@ -81,10 +81,10 @@ Twinkle.warn.callback = function twinklewarnCallback() {
 	var main_group = main_select.append({
 		type: 'select',
 		name: 'main_group',
-		event: Twinkle.warn.callback.change_category
+		event: TwinkleGlobal.warn.callback.change_category
 	});
 
-	var defaultGroup = parseInt(Twinkle.getPref('defaultWarningGroup'), 10);
+	var defaultGroup = parseInt(TwinkleGlobal.getPref('defaultWarningGroup'), 10);
 	main_group.append({ type: 'option', label: '1: General note', value: 'level1', selected: defaultGroup === 1 });
 	main_group.append({ type: 'option', label: '2: Caution', value: 'level2', selected: defaultGroup === 2 });
 	main_group.append({ type: 'option', label: '3: Warning', value: 'level3', selected: defaultGroup === 3 });
@@ -92,11 +92,11 @@ Twinkle.warn.callback = function twinklewarnCallback() {
 	main_group.append({ type: 'option', label: '4im: Only warning', value: 'level4im', selected: defaultGroup === 5 });
 	main_group.append({ type: 'option', label: 'Single-issue notices', value: 'singlenotice', selected: defaultGroup === 6 });
 	main_group.append({ type: 'option', label: 'Single-issue warnings', value: 'singlewarn', selected: defaultGroup === 7 });
-	if (Twinkle.getPref('customWarningList').length) {
+	if (TwinkleGlobal.getPref('customWarningList').length) {
 		main_group.append({ type: 'option', label: 'Custom warnings', value: 'custom', selected: defaultGroup === 9 });
 	}
 
-	main_select.append({ type: 'select', name: 'sub_group', event: Twinkle.warn.callback.change_subcategory }); // Will be empty to begin with.
+	main_select.append({ type: 'select', name: 'sub_group', event: TwinkleGlobal.warn.callback.change_subcategory }); // Will be empty to begin with.
 
 	form.append({
 		type: 'input',
@@ -111,7 +111,7 @@ Twinkle.warn.callback = function twinklewarnCallback() {
 
 	var previewlink = document.createElement('a');
 	$(previewlink).click(function() {
-		Twinkle.warn.callbacks.preview(result);  // |result| is defined below
+		TwinkleGlobal.warn.callbacks.preview(result);  // |result| is defined below
 	});
 	previewlink.style.cursor = 'pointer';
 	previewlink.textContent = 'Preview';
@@ -137,7 +137,7 @@ Twinkle.warn.callback = function twinklewarnCallback() {
 //   label (required): A short description displayed in the dialog
 //   summary (required): The edit summary used. If an article name is entered, the summary is postfixed with "on [[article]]", and it is always postfixed with ". $summaryAd"
 //   suppressArticleInSummary (optional): Set to true to suppress showing the article name in the edit summary. Useful if the warning relates to attack pages, or some such.
-Twinkle.warn.messages = {
+TwinkleGlobal.warn.messages = {
 	levels: {
 		'Common warnings': {
 			'uw-vandalism': {
@@ -1065,11 +1065,11 @@ Twinkle.warn.messages = {
 	}
 };
 
-Twinkle.warn.prev_article = null;
-Twinkle.warn.prev_reason = null;
+TwinkleGlobal.warn.prev_article = null;
+TwinkleGlobal.warn.prev_reason = null;
 
-Twinkle.warn.callback.change_category = function twinklewarnCallbackChangeCategory(e) {
-	if (!Twinkle.getPref('oldSelect')) {
+TwinkleGlobal.warn.callback.change_category = function twinklewarnCallbackChangeCategory(e) {
+	if (!TwinkleGlobal.getPref('oldSelect')) {
 		$('select[name=sub_group]').chosen('destroy');
 	}
 
@@ -1130,12 +1130,12 @@ Twinkle.warn.callback.change_category = function twinklewarnCallbackChangeCatego
 
 	if (value === 'singlenotice' || value === 'singlewarn') {
 		// no categories, just create the options right away
-		createEntries(Twinkle.warn.messages[value], sub_group, true);
+		createEntries(TwinkleGlobal.warn.messages[value], sub_group, true);
 	} else if (value === 'custom') {
-		createEntries(Twinkle.getPref('customWarningList'), sub_group, true);
+		createEntries(TwinkleGlobal.getPref('customWarningList'), sub_group, true);
 	} else {
 		// create the option-groups
-		$.each(Twinkle.warn.messages.levels, function(groupLabel, groupContents) {
+		$.each(TwinkleGlobal.warn.messages.levels, function(groupLabel, groupContents) {
 			// Creates subgroup regardless of whether there is anything to place in it;
 			// leaves "Removal of deletion tags" empty for 4im
 			var optgroup = new Morebits.quickForm.element({
@@ -1155,13 +1155,13 @@ Twinkle.warn.callback.change_category = function twinklewarnCallbackChangeCatego
 	// hide the big red notice
 	$('#tw-warn-red-notice').remove();
 	// Trigger custom label/change on main category change
-	Twinkle.warn.callback.change_subcategory(e);
+	TwinkleGlobal.warn.callback.change_subcategory(e);
 
 	// Build select menu with jquery.chosen
-	if (!Twinkle.getPref('oldSelect')) {
+	if (!TwinkleGlobal.getPref('oldSelect')) {
 		$('select[name=sub_group]')
 			.chosen({width: '100%', search_contains: true})
-			.change(Twinkle.warn.callback.change_subcategory);
+			.change(TwinkleGlobal.warn.callback.change_subcategory);
 
 		mw.util.addCSS(
 			// Force chosen select menu to display over the dialog while overflowing
@@ -1185,7 +1185,7 @@ Twinkle.warn.callback.change_category = function twinklewarnCallbackChangeCatego
 	}
 };
 
-Twinkle.warn.callback.change_subcategory = function twinklewarnCallbackChangeSubcategory(e) {
+TwinkleGlobal.warn.callback.change_subcategory = function twinklewarnCallbackChangeSubcategory(e) {
 	var main_group = e.target.form.main_group.value;
 	var value = e.target.form.sub_group.value;
 
@@ -1201,8 +1201,8 @@ Twinkle.warn.callback.change_subcategory = function twinklewarnCallbackChangeSub
 
 	if (main_group === 'singlenotice' || main_group === 'singlewarn') {
 		if (notLinkedArticle[value]) {
-			if (Twinkle.warn.prev_article === null) {
-				Twinkle.warn.prev_article = e.target.form.article.value;
+			if (TwinkleGlobal.warn.prev_article === null) {
+				TwinkleGlobal.warn.prev_article = e.target.form.article.value;
 			}
 			e.target.form.article.notArticle = true;
 			e.target.form.article.value = '';
@@ -1211,9 +1211,9 @@ Twinkle.warn.callback.change_subcategory = function twinklewarnCallbackChangeSub
 			Morebits.quickForm.setElementTooltipVisibility(e.target.form.article, false);
 			Morebits.quickForm.overrideElementLabel(e.target.form.article, notLinkedArticle[value]);
 		} else if (e.target.form.article.notArticle) {
-			if (Twinkle.warn.prev_article !== null) {
-				e.target.form.article.value = Twinkle.warn.prev_article;
-				Twinkle.warn.prev_article = null;
+			if (TwinkleGlobal.warn.prev_article !== null) {
+				e.target.form.article.value = TwinkleGlobal.warn.prev_article;
+				TwinkleGlobal.warn.prev_article = null;
 			}
 			e.target.form.article.notArticle = false;
 			Morebits.quickForm.setElementTooltipVisibility(e.target.form.article, true);
@@ -1238,7 +1238,7 @@ Twinkle.warn.callback.change_subcategory = function twinklewarnCallbackChangeSub
 	}
 };
 
-Twinkle.warn.callbacks = {
+TwinkleGlobal.warn.callbacks = {
 	getWarningWikitext: function(templateName, article, reason, isCustom) {
 		var text = '{{subst:' + templateName;
 
@@ -1269,7 +1269,7 @@ Twinkle.warn.callbacks = {
 		var linkedarticle = form.article.value;
 		var templatetext;
 
-		templatetext = Twinkle.warn.callbacks.getWarningWikitext(templatename, linkedarticle,
+		templatetext = TwinkleGlobal.warn.callbacks.getWarningWikitext(templatename, linkedarticle,
 			form.reason.value, form.main_group.value === 'custom');
 
 		form.previewer.beginRender(templatetext, 'User_talk:' + mw.config.get('wgRelevantUserName')); // Force wikitext/correct username
@@ -1340,10 +1340,10 @@ Twinkle.warn.callbacks = {
 			Morebits.status.info('Info', 'Will create a new level 2 heading for the date, as none was found for this month');
 			text += '== ' + date.getUTCMonthName() + ' ' + date.getUTCFullYear() + ' ==\n';
 		}
-		text += Twinkle.warn.callbacks.getWarningWikitext(params.sub_group, params.article,
+		text += TwinkleGlobal.warn.callbacks.getWarningWikitext(params.sub_group, params.article,
 			params.reason, params.main_group === 'custom');
 
-		if (Twinkle.getPref('showSharedIPNotice') && mw.util.isIPAddress(mw.config.get('wgTitle'))) {
+		if (TwinkleGlobal.getPref('showSharedIPNotice') && mw.util.isIPAddress(mw.config.get('wgTitle'))) {
 			Morebits.status.info('Info', 'Adding a shared IP notice');
 			text += '\n{{subst:Shared IP advice}}';
 		}
@@ -1388,16 +1388,16 @@ Twinkle.warn.callbacks = {
 				}
 			}
 		}
-		summary += '.' + Twinkle.getPref('summaryAd');
+		summary += '.' + TwinkleGlobal.getPref('summaryAd');
 
 		pageobj.setPageText(text);
 		pageobj.setEditSummary(summary);
-		pageobj.setWatchlist(Twinkle.getPref('watchWarnings'));
+		pageobj.setWatchlist(TwinkleGlobal.getPref('watchWarnings'));
 		pageobj.save();
 	}
 };
 
-Twinkle.warn.callback.evaluate = function twinklewarnCallbackEvaluate(e) {
+TwinkleGlobal.warn.callback.evaluate = function twinklewarnCallbackEvaluate(e) {
 	var userTalkPage = 'User_talk:' + mw.config.get('wgRelevantUserName');
 
 	// First, check to make sure a reason was filled in if uw-username was selected
@@ -1428,7 +1428,7 @@ Twinkle.warn.callback.evaluate = function twinklewarnCallbackEvaluate(e) {
 	var wikipedia_page = new Morebits.wiki.page(userTalkPage, 'User talk page modification');
 	wikipedia_page.setCallbackParameters(params);
 	wikipedia_page.setFollowRedirect(true);
-	wikipedia_page.load(Twinkle.warn.callbacks.main);
+	wikipedia_page.load(TwinkleGlobal.warn.callbacks.main);
 };
 })(jQuery);
 

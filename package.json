@@ -2,7 +2,7 @@
   "title": "Twinkle",
   "name": "twinkle",
   "private": true,
-  "repository": "azatoth/twinkle",
+  "repository": "Xi-Plus/twinkle-global",
   "scripts": {
     "lint": "eslint ."
   },

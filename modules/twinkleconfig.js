@@ -20,14 +20,14 @@
  */
 
 
-Twinkle.config = {};
+TwinkleGlobal.config = {};
 
-Twinkle.config.commonEnums = {
+TwinkleGlobal.config.commonEnums = {
 	watchlist: { yes: 'Add to watchlist', no: "Don't add to watchlist", 'default': 'Follow your site preferences' },
 	talkPageMode: { window: 'In a window, replacing other user talks', tab: 'In a new tab', blank: 'In a totally new window' }
 };
 
-Twinkle.config.commonSets = {
+TwinkleGlobal.config.commonSets = {
 	csdCriteria: {
 		db: 'Custom rationale ({{db}})',
 		g1: 'G1', g2: 'G2', g3: 'G3', g4: 'G4', g5: 'G5', g6: 'G6', g7: 'G7', g8: 'G8', g10: 'G10', g11: 'G11', g12: 'G12', g13: 'G13', g14: 'G14',
@@ -153,7 +153,7 @@ Twinkle.config.commonSets = {
  *
  */
 
-Twinkle.config.sections = [
+TwinkleGlobal.config.sections = [
 	{
 		title: 'General',
 		preferences: [
@@ -194,7 +194,7 @@ Twinkle.config.sections = [
 				name: 'userTalkPageMode',
 				label: 'When opening a user talk page, open it',
 				type: 'enum',
-				enumValues: Twinkle.config.commonEnums.talkPageMode
+				enumValues: TwinkleGlobal.config.commonEnums.talkPageMode
 			},
 
 			// TwinkleConfig.dialogLargeFont (boolean)
@@ -213,7 +213,7 @@ Twinkle.config.sections = [
 				name: 'spiWatchReport',
 				label: 'Add sockpuppet report pages to watchlist',
 				type: 'enum',
-				enumValues: Twinkle.config.commonEnums.watchlist
+				enumValues: TwinkleGlobal.config.commonEnums.watchlist
 			}
 		]
 	},
@@ -250,7 +250,7 @@ Twinkle.config.sections = [
 				name: 'deliWatchPage',
 				label: 'Add image page to watchlist when tagging',
 				type: 'enum',
-				enumValues: Twinkle.config.commonEnums.watchlist
+				enumValues: TwinkleGlobal.config.commonEnums.watchlist
 			},
 
 			// TwinkleConfig.deliWatchUser (string)
@@ -259,7 +259,7 @@ Twinkle.config.sections = [
 				name: 'deliWatchUser',
 				label: 'Add user talk page of initial uploader to watchlist when notifying',
 				type: 'enum',
-				enumValues: Twinkle.config.commonEnums.watchlist
+				enumValues: TwinkleGlobal.config.commonEnums.watchlist
 			}
 		]
 	},
@@ -402,8 +402,8 @@ Twinkle.config.sections = [
 				name: 'watchSpeedyPages',
 				label: 'Add page to watchlist when using these criteria',
 				type: 'set',
-				setValues: Twinkle.config.commonSets.csdCriteria,
-				setDisplayOrder: Twinkle.config.commonSets.csdCriteriaDisplayOrder
+				setValues: TwinkleGlobal.config.commonSets.csdCriteria,
+				setDisplayOrder: TwinkleGlobal.config.commonSets.csdCriteriaDisplayOrder
 			},
 
 			// TwinkleConfig.markSpeedyPagesAsPatrolled (boolean)
@@ -422,8 +422,8 @@ Twinkle.config.sections = [
 				label: 'Welcome page creator when notifying with these criteria',
 				helptip: 'The welcome is issued only if the user is notified about the deletion, and only if their talk page does not already exist. The template used is {{firstarticle}}.',
 				type: 'set',
-				setValues: Twinkle.config.commonSets.csdCriteriaNotification,
-				setDisplayOrder: Twinkle.config.commonSets.csdCriteriaNotificationDisplayOrder
+				setValues: TwinkleGlobal.config.commonSets.csdCriteriaNotification,
+				setDisplayOrder: TwinkleGlobal.config.commonSets.csdCriteriaNotificationDisplayOrder
 			},
 
 			// TwinkleConfig.notifyUserOnSpeedyDeletionNomination (array)
@@ -433,8 +433,8 @@ Twinkle.config.sections = [
 				label: 'Notify page creator when tagging with these criteria',
 				helptip: 'Even if you choose to notify from the CSD screen, the notification will only take place for those criteria selected here.',
 				type: 'set',
-				setValues: Twinkle.config.commonSets.csdCriteriaNotification,
-				setDisplayOrder: Twinkle.config.commonSets.csdCriteriaNotificationDisplayOrder
+				setValues: TwinkleGlobal.config.commonSets.csdCriteriaNotification,
+				setDisplayOrder: TwinkleGlobal.config.commonSets.csdCriteriaNotificationDisplayOrder
 			},
 
 			// TwinkleConfig.warnUserOnSpeedyDelete (array)
@@ -445,8 +445,8 @@ Twinkle.config.sections = [
 				helptip: 'Even if you choose to notify from the CSD screen, the notification will only take place for those criteria selected here.',
 				adminOnly: true,
 				type: 'set',
-				setValues: Twinkle.config.commonSets.csdCriteriaNotification,
-				setDisplayOrder: Twinkle.config.commonSets.csdCriteriaNotificationDisplayOrder
+				setValues: TwinkleGlobal.config.commonSets.csdCriteriaNotification,
+				setDisplayOrder: TwinkleGlobal.config.commonSets.csdCriteriaNotificationDisplayOrder
 			},
 
 			// TwinkleConfig.promptForSpeedyDeletionSummary (array of strings)
@@ -455,8 +455,8 @@ Twinkle.config.sections = [
 				label: 'Allow editing of deletion summary when deleting under these criteria',
 				adminOnly: true,
 				type: 'set',
-				setValues: Twinkle.config.commonSets.csdAndDICriteria,
-				setDisplayOrder: Twinkle.config.commonSets.csdAndDICriteriaDisplayOrder
+				setValues: TwinkleGlobal.config.commonSets.csdAndDICriteria,
+				setDisplayOrder: TwinkleGlobal.config.commonSets.csdAndDICriteriaDisplayOrder
 			},
 
 			// TwinkleConfig.deleteTalkPageOnDelete (boolean)
@@ -517,8 +517,8 @@ Twinkle.config.sections = [
 				name: 'noLogOnSpeedyNomination',
 				label: 'Do not create a userspace log entry when tagging with these criteria',
 				type: 'set',
-				setValues: Twinkle.config.commonSets.csdAndDICriteria,
-				setDisplayOrder: Twinkle.config.commonSets.csdAndDICriteriaDisplayOrder
+				setValues: TwinkleGlobal.config.commonSets.csdAndDICriteria,
+				setDisplayOrder: TwinkleGlobal.config.commonSets.csdAndDICriteriaDisplayOrder
 			}
 		]
 	},
@@ -628,7 +628,7 @@ Twinkle.config.sections = [
 				label: 'Remove links from pages in these namespaces',
 				helptip: 'Avoid selecting any talk namespaces, as Twinkle might end up unlinking on talk archives (a big no-no).',
 				type: 'set',
-				setValues: Twinkle.config.commonSets.namespacesNoSpecial
+				setValues: TwinkleGlobal.config.commonSets.namespacesNoSpecial
 			}
 		]
 	},
@@ -752,7 +752,7 @@ Twinkle.config.sections = [
 				name: 'xfdWatchPage',
 				label: 'Add the nominated page to watchlist',
 				type: 'enum',
-				enumValues: Twinkle.config.commonEnums.watchlist
+				enumValues: TwinkleGlobal.config.commonEnums.watchlist
 			},
 
 			// TwinkleConfig.xfdWatchDiscussion (string)
@@ -764,7 +764,7 @@ Twinkle.config.sections = [
 				label: 'Add the deletion discussion page to watchlist',
 				helptip: 'This refers to the discussion subpage (for AfD and MfD) or the daily log page (for TfD, CfD, RfD and FfD)',
 				type: 'enum',
-				enumValues: Twinkle.config.commonEnums.watchlist
+				enumValues: TwinkleGlobal.config.commonEnums.watchlist
 			},
 
 			// TwinkleConfig.xfdWatchList (string)
@@ -776,7 +776,7 @@ Twinkle.config.sections = [
 				label: 'Add the daily log/list page to the watchlist (where applicable)',
 				helptip: 'This only applies for AfD and MfD, where the discussions are transcluded onto a daily log page (for AfD) or the main MfD page (for MfD).',
 				type: 'enum',
-				enumValues: Twinkle.config.commonEnums.watchlist
+				enumValues: TwinkleGlobal.config.commonEnums.watchlist
 			},
 
 			// TwinkleConfig.xfdWatchUser (string)
@@ -786,7 +786,7 @@ Twinkle.config.sections = [
 				name: 'xfdWatchUser',
 				label: 'Add user talk page of initial contributor to watchlist (when notifying)',
 				type: 'enum',
-				enumValues: Twinkle.config.commonEnums.watchlist
+				enumValues: TwinkleGlobal.config.commonEnums.watchlist
 			},
 
 			// TwinkleConfig.xfdWatchRelated (string)
@@ -797,7 +797,7 @@ Twinkle.config.sections = [
 				label: "Add the redirect's target page to watchlist (when notifying)",
 				helptip: 'This only applies for RfD, when leaving a notification on the talk page of the target of the redirect',
 				type: 'enum',
-				enumValues: Twinkle.config.commonEnums.watchlist
+				enumValues: TwinkleGlobal.config.commonEnums.watchlist
 			},
 
 			{
@@ -884,9 +884,9 @@ Twinkle.config.sections = [
 ]; // end of Twinkle.config.sections
 
 
-Twinkle.config.init = function twinkleconfigInit() {
+TwinkleGlobal.config.init = function twinkleconfigInit() {
 
-	if ((mw.config.get('wgServer') + mw.util.getUrl() === Twinkle.getPref('configPage')) &&
+	if ((mw.config.get('wgServer') + mw.util.getUrl() === TwinkleGlobal.getPref('configPage')) &&
 			mw.config.get('wgAction') === 'view') {
 		// create the config page at Wikipedia:Twinkle/Preferences, and at user subpages (for testing purposes)
 
@@ -910,7 +910,7 @@ Twinkle.config.init = function twinkleconfigInit() {
 		// look and see if the user does in fact have any old settings in their skin JS file
 		var skinjs = new Morebits.wiki.page('User:' + mw.config.get('wgUserName') + '/' + mw.config.get('skin') + '.js');
 		skinjs.setCallbackParameters(contentnotice);
-		skinjs.load(Twinkle.config.legacyPrefsNotice);
+		skinjs.load(TwinkleGlobal.config.legacyPrefsNotice);
 
 		// start a table of contents
 		var toctable = document.createElement('div');
@@ -952,23 +952,23 @@ Twinkle.config.init = function twinkleconfigInit() {
 
 		var contentform = document.createElement('form');
 		contentform.setAttribute('action', 'javascript:void(0)');  // was #tw-save - changed to void(0) to work around Chrome issue
-		contentform.addEventListener('submit', Twinkle.config.save, true);
+		contentform.addEventListener('submit', TwinkleGlobal.config.save, true);
 		contentdiv.appendChild(contentform);
 
 		var container = document.createElement('table');
 		container.style.width = '100%';
 		contentform.appendChild(container);
 
-		$(Twinkle.config.sections).each(function(sectionkey, section) {
+		$(TwinkleGlobal.config.sections).each(function(sectionkey, section) {
 			if (section.hidden || (section.adminOnly && !Morebits.userIsInGroup('sysop'))) {
 				return true;  // i.e. "continue" in this context
 			}
 
 			var configgetter;  // retrieve the live config values
 			if (section.inFriendlyConfig) {
-				configgetter = Twinkle.getFriendlyPref;
+				configgetter = TwinkleGlobal.getFriendlyPref;
 			} else {
-				configgetter = Twinkle.getPref;
+				configgetter = TwinkleGlobal.getPref;
 			}
 
 			// add to TOC
@@ -1144,7 +1144,7 @@ Twinkle.config.init = function twinkleconfigInit() {
 						button.setAttribute('id', pref.name);
 						button.setAttribute('name', pref.name);
 						button.setAttribute('type', 'button');
-						button.addEventListener('click', Twinkle.config.listDialog.display, false);
+						button.addEventListener('click', TwinkleGlobal.config.listDialog.display, false);
 						// use jQuery data on the button to store the current config value
 						$(button).data({
 							value: configgetter(pref.name),
@@ -1176,7 +1176,7 @@ Twinkle.config.init = function twinkleconfigInit() {
 					var resetlink = document.createElement('a');
 					resetlink.setAttribute('href', '#tw-reset');
 					resetlink.setAttribute('id', 'twinkle-config-reset-' + pref.name);
-					resetlink.addEventListener('click', Twinkle.config.resetPrefLink, false);
+					resetlink.addEventListener('click', TwinkleGlobal.config.resetPrefLink, false);
 					if (resetlink.style.styleFloat) {  // IE (inc. IE9)
 						resetlink.style.styleFloat = 'right';
 					} else {  // standards
@@ -1210,7 +1210,7 @@ Twinkle.config.init = function twinkleconfigInit() {
 		var footera = document.createElement('a');
 		footera.setAttribute('href', '#tw-reset-all');
 		footera.setAttribute('id', 'twinkle-config-resetall');
-		footera.addEventListener('click', Twinkle.config.resetAllPrefs, false);
+		footera.addEventListener('click', TwinkleGlobal.config.resetAllPrefs, false);
 		footera.appendChild(document.createTextNode('Restore defaults'));
 		footerspan.appendChild(footera);
 		footerbox.appendChild(footerspan);
@@ -1271,7 +1271,7 @@ Twinkle.config.init = function twinkleconfigInit() {
 };
 
 // Morebits.wiki.page callback from init code
-Twinkle.config.legacyPrefsNotice = function twinkleconfigLegacyPrefsNotice(pageobj) {
+TwinkleGlobal.config.legacyPrefsNotice = function twinkleconfigLegacyPrefsNotice(pageobj) {
 	var text = pageobj.getPageText();
 	var contentnotice = pageobj.getCallbackParameters();
 	if (text.indexOf('TwinkleConfig') !== -1 || text.indexOf('FriendlyConfig') !== -1) {
@@ -1287,9 +1287,9 @@ Twinkle.config.legacyPrefsNotice = function twinkleconfigLegacyPrefsNotice(pageo
 
 // custom list-related stuff
 
-Twinkle.config.listDialog = {};
+TwinkleGlobal.config.listDialog = {};
 
-Twinkle.config.listDialog.addRow = function twinkleconfigListDialogAddRow(dlgtable, value, label) {
+TwinkleGlobal.config.listDialog.addRow = function twinkleconfigListDialogAddRow(dlgtable, value, label) {
 	var contenttr = document.createElement('tr');
 	// "remove" button
 	var contenttd = document.createElement('td');
@@ -1329,7 +1329,7 @@ Twinkle.config.listDialog.addRow = function twinkleconfigListDialogAddRow(dlgtab
 	dlgtable.appendChild(contenttr);
 };
 
-Twinkle.config.listDialog.display = function twinkleconfigListDialogDisplay(e) {
+TwinkleGlobal.config.listDialog.display = function twinkleconfigListDialogDisplay(e) {
 	var $prefbutton = $(e.target);
 	var curvalue = $prefbutton.data('value');
 	var curpref = $prefbutton.data('pref');
@@ -1368,11 +1368,11 @@ Twinkle.config.listDialog.display = function twinkleconfigListDialogDisplay(e) {
 	var gotRow = false;
 	$.each(curvalue, function(k, v) {
 		gotRow = true;
-		Twinkle.config.listDialog.addRow(dlgtbody, v.value, v.label);
+		TwinkleGlobal.config.listDialog.addRow(dlgtbody, v.value, v.label);
 	});
 	// if there are no values present, add a blank row to start the user off
 	if (!gotRow) {
-		Twinkle.config.listDialog.addRow(dlgtbody);
+		TwinkleGlobal.config.listDialog.addRow(dlgtbody);
 	}
 
 	// final "add" button
@@ -1384,7 +1384,7 @@ Twinkle.config.listDialog.display = function twinkleconfigListDialogDisplay(e) {
 	addButton.style.minWidth = '8em';
 	addButton.setAttribute('type', 'button');
 	addButton.addEventListener('click', function() {
-		Twinkle.config.listDialog.addRow(dlgtbody);
+		TwinkleGlobal.config.listDialog.addRow(dlgtbody);
 	}, false);
 	addButton.textContent = 'Add';
 	dlgtd.appendChild(addButton);
@@ -1399,7 +1399,7 @@ Twinkle.config.listDialog.display = function twinkleconfigListDialogDisplay(e) {
 	var button = document.createElement('button');
 	button.setAttribute('type', 'submit');  // so Morebits.simpleWindow puts the button in the button pane
 	button.addEventListener('click', function() {
-		Twinkle.config.listDialog.save($prefbutton, dlgtbody);
+		TwinkleGlobal.config.listDialog.save($prefbutton, dlgtbody);
 		dialog.close();
 	}, false);
 	button.textContent = 'Save changes';
@@ -1407,7 +1407,7 @@ Twinkle.config.listDialog.display = function twinkleconfigListDialogDisplay(e) {
 	button = document.createElement('button');
 	button.setAttribute('type', 'submit');  // so Morebits.simpleWindow puts the button in the button pane
 	button.addEventListener('click', function() {
-		Twinkle.config.listDialog.reset($prefbutton, dlgtbody);
+		TwinkleGlobal.config.listDialog.reset($prefbutton, dlgtbody);
 	}, false);
 	button.textContent = 'Reset';
 	dialogcontent.appendChild(button);
@@ -1425,12 +1425,12 @@ Twinkle.config.listDialog.display = function twinkleconfigListDialogDisplay(e) {
 
 // Resets the data value, re-populates based on the new (default) value, then saves the
 // old data value again (less surprising behaviour)
-Twinkle.config.listDialog.reset = function twinkleconfigListDialogReset(button, tbody) {
+TwinkleGlobal.config.listDialog.reset = function twinkleconfigListDialogReset(button, tbody) {
 	// reset value on button
 	var $button = $(button);
 	var curpref = $button.data('pref');
 	var oldvalue = $button.data('value');
-	Twinkle.config.resetPref(curpref, $button.data('inFriendlyConfig'));
+	TwinkleGlobal.config.resetPref(curpref, $button.data('inFriendlyConfig'));
 
 	// reset form
 	var $tbody = $(tbody);
@@ -1438,14 +1438,14 @@ Twinkle.config.listDialog.reset = function twinkleconfigListDialogReset(button, 
 	// add the new values
 	var curvalue = $button.data('value');
 	$.each(curvalue, function(k, v) {
-		Twinkle.config.listDialog.addRow(tbody, v.value, v.label);
+		TwinkleGlobal.config.listDialog.addRow(tbody, v.value, v.label);
 	});
 
 	// save the old value
 	$button.data('value', oldvalue);
 };
 
-Twinkle.config.listDialog.save = function twinkleconfigListDialogSave(button, tbody) {
+TwinkleGlobal.config.listDialog.save = function twinkleconfigListDialogSave(button, tbody) {
 	var result = [];
 	var current = {};
 	$(tbody).find('input[type="text"]').each(function(inputkey, input) {
@@ -1464,11 +1464,11 @@ Twinkle.config.listDialog.save = function twinkleconfigListDialogSave(button, tb
 
 // reset/restore defaults
 
-Twinkle.config.resetPrefLink = function twinkleconfigResetPrefLink(e) {
+TwinkleGlobal.config.resetPrefLink = function twinkleconfigResetPrefLink(e) {
 	var wantedpref = e.target.id.substring(21); // "twinkle-config-reset-" prefix is stripped
 
 	// search tactics
-	$(Twinkle.config.sections).each(function(sectionkey, section) {
+	$(TwinkleGlobal.config.sections).each(function(sectionkey, section) {
 		if (section.hidden || (section.adminOnly && !Morebits.userIsInGroup('sysop'))) {
 			return true;  // continue: skip impossibilities
 		}
@@ -1479,7 +1479,7 @@ Twinkle.config.resetPrefLink = function twinkleconfigResetPrefLink(e) {
 			if (pref.name !== wantedpref) {
 				return true;  // continue
 			}
-			Twinkle.config.resetPref(pref, section.inFriendlyConfig);
+			TwinkleGlobal.config.resetPref(pref, section.inFriendlyConfig);
 			foundit = true;
 			return false;  // break
 		});
@@ -1491,33 +1491,33 @@ Twinkle.config.resetPrefLink = function twinkleconfigResetPrefLink(e) {
 	return false;  // stop link from scrolling page
 };
 
-Twinkle.config.resetPref = function twinkleconfigResetPref(pref, inFriendlyConfig) {
+TwinkleGlobal.config.resetPref = function twinkleconfigResetPref(pref, inFriendlyConfig) {
 	switch (pref.type) {
 
 		case 'boolean':
 			document.getElementById(pref.name).checked = inFriendlyConfig ?
-				Twinkle.defaultConfig.friendly[pref.name] : Twinkle.defaultConfig.twinkle[pref.name];
+				TwinkleGlobal.defaultConfig.friendly[pref.name] : TwinkleGlobal.defaultConfig.twinkle[pref.name];
 			break;
 
 		case 'string':
 		case 'integer':
 		case 'enum':
 			document.getElementById(pref.name).value = inFriendlyConfig ?
-				Twinkle.defaultConfig.friendly[pref.name] : Twinkle.defaultConfig.twinkle[pref.name];
+				TwinkleGlobal.defaultConfig.friendly[pref.name] : TwinkleGlobal.defaultConfig.twinkle[pref.name];
 			break;
 
 		case 'set':
 			$.each(pref.setValues, function(itemkey) {
 				if (document.getElementById(pref.name + '_' + itemkey)) {
 					document.getElementById(pref.name + '_' + itemkey).checked = (inFriendlyConfig ?
-						Twinkle.defaultConfig.friendly[pref.name] : Twinkle.defaultConfig.twinkle[pref.name]).indexOf(itemkey) !== -1;
+						TwinkleGlobal.defaultConfig.friendly[pref.name] : TwinkleGlobal.defaultConfig.twinkle[pref.name]).indexOf(itemkey) !== -1;
 				}
 			});
 			break;
 
 		case 'customList':
 			$(document.getElementById(pref.name)).data('value', inFriendlyConfig ?
-				Twinkle.defaultConfig.friendly[pref.name] : Twinkle.defaultConfig.twinkle[pref.name]);
+				TwinkleGlobal.defaultConfig.friendly[pref.name] : TwinkleGlobal.defaultConfig.twinkle[pref.name]);
 			break;
 
 		default:
@@ -1526,15 +1526,15 @@ Twinkle.config.resetPref = function twinkleconfigResetPref(pref, inFriendlyConfi
 	}
 };
 
-Twinkle.config.resetAllPrefs = function twinkleconfigResetAllPrefs() {
+TwinkleGlobal.config.resetAllPrefs = function twinkleconfigResetAllPrefs() {
 	// no confirmation message - the user can just refresh/close the page to abort
-	$(Twinkle.config.sections).each(function(sectionkey, section) {
+	$(TwinkleGlobal.config.sections).each(function(sectionkey, section) {
 		if (section.hidden || (section.adminOnly && !Morebits.userIsInGroup('sysop'))) {
 			return true;  // continue: skip impossibilities
 		}
 		$(section.preferences).each(function(prefkey, pref) {
 			if (!pref.adminOnly || Morebits.userIsInGroup('sysop')) {
-				Twinkle.config.resetPref(pref, section.inFriendlyConfig);
+				TwinkleGlobal.config.resetPref(pref, section.inFriendlyConfig);
 			}
 		});
 		return true;
@@ -1542,7 +1542,7 @@ Twinkle.config.resetAllPrefs = function twinkleconfigResetAllPrefs() {
 	return false;  // stop link from scrolling page
 };
 
-Twinkle.config.save = function twinkleconfigSave(e) {
+TwinkleGlobal.config.save = function twinkleconfigSave(e) {
 	Morebits.status.init(document.getElementById('twinkle-config-content'));
 
 	Morebits.wiki.actionCompleted.notice = 'Save';
@@ -1550,12 +1550,12 @@ Twinkle.config.save = function twinkleconfigSave(e) {
 	var userjs = mw.config.get('wgFormattedNamespaces')[mw.config.get('wgNamespaceIds').user] + ':' + mw.config.get('wgUserName') + '/twinkleoptions.js';
 	var wikipedia_page = new Morebits.wiki.page(userjs, 'Saving preferences to ' + userjs);
 	wikipedia_page.setCallbackParameters(e.target);
-	wikipedia_page.load(Twinkle.config.writePrefs);
+	wikipedia_page.load(TwinkleGlobal.config.writePrefs);
 
 	return false;
 };
 
-Twinkle.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
+TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 	var form = pageobj.getCallbackParameters();
 
 	// this is the object which gets serialized into JSON
@@ -1596,7 +1596,7 @@ Twinkle.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 
 	};
 
-	$(Twinkle.config.sections).each(function(sectionkey, section) {
+	$(TwinkleGlobal.config.sections).each(function(sectionkey, section) {
 		if (section.adminOnly && !Morebits.userIsInGroup('sysop')) {
 			return;  // i.e. "continue" in this context
 		}
@@ -1657,12 +1657,12 @@ Twinkle.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 
 			// only save those preferences that are *different* from the default
 			if (section.inFriendlyConfig) {
-				if (userValue !== undefined && !compare(userValue, Twinkle.defaultConfig.friendly[pref.name])) {
+				if (userValue !== undefined && !compare(userValue, TwinkleGlobal.defaultConfig.friendly[pref.name])) {
 					newConfig.friendly[pref.name] = userValue;
 				}
 				foundFriendlyPrefs.push(pref.name);
 			} else {
-				if (userValue !== undefined && !compare(userValue, Twinkle.defaultConfig.twinkle[pref.name])) {
+				if (userValue !== undefined && !compare(userValue, TwinkleGlobal.defaultConfig.twinkle[pref.name])) {
 					newConfig.twinkle[pref.name] = userValue;
 				}
 				foundTwinklePrefs.push(pref.name);
@@ -1670,13 +1670,13 @@ Twinkle.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 		});
 	});
 
-	if (Twinkle.prefs) {
-		$.each(Twinkle.prefs.twinkle, function(tkey, tvalue) {
+	if (TwinkleGlobal.prefs) {
+		$.each(TwinkleGlobal.prefs.twinkle, function(tkey, tvalue) {
 			if (foundTwinklePrefs.indexOf(tkey) === -1) {
 				newConfig.twinkle[tkey] = tvalue;
 			}
 		});
-		$.each(Twinkle.prefs.friendly, function(fkey, fvalue) {
+		$.each(TwinkleGlobal.prefs.friendly, function(fkey, fvalue) {
 			if (foundFriendlyPrefs.indexOf(fkey) === -1) {
 				newConfig.friendly[fkey] = fvalue;
 			}
@@ -1706,10 +1706,10 @@ Twinkle.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 	pageobj.setPageText(text);
 	pageobj.setEditSummary('Saving Twinkle preferences: automatic edit from [[:' + Morebits.pageNameNorm + ']]');
 	pageobj.setCreateOption('recreate');
-	pageobj.save(Twinkle.config.saveSuccess);
+	pageobj.save(TwinkleGlobal.config.saveSuccess);
 };
 
-Twinkle.config.saveSuccess = function twinkleconfigSaveSuccess(pageobj) {
+TwinkleGlobal.config.saveSuccess = function twinkleconfigSaveSuccess(pageobj) {
 	pageobj.getStatusElement().info('successful');
 
 	var noticebox = document.createElement('div');

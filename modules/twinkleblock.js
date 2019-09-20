@@ -14,14 +14,14 @@ var api = new mw.Api(), relevantUserName;
  * Config directives in:   [soon to be TwinkleConfig]
  */
 
-Twinkle.block = function twinkleblock() {
+TwinkleGlobal.block = function twinkleblock() {
 	// should show on Contributions pages, anywhere there's a relevant user
 	if (Morebits.userIsInGroup('sysop') && mw.config.get('wgRelevantUserName')) {
-		Twinkle.addPortletLink(Twinkle.block.callback, 'Block', 'tw-block', 'Block relevant user');
+		TwinkleGlobal.addPortletLink(TwinkleGlobal.block.callback, 'Block', 'tw-block', 'Block relevant user');
 	}
 };
 
-Twinkle.block.callback = function twinkleblockCallback() {
+TwinkleGlobal.block.callback = function twinkleblockCallback() {
 	if (mw.config.get('wgRelevantUserName') === mw.config.get('wgUserName') &&
 			!confirm('You are about to block yourself! Are you sure you want to proceed?')) {
 		return;
@@ -35,11 +35,11 @@ Twinkle.block.callback = function twinkleblockCallback() {
 	Window.addFooterLink('Block policy', 'WP:BLOCK');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#block');
 
-	Twinkle.block.currentBlockInfo = undefined;
-	Twinkle.block.field_block_options = {};
-	Twinkle.block.field_template_options = {};
+	TwinkleGlobal.block.currentBlockInfo = undefined;
+	TwinkleGlobal.block.field_block_options = {};
+	TwinkleGlobal.block.field_template_options = {};
 
-	var form = new Morebits.quickForm(Twinkle.block.callback.evaluate);
+	var form = new Morebits.quickForm(TwinkleGlobal.block.callback.evaluate);
 	var actionfield = form.append({
 		type: 'field',
 		label: 'Type of action'
@@ -47,7 +47,7 @@ Twinkle.block.callback = function twinkleblockCallback() {
 	actionfield.append({
 		type: 'checkbox',
 		name: 'actiontype',
-		event: Twinkle.block.callback.change_action,
+		event: TwinkleGlobal.block.callback.change_action,
 		list: [
 			{
 				label: 'Block user',
@@ -75,9 +75,9 @@ Twinkle.block.callback = function twinkleblockCallback() {
 	Window.display();
 	result.root = result;
 
-	Twinkle.block.fetchUserInfo(function() {
+	TwinkleGlobal.block.fetchUserInfo(function() {
 		// clean up preset data (defaults, etc.), done exactly once, must be before Twinkle.block.callback.change_action is called
-		Twinkle.block.transformBlockPresets();
+		TwinkleGlobal.block.transformBlockPresets();
 
 		// init the controls after user and block info have been fetched
 		var evt = document.createEvent('Event');
@@ -86,7 +86,7 @@ Twinkle.block.callback = function twinkleblockCallback() {
 	});
 };
 
-Twinkle.block.fetchUserInfo = function twinkleblockFetchUserInfo(fn) {
+TwinkleGlobal.block.fetchUserInfo = function twinkleblockFetchUserInfo(fn) {
 
 	api.get({
 		format: 'json',
@@ -102,17 +102,17 @@ Twinkle.block.fetchUserInfo = function twinkleblockFetchUserInfo(fn) {
 			var blockinfo = data.query.blocks[0],
 				userinfo = data.query.users[0];
 
-			Twinkle.block.isRegistered = !!userinfo.userid;
-			relevantUserName = Twinkle.block.isRegistered ? 'User:' + mw.config.get('wgRelevantUserName') : mw.config.get('wgRelevantUserName');
+			TwinkleGlobal.block.isRegistered = !!userinfo.userid;
+			relevantUserName = TwinkleGlobal.block.isRegistered ? 'User:' + mw.config.get('wgRelevantUserName') : mw.config.get('wgRelevantUserName');
 
 			if (blockinfo) {
 			// handle frustrating system of inverted boolean values
 				blockinfo.disabletalk = blockinfo.allowusertalk === undefined;
 				blockinfo.hardblock = blockinfo.anononly === undefined;
-				Twinkle.block.currentBlockInfo = blockinfo;
+				TwinkleGlobal.block.currentBlockInfo = blockinfo;
 			}
 
-			Twinkle.block.hasBlockLog = !!data.query.logevents.length;
+			TwinkleGlobal.block.hasBlockLog = !!data.query.logevents.length;
 
 			if (typeof fn === 'function') {
 				return fn();
@@ -123,18 +123,18 @@ Twinkle.block.fetchUserInfo = function twinkleblockFetchUserInfo(fn) {
 		});
 };
 
-Twinkle.block.callback.saveFieldset = function twinkleblockCallbacksaveFieldset(fieldset) {
-	Twinkle.block[$(fieldset).prop('name')] = {};
+TwinkleGlobal.block.callback.saveFieldset = function twinkleblockCallbacksaveFieldset(fieldset) {
+	TwinkleGlobal.block[$(fieldset).prop('name')] = {};
 	$(fieldset).serializeArray().forEach(function(el) {
-		Twinkle.block[$(fieldset).prop('name')][el.name] = el.value;
+		TwinkleGlobal.block[$(fieldset).prop('name')][el.name] = el.value;
 	});
 };
 
-Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction(e) {
+TwinkleGlobal.block.callback.change_action = function twinkleblockCallbackChangeAction(e) {
 	var field_preset, field_template_options, field_block_options, $form = $(e.target.form);
 
-	Twinkle.block.callback.saveFieldset($('[name=field_block_options]'));
-	Twinkle.block.callback.saveFieldset($('[name=field_template_options]'));
+	TwinkleGlobal.block.callback.saveFieldset($('[name=field_block_options]'));
+	TwinkleGlobal.block.callback.saveFieldset($('[name=field_template_options]'));
 
 	if ($form.find('[name=actiontype][value=block]').is(':checked')) {
 		field_preset = new Morebits.quickForm.element({ type: 'field', label: 'Preset', name: 'field_preset' });
@@ -142,8 +142,8 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
 			type: 'select',
 			name: 'preset',
 			label: 'Choose a preset:',
-			event: Twinkle.block.callback.change_preset,
-			list: Twinkle.block.callback.filtered_block_groups()
+			event: TwinkleGlobal.block.callback.change_preset,
+			list: TwinkleGlobal.block.callback.filtered_block_groups()
 		});
 
 		field_block_options = new Morebits.quickForm.element({ type: 'field', label: 'Block options', name: 'field_block_options' });
@@ -153,7 +153,7 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
 			type: 'select',
 			name: 'expiry_preset',
 			label: 'Expiry:',
-			event: Twinkle.block.callback.change_expiry,
+			event: TwinkleGlobal.block.callback.change_expiry,
 			list: [
 				{ label: 'custom', value: 'custom', selected: true },
 				{ label: 'indefinite', value: 'infinity' },
@@ -180,39 +180,39 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
 			name: 'expiry',
 			label: 'Custom expiry',
 			tooltip: 'You can use relative times, like "1 minute" or "19 days", or absolute timestamps, "yyyymmddhhmm" (e.g. "200602011405" is Feb 1, 2006, at 14:05 UTC).',
-			value: Twinkle.block.field_block_options.expiry || Twinkle.block.field_template_options.template_expiry
+			value: TwinkleGlobal.block.field_block_options.expiry || TwinkleGlobal.block.field_template_options.template_expiry
 		});
 		var blockoptions = [
 			{
-				checked: Twinkle.block.field_block_options.nocreate,
+				checked: TwinkleGlobal.block.field_block_options.nocreate,
 				label: 'Block account creation',
 				name: 'nocreate',
 				value: '1'
 			},
 			{
-				checked: Twinkle.block.field_block_options.noemail,
+				checked: TwinkleGlobal.block.field_block_options.noemail,
 				label: 'Block user from sending email',
 				name: 'noemail',
 				value: '1'
 			},
 			{
-				checked: Twinkle.block.field_block_options.disabletalk,
+				checked: TwinkleGlobal.block.field_block_options.disabletalk,
 				label: 'Prevent this user from editing their own talk page while blocked',
 				name: 'disabletalk',
 				value: '1'
 			}
 		];
 
-		if (Twinkle.block.isRegistered) {
+		if (TwinkleGlobal.block.isRegistered) {
 			blockoptions.push({
-				checked: Twinkle.block.field_block_options.autoblock,
+				checked: TwinkleGlobal.block.field_block_options.autoblock,
 				label: 'Autoblock any IP addresses used (hardblock)',
 				name: 'autoblock',
 				value: '1'
 			});
 		} else {
 			blockoptions.push({
-				checked: Twinkle.block.field_block_options.hardblock,
+				checked: TwinkleGlobal.block.field_block_options.hardblock,
 				label: 'Prevent logged-in users from editing from this IP address (hardblock)',
 				name: 'hardblock',
 				value: '1'
@@ -220,7 +220,7 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
 		}
 
 		blockoptions.push({
-			checked: Twinkle.block.field_block_options.watchuser,
+			checked: TwinkleGlobal.block.field_block_options.watchuser,
 			label: 'Watch user and user talk pages',
 			name: 'watchuser',
 			value: '1'
@@ -235,7 +235,7 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
 			type: 'textarea',
 			label: 'Reason (for block log):',
 			name: 'reason',
-			value: Twinkle.block.field_block_options.reason
+			value: TwinkleGlobal.block.field_block_options.reason
 		});
 
 		field_block_options.append({
@@ -248,7 +248,7 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
 		field_block_options.append({
 			type: 'checkbox',
 			name: 'filter_see_also',
-			event: Twinkle.block.callback.toggle_see_alsos,
+			event: TwinkleGlobal.block.callback.toggle_see_alsos,
 			style: 'display:inline-block; margin-right:5px',
 			list: [
 				{
@@ -261,7 +261,7 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
 		field_block_options.append({
 			type: 'checkbox',
 			name: 'deleted_see_also',
-			event: Twinkle.block.callback.toggle_see_alsos,
+			event: TwinkleGlobal.block.callback.toggle_see_alsos,
 			style: 'display:inline-block',
 			list: [
 				{
@@ -272,7 +272,7 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
 			]
 		});
 
-		if (Twinkle.block.currentBlockInfo) {
+		if (TwinkleGlobal.block.currentBlockInfo) {
 			field_block_options.append({ type: 'hidden', name: 'reblock', value: '1' });
 		}
 	}
@@ -283,9 +283,9 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
 			type: 'select',
 			name: 'template',
 			label: 'Choose talk page template:',
-			event: Twinkle.block.callback.change_template,
-			list: Twinkle.block.callback.filtered_block_groups(true),
-			value: Twinkle.block.field_template_options.template
+			event: TwinkleGlobal.block.callback.change_template,
+			list: TwinkleGlobal.block.callback.filtered_block_groups(true),
+			value: TwinkleGlobal.block.field_template_options.template
 		});
 		field_template_options.append({
 			type: 'input',
@@ -311,7 +311,7 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
 			label: '"You have been blocked for ..." ',
 			display: 'none',
 			tooltip: 'An optional reason, to replace the default generic reason. Only available for the generic block templates.',
-			value: Twinkle.block.field_template_options.block_reason
+			value: TwinkleGlobal.block.field_template_options.block_reason
 		});
 
 		if ($form.find('[name=actiontype][value=block]').is(':checked')) {
@@ -321,7 +321,7 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
 				list: [
 					{
 						label: 'Do not include expiry in template',
-						checked: Twinkle.block.field_template_options.blank_duration,
+						checked: TwinkleGlobal.block.field_template_options.blank_duration,
 						tooltip: 'Instead of including the duration, make the block template read "You have been blocked from editing temporarily for..."'
 					}
 				]
@@ -333,7 +333,7 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
 				list: [
 					{
 						label: 'Talk page access disabled',
-						checked: Twinkle.block.field_template_options.notalk,
+						checked: TwinkleGlobal.block.field_template_options.notalk,
 						tooltip: 'Use this to make the block template state that the user\'s talk page access has been removed'
 					}
 				]
@@ -342,7 +342,7 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
 
 		var $previewlink = $('<a id="twinkleblock-preivew-link">Preview</a>');
 		$previewlink.off('click').on('click', function() {
-			Twinkle.block.callback.preview($form[0]);
+			TwinkleGlobal.block.callback.preview($form[0]);
 		});
 		$previewlink.css({cursor: 'pointer'});
 		field_template_options.append({ type: 'div', id: 'blockpreview', label: [ $previewlink[0] ] });
@@ -370,23 +370,23 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
 		$form.find('fieldset[name="field_template_options"]').hide();
 	}
 
-	if (Twinkle.block.hasBlockLog) {
+	if (TwinkleGlobal.block.hasBlockLog) {
 		var $blockloglink = $('<a target="_blank" href="' + mw.util.getUrl('Special:Log', {action: 'view', page: mw.config.get('wgRelevantUserName'), type: 'block'}) + '">block log</a>)');
 
 		Morebits.status.init($('div[name="hasblocklog"] span').last()[0]);
 		Morebits.status.warn('This user has been blocked in the past', $blockloglink[0]);
 	}
 
-	if (Twinkle.block.currentBlockInfo) {
+	if (TwinkleGlobal.block.currentBlockInfo) {
 		Morebits.status.init($('div[name="currentblock"] span').last()[0]);
 		Morebits.status.warn(relevantUserName + ' is already blocked', 'Submit query to reblock with supplied options');
-		Twinkle.block.callback.update_form(e, Twinkle.block.currentBlockInfo);
+		TwinkleGlobal.block.callback.update_form(e, TwinkleGlobal.block.currentBlockInfo);
 	} else if ($form.find('[name=actiontype][value=template]').is(':checked')) {
 		// make sure all the fields are correct based on defaults
 		if ($form.find('[name=actiontype][value=block]').is(':checked')) {
-			Twinkle.block.callback.change_preset(e);
+			TwinkleGlobal.block.callback.change_preset(e);
 		} else {
-			Twinkle.block.callback.change_template(e);
+			TwinkleGlobal.block.callback.change_template(e);
 		}
 	}
 };
@@ -421,7 +421,7 @@ Twinkle.block.callback.change_action = function twinkleblockCallbackChangeAction
  * WARNING: 'anononly' and 'allowusertalk' are enabled by default.
  *   To disable, set 'hardblock' and 'disabletalk', respectively
  */
-Twinkle.block.blockPresetsInfo = {
+TwinkleGlobal.block.blockPresetsInfo = {
 	'anonblock': {
 		expiry: '31 hours',
 		forAnonOnly: true,
@@ -832,28 +832,28 @@ Twinkle.block.blockPresetsInfo = {
 	}
 };
 
-Twinkle.block.transformBlockPresets = function twinkleblockTransformBlockPresets() {
+TwinkleGlobal.block.transformBlockPresets = function twinkleblockTransformBlockPresets() {
 	// supply sensible defaults
-	$.each(Twinkle.block.blockPresetsInfo, function(preset, settings) {
+	$.each(TwinkleGlobal.block.blockPresetsInfo, function(preset, settings) {
 		settings.summary = settings.summary || settings.reason;
 		settings.sig = settings.sig !== undefined ? settings.sig : 'yes';
 		// despite this it's preferred that you use 'infinity' as the value for expiry
 		settings.indefinite = settings.indefinite || settings.expiry === 'infinity' || settings.expiry === 'infinite' || settings.expiry === 'indefinite' || settings.expiry === 'never';
 
-		if (!Twinkle.block.isRegistered && settings.indefinite) {
+		if (!TwinkleGlobal.block.isRegistered && settings.indefinite) {
 			settings.expiry = '31 hours';
 		} else {
 			settings.expiry = settings.expiry || '31 hours';
 		}
 
-		Twinkle.block.blockPresetsInfo[preset] = settings;
+		TwinkleGlobal.block.blockPresetsInfo[preset] = settings;
 	});
 };
 
 // These are the groups of presets and defines the order in which they appear. For each list item:
 //   label: <string, the description that will be visible in the dropdown>
 //   value: <string, the key of a preset in blockPresetsInfo>
-Twinkle.block.blockGroups = [
+TwinkleGlobal.block.blockGroups = [
 	{
 		label: 'Common block reasons',
 		list: [
@@ -930,16 +930,16 @@ Twinkle.block.blockGroups = [
 	}
 ];
 
-Twinkle.block.callback.filtered_block_groups = function twinkleblockCallbackFilteredBlockGroups(show_template) {
-	return $.map(Twinkle.block.blockGroups, function(blockGroup) {
+TwinkleGlobal.block.callback.filtered_block_groups = function twinkleblockCallbackFilteredBlockGroups(show_template) {
+	return $.map(TwinkleGlobal.block.blockGroups, function(blockGroup) {
 		var list = $.map(blockGroup.list, function(blockPreset) {
 			// only show uw-talkrevoked if reblocking
-			if (!Twinkle.block.currentBlockInfo && blockPreset.value === 'uw-talkrevoked') {
+			if (!TwinkleGlobal.block.currentBlockInfo && blockPreset.value === 'uw-talkrevoked') {
 				return;
 			}
 
-			var blockSettings = Twinkle.block.blockPresetsInfo[blockPreset.value];
-			var registrationRestrict = blockSettings.forRegisteredOnly ? Twinkle.block.isRegistered : blockSettings.forAnonOnly ? !Twinkle.block.isRegistered : true;
+			var blockSettings = TwinkleGlobal.block.blockPresetsInfo[blockPreset.value];
+			var registrationRestrict = blockSettings.forRegisteredOnly ? TwinkleGlobal.block.isRegistered : blockSettings.forAnonOnly ? !TwinkleGlobal.block.isRegistered : true;
 			if (!(blockSettings.templateName && show_template) && registrationRestrict) {
 				var templateName = blockSettings.templateName || blockPreset.value;
 				return {
@@ -962,18 +962,18 @@ Twinkle.block.callback.filtered_block_groups = function twinkleblockCallbackFilt
 	});
 };
 
-Twinkle.block.callback.change_preset = function twinkleblockCallbackChangePreset(e) {
+TwinkleGlobal.block.callback.change_preset = function twinkleblockCallbackChangePreset(e) {
 	var key = e.target.form.preset.value;
 	if (!key) {
 		return;
 	}
 
-	e.target.form.template.value = Twinkle.block.blockPresetsInfo[key].templateName || key;
-	Twinkle.block.callback.update_form(e, Twinkle.block.blockPresetsInfo[key]);
-	Twinkle.block.callback.change_template(e);
+	e.target.form.template.value = TwinkleGlobal.block.blockPresetsInfo[key].templateName || key;
+	TwinkleGlobal.block.callback.update_form(e, TwinkleGlobal.block.blockPresetsInfo[key]);
+	TwinkleGlobal.block.callback.change_template(e);
 };
 
-Twinkle.block.callback.change_expiry = function twinkleblockCallbackChangeExpiry(e) {
+TwinkleGlobal.block.callback.change_expiry = function twinkleblockCallbackChangeExpiry(e) {
 	var expiry = e.target.form.expiry;
 	if (e.target.value === 'custom') {
 		Morebits.quickForm.setElementVisibility(expiry.parentNode, true);
@@ -983,22 +983,22 @@ Twinkle.block.callback.change_expiry = function twinkleblockCallbackChangeExpiry
 	}
 };
 
-Twinkle.block.seeAlsos = [];
-Twinkle.block.callback.toggle_see_alsos = function twinkleblockCallbackToggleSeeAlso() {
+TwinkleGlobal.block.seeAlsos = [];
+TwinkleGlobal.block.callback.toggle_see_alsos = function twinkleblockCallbackToggleSeeAlso() {
 	var reason = this.form.reason.value.replace(
-		new RegExp('( <!--|;) ' + 'see also ' + Twinkle.block.seeAlsos.join(' and ') + '( -->)?'), ''
+		new RegExp('( <!--|;) ' + 'see also ' + TwinkleGlobal.block.seeAlsos.join(' and ') + '( -->)?'), ''
 	);
 
-	Twinkle.block.seeAlsos = Twinkle.block.seeAlsos.filter(function(el) {
+	TwinkleGlobal.block.seeAlsos = TwinkleGlobal.block.seeAlsos.filter(function(el) {
 		return el !== this.value;
 	}.bind(this));
 
 	if (this.checked) {
-		Twinkle.block.seeAlsos.push(this.value);
+		TwinkleGlobal.block.seeAlsos.push(this.value);
 	}
-	var seeAlsoMessage = Twinkle.block.seeAlsos.join(' and ');
+	var seeAlsoMessage = TwinkleGlobal.block.seeAlsos.join(' and ');
 
-	if (!Twinkle.block.seeAlsos.length) {
+	if (!TwinkleGlobal.block.seeAlsos.length) {
 		this.form.reason.value = reason;
 	} else if (reason.indexOf('{{') !== -1) {
 		this.form.reason.value = reason + ' <!-- see also ' + seeAlsoMessage + ' -->';
@@ -1007,7 +1007,7 @@ Twinkle.block.callback.toggle_see_alsos = function twinkleblockCallbackToggleSee
 	}
 };
 
-Twinkle.block.callback.update_form = function twinkleblockCallbackUpdateForm(e, data) {
+TwinkleGlobal.block.callback.update_form = function twinkleblockCallbackUpdateForm(e, data) {
 	var form = e.target.form, expiry = data.expiry;
 
 	// don't override original expiry if useInitialOptions is set
@@ -1032,7 +1032,7 @@ Twinkle.block.callback.update_form = function twinkleblockCallbackUpdateForm(e, 
 	data.hardblock = data.hardblock !== undefined ? data.hardblock : false;
 
 	// disable autoblock if blocking a bot
-	if (Twinkle.block.isRegistered && relevantUserName.search(/bot$/i) > 0) {
+	if (TwinkleGlobal.block.isRegistered && relevantUserName.search(/bot$/i) > 0) {
 		data.autoblock = false;
 	}
 
@@ -1053,25 +1053,25 @@ Twinkle.block.callback.update_form = function twinkleblockCallbackUpdateForm(e, 
 	}
 };
 
-Twinkle.block.callback.change_template = function twinkleblockcallbackChangeTemplate(e) {
-	var form = e.target.form, value = form.template.value, settings = Twinkle.block.blockPresetsInfo[value];
+TwinkleGlobal.block.callback.change_template = function twinkleblockcallbackChangeTemplate(e) {
+	var form = e.target.form, value = form.template.value, settings = TwinkleGlobal.block.blockPresetsInfo[value];
 
 	if (!$(form).find('[name=actiontype][value=block]').is(':checked')) {
 		if (settings.indefinite || settings.nonstandard) {
-			if (Twinkle.block.prev_template_expiry === null) {
-				Twinkle.block.prev_template_expiry = form.template_expiry.value || '';
+			if (TwinkleGlobal.block.prev_template_expiry === null) {
+				TwinkleGlobal.block.prev_template_expiry = form.template_expiry.value || '';
 			}
 			form.template_expiry.parentNode.style.display = 'none';
 			form.template_expiry.value = 'indefinite';
 		} else if (form.template_expiry.parentNode.style.display === 'none') {
-			if (Twinkle.block.prev_template_expiry !== null) {
-				form.template_expiry.value = Twinkle.block.prev_template_expiry;
-				Twinkle.block.prev_template_expiry = null;
+			if (TwinkleGlobal.block.prev_template_expiry !== null) {
+				form.template_expiry.value = TwinkleGlobal.block.prev_template_expiry;
+				TwinkleGlobal.block.prev_template_expiry = null;
 			}
 			form.template_expiry.parentNode.style.display = 'block';
 		}
-		if (Twinkle.block.prev_template_expiry) {
-			form.expiry.value = Twinkle.block.prev_template_expiry;
+		if (TwinkleGlobal.block.prev_template_expiry) {
+			form.expiry.value = TwinkleGlobal.block.prev_template_expiry;
 		}
 		Morebits.quickForm.setElementVisibility(form.notalk.parentNode, !settings.nonstandard);
 	} else {
@@ -1086,40 +1086,40 @@ Twinkle.block.callback.change_template = function twinkleblockcallbackChangeTemp
 
 	form.root.previewer.closePreview();
 };
-Twinkle.block.prev_template_expiry = null;
-Twinkle.block.prev_block_reason = null;
-Twinkle.block.prev_article = null;
-Twinkle.block.prev_reason = null;
+TwinkleGlobal.block.prev_template_expiry = null;
+TwinkleGlobal.block.prev_block_reason = null;
+TwinkleGlobal.block.prev_article = null;
+TwinkleGlobal.block.prev_reason = null;
 
-Twinkle.block.callback.preview = function twinkleblockcallbackPreview(form) {
+TwinkleGlobal.block.callback.preview = function twinkleblockcallbackPreview(form) {
 	var params = {
 		article: form.article.value,
 		blank_duration: form.blank_duration ? form.blank_duration.checked : false,
 		disabletalk: form.disabletalk.checked || (form.notalk ? form.notalk.checked : false),
 		expiry: form.template_expiry ? form.template_expiry.value : form.expiry.value,
-		hardblock: Twinkle.block.isRegistered ? form.autoblock.checked : form.hardblock.checked,
+		hardblock: TwinkleGlobal.block.isRegistered ? form.autoblock.checked : form.hardblock.checked,
 		indefinite: (/indef|infinit|never|\*|max/).test(form.template_expiry ? form.template_expiry.value : form.expiry.value),
 		reason: form.block_reason.value,
 		template: form.template.value
 	};
 
-	var templateText = Twinkle.block.callback.getBlockNoticeWikitext(params);
+	var templateText = TwinkleGlobal.block.callback.getBlockNoticeWikitext(params);
 
 	form.previewer.beginRender(templateText, 'User_talk:' + mw.config.get('wgRelevantUserName')); // Force wikitext/correct username
 };
 
-Twinkle.block.callback.evaluate = function twinkleblockCallbackEvaluate(e) {
+TwinkleGlobal.block.callback.evaluate = function twinkleblockCallbackEvaluate(e) {
 	var $form = $(e.target),
 		toBlock = $form.find('[name=actiontype][value=block]').is(':checked'),
 		toWarn = $form.find('[name=actiontype][value=template]').is(':checked'),
 		blockoptions = {}, templateoptions = {};
 
-	Twinkle.block.callback.saveFieldset($form.find('[name=field_block_options]'));
-	Twinkle.block.callback.saveFieldset($form.find('[name=field_template_options]'));
+	TwinkleGlobal.block.callback.saveFieldset($form.find('[name=field_block_options]'));
+	TwinkleGlobal.block.callback.saveFieldset($form.find('[name=field_template_options]'));
 
-	blockoptions = Twinkle.block.field_block_options;
+	blockoptions = TwinkleGlobal.block.field_block_options;
 
-	templateoptions = Twinkle.block.field_template_options;
+	templateoptions = TwinkleGlobal.block.field_template_options;
 	templateoptions.disabletalk = !!(templateoptions.disabletalk || blockoptions.disabletalk);
 	templateoptions.hardblock = !!blockoptions.hardblock;
 	delete blockoptions.expiry_preset; // remove extraneous
@@ -1153,7 +1153,7 @@ Twinkle.block.callback.evaluate = function twinkleblockCallbackEvaluate(e) {
 			var mbApi = new Morebits.wiki.api('Executing block', blockoptions, function() {
 				statusElement.info('Completed');
 				if (toWarn) {
-					Twinkle.block.callback.issue_template(templateoptions);
+					TwinkleGlobal.block.callback.issue_template(templateoptions);
 				}
 			});
 			mbApi.post();
@@ -1164,19 +1164,19 @@ Twinkle.block.callback.evaluate = function twinkleblockCallbackEvaluate(e) {
 		Morebits.simpleWindow.setButtonsEnabled(false);
 
 		Morebits.status.init(e.target);
-		Twinkle.block.callback.issue_template(templateoptions);
+		TwinkleGlobal.block.callback.issue_template(templateoptions);
 	} else {
 		return alert('Please give Twinkle something to do!');
 	}
 };
 
-Twinkle.block.callback.issue_template = function twinkleblockCallbackIssueTemplate(formData) {
+TwinkleGlobal.block.callback.issue_template = function twinkleblockCallbackIssueTemplate(formData) {
 	var userTalkPage = 'User_talk:' + mw.config.get('wgRelevantUserName');
 
 	var params = $.extend(formData, {
-		messageData: Twinkle.block.blockPresetsInfo[formData.template],
-		reason: Twinkle.block.field_template_options.block_reason,
-		disabletalk: Twinkle.block.field_template_options.notalk
+		messageData: TwinkleGlobal.block.blockPresetsInfo[formData.template],
+		reason: TwinkleGlobal.block.field_template_options.block_reason,
+		disabletalk: TwinkleGlobal.block.field_template_options.notalk
 	});
 
 	Morebits.wiki.actionCompleted.redirect = userTalkPage;
@@ -1185,11 +1185,11 @@ Twinkle.block.callback.issue_template = function twinkleblockCallbackIssueTempla
 	var wikipedia_page = new Morebits.wiki.page(userTalkPage, 'User talk page modification');
 	wikipedia_page.setCallbackParameters(params);
 	wikipedia_page.setFollowRedirect(true);
-	wikipedia_page.load(Twinkle.block.callback.main);
+	wikipedia_page.load(TwinkleGlobal.block.callback.main);
 };
 
-Twinkle.block.callback.getBlockNoticeWikitext = function(params) {
-	var text = '{{', settings = Twinkle.block.blockPresetsInfo[params.template];
+TwinkleGlobal.block.callback.getBlockNoticeWikitext = function(params) {
+	var text = '{{', settings = TwinkleGlobal.block.blockPresetsInfo[params.template];
 
 	if (!settings.nonstandard) {
 		text += 'subst:' + params.template;
@@ -1205,7 +1205,7 @@ Twinkle.block.callback.getBlockNoticeWikitext = function(params) {
 			}
 		}
 
-		if (!Twinkle.block.isRegistered && !params.hardblock) {
+		if (!TwinkleGlobal.block.isRegistered && !params.hardblock) {
 			text += '|anon=yes';
 		}
 
@@ -1226,7 +1226,7 @@ Twinkle.block.callback.getBlockNoticeWikitext = function(params) {
 	return text + '}}';
 };
 
-Twinkle.block.callback.main = function twinkleblockcallbackMain(pageobj) {
+TwinkleGlobal.block.callback.main = function twinkleblockcallbackMain(pageobj) {
 	var text = pageobj.getPageText(),
 		params = pageobj.getCallbackParameters(),
 		messageData = params.messageData,
@@ -1249,7 +1249,7 @@ Twinkle.block.callback.main = function twinkleblockcallbackMain(pageobj) {
 
 	params.indefinite = (/indef|infinit|never|\*|max/).test(params.expiry);
 
-	if (Twinkle.getPref('blankTalkpageOnIndefBlock') && params.template !== 'uw-lblock' && params.indefinite) {
+	if (TwinkleGlobal.getPref('blankTalkpageOnIndefBlock') && params.template !== 'uw-lblock' && params.indefinite) {
 		Morebits.status.info('Info', 'Blanking talk page per preferences and creating a new level 2 heading for the date');
 		text = '== ' + date.getUTCMonthName() + ' ' + date.getUTCFullYear() + ' ==\n';
 	} else if (!dateHeaderRegexResult || dateHeaderRegexResult.index !== lastHeaderIndex) {
@@ -1259,18 +1259,18 @@ Twinkle.block.callback.main = function twinkleblockcallbackMain(pageobj) {
 
 	params.expiry = typeof params.template_expiry !== 'undefined' ? params.template_expiry : params.expiry;
 
-	text += Twinkle.block.callback.getBlockNoticeWikitext(params);
+	text += TwinkleGlobal.block.callback.getBlockNoticeWikitext(params);
 
 	// build the edit summary
 	var summary = messageData.summary;
 	if (messageData.suppressArticleInSummary !== true && params.article) {
 		summary += ' on [[:' + params.article + ']]';
 	}
-	summary += '.' + Twinkle.getPref('summaryAd');
+	summary += '.' + TwinkleGlobal.getPref('summaryAd');
 
 	pageobj.setPageText(text);
 	pageobj.setEditSummary(summary);
-	pageobj.setWatchlist(Twinkle.getPref('watchWarnings'));
+	pageobj.setWatchlist(TwinkleGlobal.getPref('watchWarnings'));
 	pageobj.save();
 };
 

@@ -13,7 +13,7 @@
 * Config directives in:   TwinkleConfig
 */
 
-Twinkle.deprod = function() {
+TwinkleGlobal.deprod = function() {
 	if (
 		mw.config.get('wgNamespaceNumber') !== 14 ||
 		!Morebits.userIsInGroup('sysop') ||
@@ -21,12 +21,12 @@ Twinkle.deprod = function() {
 	) {
 		return;
 	}
-	Twinkle.addPortletLink(Twinkle.deprod.callback, 'Deprod', 'tw-deprod', 'Delete prod pages found in this category');
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.deprod.callback, 'Deprod', 'tw-deprod', 'Delete prod pages found in this category');
 };
 
 var concerns = {};
 
-Twinkle.deprod.callback = function() {
+TwinkleGlobal.deprod.callback = function() {
 	var Window = new Morebits.simpleWindow(800, 400);
 	Window.setTitle('PROD cleaning');
 	Window.setScriptName('Twinkle');
@@ -128,7 +128,7 @@ var callback_commit = function(event) {
 		Morebits.status.init(event.target);
 
 		var batchOperation = new Morebits.batchOperation('Deleting articles');
-		batchOperation.setOption('chunkSize', Twinkle.getPref('proddeleteChunks'));
+		batchOperation.setOption('chunkSize', TwinkleGlobal.getPref('proddeleteChunks'));
 		batchOperation.setOption('preserveIndividualStatusLines', true);
 		batchOperation.setPageList(pages);
 		batchOperation.run(function(pageName) {
@@ -154,7 +154,7 @@ var callback_commit = function(event) {
 			wikipedia_api.post();
 
 			var page = new Morebits.wiki.page(pageName, 'Deleting article ' + pageName);
-			page.setEditSummary('Expired [[WP:PROD|PROD]], concern was: ' + concerns[pageName] + Twinkle.getPref('deletionSummaryAd'));
+			page.setEditSummary('Expired [[WP:PROD|PROD]], concern was: ' + concerns[pageName] + TwinkleGlobal.getPref('deletionSummaryAd'));
 			page.suppressProtectWarning();
 			page.deletePage(batchOperation.workerSuccess, batchOperation.workerFailure);
 		});
@@ -169,7 +169,7 @@ var callback_commit = function(event) {
 		}
 
 		var page = new Morebits.wiki.page('Talk:' + apiobj.params.page, 'Deleting talk page of article ' + apiobj.params.page);
-		page.setEditSummary('[[WP:CSD#G8|G8]]: [[Help:Talk page|Talk page]] of deleted page "' + apiobj.params.page + '"' + Twinkle.getPref('deletionSummaryAd'));
+		page.setEditSummary('[[WP:CSD#G8|G8]]: [[Help:Talk page|Talk page]] of deleted page "' + apiobj.params.page + '"' + TwinkleGlobal.getPref('deletionSummaryAd'));
 		page.deletePage();
 	},
 	callback_deleteRedirects = function(apiobj) {
@@ -177,7 +177,7 @@ var callback_commit = function(event) {
 		$doc.find('redirects rd').each(function() {
 			var title = $(this).attr('title');
 			var page = new Morebits.wiki.page(title, 'Deleting redirecting page ' + title);
-			page.setEditSummary('[[WP:CSD#G8|G8]]: Redirect to deleted page "' + apiobj.params.page + '"' + Twinkle.getPref('deletionSummaryAd'));
+			page.setEditSummary('[[WP:CSD#G8|G8]]: Redirect to deleted page "' + apiobj.params.page + '"' + TwinkleGlobal.getPref('deletionSummaryAd'));
 			page.deletePage();
 		});
 	};

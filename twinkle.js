@@ -22,19 +22,19 @@
 
 (function (window, document, $, undefined) { // Wrap with anonymous function
 
-var Twinkle = {};
-window.Twinkle = Twinkle;  // allow global access
+var TwinkleGlobal = {};
+window.TwinkleGlobal = TwinkleGlobal;  // allow global access
 
 // Check if account is experienced enough to use Twinkle
-Twinkle.userAuthorized = Morebits.userIsInGroup('autoconfirmed') || Morebits.userIsInGroup('confirmed');
+TwinkleGlobal.userAuthorized = Morebits.userIsInGroup('autoconfirmed') || Morebits.userIsInGroup('confirmed');
 
 // for use by custom modules (normally empty)
-Twinkle.initCallbacks = [];
-Twinkle.addInitCallback = function twinkleAddInitCallback(func) {
-	Twinkle.initCallbacks.push(func);
+TwinkleGlobal.initCallbacks = [];
+TwinkleGlobal.addInitCallback = function twinkleAddInitCallback(func) {
+	TwinkleGlobal.initCallbacks.push(func);
 };
 
-Twinkle.defaultConfig = {};
+TwinkleGlobal.defaultConfig = {};
 /**
  * Twinkle.defaultConfig.twinkle and Twinkle.defaultConfig.friendly
  *
@@ -43,7 +43,7 @@ Twinkle.defaultConfig = {};
  * |Twinkle.config.sections| in twinkleconfig.js, so they are configurable via the Twinkle preferences panel.
  * For help on the actual preferences, see the comments in twinkleconfig.js.
  */
-Twinkle.defaultConfig.twinkle = {
+TwinkleGlobal.defaultConfig.twinkle = {
 	// General
 	summaryAd: '',
 	deletionSummaryAd: '',
@@ -130,20 +130,20 @@ Twinkle.defaultConfig.twinkle = {
 
 // now some skin dependent config.
 if (mw.config.get('skin') === 'vector') {
-	Twinkle.defaultConfig.twinkle.portletArea = 'right-navigation';
-	Twinkle.defaultConfig.twinkle.portletId = 'p-twinkle';
-	Twinkle.defaultConfig.twinkle.portletName = 'TW';
-	Twinkle.defaultConfig.twinkle.portletType = 'menu';
-	Twinkle.defaultConfig.twinkle.portletNext = 'p-search';
+	TwinkleGlobal.defaultConfig.twinkle.portletArea = 'right-navigation';
+	TwinkleGlobal.defaultConfig.twinkle.portletId = 'p-twinkle';
+	TwinkleGlobal.defaultConfig.twinkle.portletName = 'TW';
+	TwinkleGlobal.defaultConfig.twinkle.portletType = 'menu';
+	TwinkleGlobal.defaultConfig.twinkle.portletNext = 'p-search';
 } else {
-	Twinkle.defaultConfig.twinkle.portletArea = null;
-	Twinkle.defaultConfig.twinkle.portletId = 'p-cactions';
-	Twinkle.defaultConfig.twinkle.portletName = null;
-	Twinkle.defaultConfig.twinkle.portletType = null;
-	Twinkle.defaultConfig.twinkle.portletNext = null;
+	TwinkleGlobal.defaultConfig.twinkle.portletArea = null;
+	TwinkleGlobal.defaultConfig.twinkle.portletId = 'p-cactions';
+	TwinkleGlobal.defaultConfig.twinkle.portletName = null;
+	TwinkleGlobal.defaultConfig.twinkle.portletType = null;
+	TwinkleGlobal.defaultConfig.twinkle.portletNext = null;
 }
 
-Twinkle.defaultConfig.friendly = {
+TwinkleGlobal.defaultConfig.friendly = {
 	// Tag
 	groupByDefault: true,
 	watchTaggedPages: true,
@@ -178,34 +178,34 @@ Twinkle.defaultConfig.friendly = {
 	markSharedIPAsMinor: true
 };
 
-Twinkle.getPref = function twinkleGetPref(name) {
+TwinkleGlobal.getPref = function twinkleGetPref(name) {
 	var result;
-	if (typeof Twinkle.prefs === 'object' && typeof Twinkle.prefs.twinkle === 'object') {
+	if (typeof TwinkleGlobal.prefs === 'object' && typeof TwinkleGlobal.prefs.twinkle === 'object') {
 		// look in Twinkle.prefs (twinkleoptions.js)
-		result = Twinkle.prefs.twinkle[name];
+		result = TwinkleGlobal.prefs.twinkle[name];
 	} else if (typeof window.TwinkleConfig === 'object') {
 		// look in TwinkleConfig
 		result = window.TwinkleConfig[name];
 	}
 
 	if (result === undefined) {
-		return Twinkle.defaultConfig.twinkle[name];
+		return TwinkleGlobal.defaultConfig.twinkle[name];
 	}
 	return result;
 };
 
-Twinkle.getFriendlyPref = function twinkleGetFriendlyPref(name) {
+TwinkleGlobal.getFriendlyPref = function twinkleGetFriendlyPref(name) {
 	var result;
-	if (typeof Twinkle.prefs === 'object' && typeof Twinkle.prefs.friendly === 'object') {
+	if (typeof TwinkleGlobal.prefs === 'object' && typeof TwinkleGlobal.prefs.friendly === 'object') {
 		// look in Twinkle.prefs (twinkleoptions.js)
-		result = Twinkle.prefs.friendly[name];
+		result = TwinkleGlobal.prefs.friendly[name];
 	} else if (typeof window.FriendlyConfig === 'object') {
 		// look in FriendlyConfig
 		result = window.FriendlyConfig[name];
 	}
 
 	if (result === undefined) {
-		return Twinkle.defaultConfig.friendly[name];
+		return TwinkleGlobal.defaultConfig.friendly[name];
 	}
 	return result;
 };
@@ -240,7 +240,7 @@ Twinkle.getFriendlyPref = function twinkleGetFriendlyPref(name) {
  *
  * @return Node -- the DOM node of the new item (a DIV element) or null
  */
-Twinkle.addPortlet = function(navigation, id, text, type, nextnodeid) {
+TwinkleGlobal.addPortlet = function(navigation, id, text, type, nextnodeid) {
 	// sanity checks, and get required DOM nodes
 	var root = document.getElementById(navigation);
 	if (!root) {
@@ -321,7 +321,7 @@ Twinkle.addPortlet = function(navigation, id, text, type, nextnodeid) {
 		$(a).click(function (e) {
 			e.preventDefault();
 
-			if (!Twinkle.userAuthorized) {
+			if (!TwinkleGlobal.userAuthorized) {
 				alert('Sorry, your account is too new to use Twinkle.');
 			}
 		});
@@ -351,11 +351,11 @@ Twinkle.addPortlet = function(navigation, id, text, type, nextnodeid) {
  * Builds a portlet menu if it doesn't exist yet, and add the portlet link.
  * @param task: Either a URL for the portlet link or a function to execute.
  */
-Twinkle.addPortletLink = function(task, text, id, tooltip) {
-	if (Twinkle.getPref('portletArea') !== null) {
-		Twinkle.addPortlet(Twinkle.getPref('portletArea'), Twinkle.getPref('portletId'), Twinkle.getPref('portletName'), Twinkle.getPref('portletType'), Twinkle.getPref('portletNext'));
+TwinkleGlobal.addPortletLink = function(task, text, id, tooltip) {
+	if (TwinkleGlobal.getPref('portletArea') !== null) {
+		TwinkleGlobal.addPortlet(TwinkleGlobal.getPref('portletArea'), TwinkleGlobal.getPref('portletId'), TwinkleGlobal.getPref('portletName'), TwinkleGlobal.getPref('portletType'), TwinkleGlobal.getPref('portletNext'));
 	}
-	var link = mw.util.addPortletLink(Twinkle.getPref('portletId'), typeof task === 'string' ? task : '#', text, id, tooltip);
+	var link = mw.util.addPortletLink(TwinkleGlobal.getPref('portletId'), typeof task === 'string' ? task : '#', text, id, tooltip);
 	$('.client-js .skin-vector #p-cactions').css('margin-right', 'initial');
 	if (typeof task === 'function') {
 		$(link).click(function (ev) {
@@ -383,13 +383,13 @@ mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.ge
 		mw.notify('Could not load twinkleoptions.js');
 	})
 	.always(function () {
-		$(Twinkle.load);
+		$(TwinkleGlobal.load);
 	});
 
 // Developers: you can import custom Twinkle modules here
 // For example, mw.loader.load(scriptpathbefore + "User:UncleDouggie/morebits-test.js" + scriptpathafter);
 
-Twinkle.load = function () {
+TwinkleGlobal.load = function () {
 	// Don't activate on special pages other than those on the whitelist so that
 	// they load faster, especially the watchlist.
 	var specialPageWhitelist = [ 'Contributions', 'DeletedContributions', 'Prefixindex' ];
@@ -402,7 +402,7 @@ Twinkle.load = function () {
 		$.client.profile().versionNumber < 9;
 
 	// Prevent users that are not autoconfirmed from loading Twinkle as well.
-	if (isSpecialPage || isOldIE || !Twinkle.userAuthorized) {
+	if (isSpecialPage || isOldIE || !TwinkleGlobal.userAuthorized) {
 		return;
 	}
 
@@ -416,46 +416,46 @@ Twinkle.load = function () {
 
 	// Load the modules in the order that the tabs should appear
 	// User/user talk-related
-	Twinkle.arv();
-	// Twinkle.warn();
+	TwinkleGlobal.arv();
+	// TwinkleGlobal.warn();
 	if (Morebits.userIsInGroup('sysop')) {
-		// Twinkle.block();
+		// TwinkleGlobal.block();
 	}
-	// Twinkle.welcome();
-	// Twinkle.shared();
-	// Twinkle.talkback();
+	// TwinkleGlobal.welcome();
+	// TwinkleGlobal.shared();
+	// TwinkleGlobal.talkback();
 	// Deletion
-	// Twinkle.speedy();
-	// Twinkle.prod();
-	// Twinkle.xfd();
-	// Twinkle.image();
+	// TwinkleGlobal.speedy();
+	// TwinkleGlobal.prod();
+	// TwinkleGlobal.xfd();
+	// TwinkleGlobal.image();
 	// Maintenance
-	// Twinkle.protect();
-	// Twinkle.tag();
+	// TwinkleGlobal.protect();
+	// TwinkleGlobal.tag();
 	// Misc. ones last
-	Twinkle.diff();
-	// Twinkle.unlink();
-	Twinkle.config.init();
-	Twinkle.fluff.init();
+	TwinkleGlobal.diff();
+	// TwinkleGlobal.unlink();
+	TwinkleGlobal.config.init();
+	TwinkleGlobal.fluff.init();
 	if (Morebits.userIsInGroup('sysop')) {
-		// Twinkle.deprod();
-		// Twinkle.batchdelete();
-		// Twinkle.batchprotect();
-		// Twinkle.batchundelete();
+		// TwinkleGlobal.deprod();
+		// TwinkleGlobal.batchdelete();
+		// TwinkleGlobal.batchprotect();
+		// TwinkleGlobal.batchundelete();
 	}
 
-	Twinkle.addPortletLink(Twinkle.getPref('configPage'), 'Pref', 'tw-config', 'Set Twinkle preferences');
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.getPref('configPage'), 'Pref', 'tw-config', 'Set Twinkle preferences');
 
 	// Run the initialization callbacks for any custom modules
-	Twinkle.initCallbacks.forEach(function (func) {
+	TwinkleGlobal.initCallbacks.forEach(function (func) {
 		func();
 	});
-	Twinkle.addInitCallback = function (func) {
+	TwinkleGlobal.addInitCallback = function (func) {
 		func();
 	};
 
 	// Increases text size in Twinkle dialogs, if so configured
-	if (Twinkle.getPref('dialogLargeFont')) {
+	if (TwinkleGlobal.getPref('dialogLargeFont')) {
 		mw.util.addCSS('.morebits-dialog-content, .morebits-dialog-footerlinks { font-size: 100% !important; } ' +
 			'.morebits-dialog input, .morebits-dialog select, .morebits-dialog-content button { font-size: inherit !important; }');
 	}

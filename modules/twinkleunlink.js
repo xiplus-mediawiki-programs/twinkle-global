@@ -13,15 +13,15 @@
  * Config directives in:   TwinkleConfig
  */
 
-Twinkle.unlink = function twinkleunlink() {
+TwinkleGlobal.unlink = function twinkleunlink() {
 	if (mw.config.get('wgNamespaceNumber') < 0 || mw.config.get('wgPageName') === 'Wikipedia:Sandbox' ||
 		(!Morebits.userIsInGroup('extendedconfirmed') && !Morebits.userIsInGroup('sysop'))) {
 		return;
 	}
-	Twinkle.addPortletLink(Twinkle.unlink.callback, 'Unlink', 'tw-unlink', 'Unlink backlinks');
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.unlink.callback, 'Unlink', 'tw-unlink', 'Unlink backlinks');
 };
 
-Twinkle.unlink.getChecked2 = function twinkleunlinkGetChecked2(nodelist) {
+TwinkleGlobal.unlink.getChecked2 = function twinkleunlinkGetChecked2(nodelist) {
 	if (!(nodelist instanceof NodeList) && !(nodelist instanceof HTMLCollection)) {
 		return nodelist.checked ? [ nodelist.values ] : [];
 	}
@@ -35,13 +35,13 @@ Twinkle.unlink.getChecked2 = function twinkleunlinkGetChecked2(nodelist) {
 };
 
 // the parameter is used when invoking unlink from admin speedy
-Twinkle.unlink.callback = function(presetReason) {
+TwinkleGlobal.unlink.callback = function(presetReason) {
 	var Window = new Morebits.simpleWindow(600, 440);
 	Window.setTitle('Unlink backlinks' + (mw.config.get('wgNamespaceNumber') === 6 ? ' and file usages' : ''));
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#unlink');
 
-	var form = new Morebits.quickForm(Twinkle.unlink.callback.evaluate);
+	var form = new Morebits.quickForm(TwinkleGlobal.unlink.callback.evaluate);
 
 	// prepend some basic documentation
 	var node1 = Morebits.htmlNode('code', '[[' + Morebits.pageNameNorm + '|link text]]');
@@ -79,8 +79,8 @@ Twinkle.unlink.callback = function(presetReason) {
 			'iutitle': mw.config.get('wgPageName'),
 			'bllimit': 'max', // 500 is max for normal users, 5000 for bots and sysops
 			'iulimit': 'max', // 500 is max for normal users, 5000 for bots and sysops
-			'blnamespace': Twinkle.getPref('unlinkNamespaces'),
-			'iunamespace': Twinkle.getPref('unlinkNamespaces'),
+			'blnamespace': TwinkleGlobal.getPref('unlinkNamespaces'),
+			'iunamespace': TwinkleGlobal.getPref('unlinkNamespaces'),
 			'rawcontinue': true
 		};
 	} else {
@@ -90,11 +90,11 @@ Twinkle.unlink.callback = function(presetReason) {
 			'bltitle': mw.config.get('wgPageName'),
 			'blfilterredir': 'nonredirects',
 			'bllimit': 'max', // 500 is max for normal users, 5000 for bots and sysops
-			'blnamespace': Twinkle.getPref('unlinkNamespaces'),
+			'blnamespace': TwinkleGlobal.getPref('unlinkNamespaces'),
 			'rawcontinue': true
 		};
 	}
-	var wikipedia_api = new Morebits.wiki.api('Grabbing backlinks', query, Twinkle.unlink.callbacks.display.backlinks);
+	var wikipedia_api = new Morebits.wiki.api('Grabbing backlinks', query, TwinkleGlobal.unlink.callbacks.display.backlinks);
 	wikipedia_api.params = { form: form, Window: Window, image: mw.config.get('wgNamespaceNumber') === 6 };
 	wikipedia_api.post();
 
@@ -106,7 +106,7 @@ Twinkle.unlink.callback = function(presetReason) {
 	Window.display();
 };
 
-Twinkle.unlink.callback.evaluate = function twinkleunlinkCallbackEvaluate(event) {
+TwinkleGlobal.unlink.callback.evaluate = function twinkleunlinkCallbackEvaluate(event) {
 	var reason = event.target.reason.value;
 	if (!reason) {
 		alert('You must specify a reason for unlinking.');
@@ -115,10 +115,10 @@ Twinkle.unlink.callback.evaluate = function twinkleunlinkCallbackEvaluate(event)
 
 	var backlinks = [], imageusage = [];
 	if (event.target.backlinks) {
-		backlinks = Twinkle.unlink.getChecked2(event.target.backlinks);
+		backlinks = TwinkleGlobal.unlink.getChecked2(event.target.backlinks);
 	}
 	if (event.target.imageusage) {
-		imageusage = Twinkle.unlink.getChecked2(event.target.imageusage);
+		imageusage = TwinkleGlobal.unlink.getChecked2(event.target.imageusage);
 	}
 
 	Morebits.simpleWindow.setButtonsEnabled(false);
@@ -137,11 +137,11 @@ Twinkle.unlink.callback.evaluate = function twinkleunlinkCallbackEvaluate(event)
 		innerParams.doBacklinks = backlinks && backlinks.indexOf(pageName) !== -1;
 		innerParams.doImageusage = imageusage && imageusage.indexOf(pageName) !== -1;
 		wikipedia_page.setCallbackParameters(innerParams);
-		wikipedia_page.load(Twinkle.unlink.callbacks.unlinkBacklinks);
+		wikipedia_page.load(TwinkleGlobal.unlink.callbacks.unlinkBacklinks);
 	});
 };
 
-Twinkle.unlink.callbacks = {
+TwinkleGlobal.unlink.callbacks = {
 	display: {
 		backlinks: function twinkleunlinkCallbackDisplayBacklinks(apiobj) {
 			var xmlDoc = apiobj.responseXML;
@@ -160,7 +160,7 @@ Twinkle.unlink.callbacks = {
 				} else {
 					apiobj.params.form.append({ type: 'header', label: 'File usage' });
 					namespaces = [];
-					$.each(Twinkle.getPref('unlinkNamespaces'), function(k, v) {
+					$.each(TwinkleGlobal.getPref('unlinkNamespaces'), function(k, v) {
 						namespaces.push(v === '0' ? '(Article)' : mw.config.get('wgFormattedNamespaces')[v]);
 					});
 					apiobj.params.form.append({
@@ -206,7 +206,7 @@ Twinkle.unlink.callbacks = {
 				}
 				apiobj.params.form.append({ type: 'header', label: 'Backlinks' });
 				namespaces = [];
-				$.each(Twinkle.getPref('unlinkNamespaces'), function(k, v) {
+				$.each(TwinkleGlobal.getPref('unlinkNamespaces'), function(k, v) {
 					namespaces.push(v === '0' ? '(Article)' : mw.config.get('wgFormattedNamespaces')[v]);
 				});
 				apiobj.params.form.append({
@@ -298,7 +298,7 @@ Twinkle.unlink.callbacks = {
 		}
 
 		pageobj.setPageText(text);
-		pageobj.setEditSummary(summaryText + ' "' + Morebits.pageNameNorm + '": ' + params.reason + '.' + Twinkle.getPref('summaryAd'));
+		pageobj.setEditSummary(summaryText + ' "' + Morebits.pageNameNorm + '": ' + params.reason + '.' + TwinkleGlobal.getPref('summaryAd'));
 		pageobj.setCreateOption('nocreate');
 		pageobj.save(params.unlinker.workerSuccess, params.unlinker.workerFailure);
 	}

@@ -13,22 +13,22 @@
  * Config directives in:   FriendlyConfig
  */
 
-Twinkle.shared = function friendlyshared() {
+TwinkleGlobal.shared = function friendlyshared() {
 	if (mw.config.get('wgNamespaceNumber') === 3 && mw.util.isIPAddress(mw.config.get('wgTitle'))) {
 		var username = mw.config.get('wgRelevantUserName');
-		Twinkle.addPortletLink(function() {
-			Twinkle.shared.callback(username);
+		TwinkleGlobal.addPortletLink(function() {
+			TwinkleGlobal.shared.callback(username);
 		}, 'Shared IP', 'friendly-shared', 'Shared IP tagging');
 	}
 };
 
-Twinkle.shared.callback = function friendlysharedCallback() {
+TwinkleGlobal.shared.callback = function friendlysharedCallback() {
 	var Window = new Morebits.simpleWindow(600, 420);
 	Window.setTitle('Shared IP address tagging');
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#shared');
 
-	var form = new Morebits.quickForm(Twinkle.shared.callback.evaluate);
+	var form = new Morebits.quickForm(TwinkleGlobal.shared.callback.evaluate);
 
 	var div = form.append({
 		type: 'div',
@@ -37,9 +37,9 @@ Twinkle.shared.callback = function friendlysharedCallback() {
 	}
 	);
 	div.append({ type: 'header', label: 'Shared IP address templates' });
-	div.append({ type: 'radio', name: 'shared', list: Twinkle.shared.standardList,
+	div.append({ type: 'radio', name: 'shared', list: TwinkleGlobal.shared.standardList,
 		event: function(e) {
-			Twinkle.shared.callback.change_shared(e);
+			TwinkleGlobal.shared.callback.change_shared(e);
 			e.stopPropagation();
 		}
 	});
@@ -77,7 +77,7 @@ Twinkle.shared.callback = function friendlysharedCallback() {
 	Window.display();
 };
 
-Twinkle.shared.standardList = [
+TwinkleGlobal.shared.standardList = [
 	{
 		label: '{{Shared IP}}: standard shared IP address template',
 		value: 'Shared IP',
@@ -121,23 +121,23 @@ Twinkle.shared.standardList = [
 	}
 ];
 
-Twinkle.shared.callback.change_shared = function friendlysharedCallbackChangeShared(e) {
+TwinkleGlobal.shared.callback.change_shared = function friendlysharedCallbackChangeShared(e) {
 	e.target.form.contact.disabled = e.target.value !== 'Shared IP edu';  // only supported by {{Shared IP edu}}
 	e.target.form.organization.disabled = false;
 	e.target.form.host.disabled = e.target.value === 'Whois';  // host= not supported by {{Whois}}
 };
 
-Twinkle.shared.callbacks = {
+TwinkleGlobal.shared.callbacks = {
 	main: function(pageobj) {
 		var params = pageobj.getCallbackParameters();
 		var pageText = pageobj.getPageText();
 		var found = false;
 		var text = '{{';
 
-		for (var i = 0; i < Twinkle.shared.standardList.length; i++) {
-			var tagRe = new RegExp('(\\{\\{' + Twinkle.shared.standardList[i].value + '(\\||\\}\\}))', 'im');
+		for (var i = 0; i < TwinkleGlobal.shared.standardList.length; i++) {
+			var tagRe = new RegExp('(\\{\\{' + TwinkleGlobal.shared.standardList[i].value + '(\\||\\}\\}))', 'im');
 			if (tagRe.exec(pageText)) {
-				Morebits.status.warn('Info', 'Found {{' + Twinkle.shared.standardList[i].value + '}} on the user\'s talk page already...aborting');
+				Morebits.status.warn('Info', 'Found {{' + TwinkleGlobal.shared.standardList[i].value + '}} on the user\'s talk page already...aborting');
 				found = true;
 			}
 		}
@@ -158,14 +158,14 @@ Twinkle.shared.callbacks = {
 
 		var summaryText = 'Added {{[[Template:' + params.value + '|' + params.value + ']]}} template.';
 		pageobj.setPageText(text + pageText);
-		pageobj.setEditSummary(summaryText + Twinkle.getPref('summaryAd'));
-		pageobj.setMinorEdit(Twinkle.getFriendlyPref('markSharedIPAsMinor'));
+		pageobj.setEditSummary(summaryText + TwinkleGlobal.getPref('summaryAd'));
+		pageobj.setMinorEdit(TwinkleGlobal.getFriendlyPref('markSharedIPAsMinor'));
 		pageobj.setCreateOption('recreate');
 		pageobj.save();
 	}
 };
 
-Twinkle.shared.callback.evaluate = function friendlysharedCallbackEvaluate(e) {
+TwinkleGlobal.shared.callback.evaluate = function friendlysharedCallbackEvaluate(e) {
 	var shared = e.target.getChecked('shared');
 	if (!shared || shared.length <= 0) {
 		alert('You must select a shared IP address template to use!');
@@ -195,7 +195,7 @@ Twinkle.shared.callback.evaluate = function friendlysharedCallbackEvaluate(e) {
 	var wikipedia_page = new Morebits.wiki.page(mw.config.get('wgPageName'), 'User talk page modification');
 	wikipedia_page.setFollowRedirect(true);
 	wikipedia_page.setCallbackParameters(params);
-	wikipedia_page.load(Twinkle.shared.callbacks.main);
+	wikipedia_page.load(TwinkleGlobal.shared.callbacks.main);
 };
 })(jQuery);
 

@@ -13,7 +13,7 @@
  * Config directives in:   TwinkleConfig
  */
 
-Twinkle.arv = function twinklearv() {
+TwinkleGlobal.arv = function twinklearv() {
 	var username = mw.config.get('wgRelevantUserName');
 	if (!username || username === mw.config.get('wgUserName')) {
 		return;
@@ -21,12 +21,12 @@ Twinkle.arv = function twinklearv() {
 
 	var title = mw.util.isIPAddress(username) ? 'Report IP to administrators' : 'Report user to administrators';
 
-	Twinkle.addPortletLink(function() {
-		Twinkle.arv.callback(username);
+	TwinkleGlobal.addPortletLink(function() {
+		TwinkleGlobal.arv.callback(username);
 	}, 'ARV', 'tw-arv', title);
 };
 
-Twinkle.arv.callback = function (uid) {
+TwinkleGlobal.arv.callback = function (uid) {
 	var Window = new Morebits.simpleWindow(600, 500);
 	Window.setTitle('Advance Reporting and Vetting'); // Backronym
 	Window.setScriptName('Twinkle');
@@ -36,12 +36,12 @@ Twinkle.arv.callback = function (uid) {
 		Window.addFooterLink('Global locks', 'm:Global locks');
 	}
 
-	var form = new Morebits.quickForm(Twinkle.arv.callback.evaluate);
+	var form = new Morebits.quickForm(TwinkleGlobal.arv.callback.evaluate);
 	var categories = form.append({
 		type: 'select',
 		name: 'category',
 		label: 'Select report type: ',
-		event: Twinkle.arv.callback.changeCategory
+		event: TwinkleGlobal.arv.callback.changeCategory
 	});
 	categories.append({
 		type: 'option',
@@ -70,7 +70,7 @@ Twinkle.arv.callback = function (uid) {
 	result.category.dispatchEvent(evt);
 };
 
-Twinkle.arv.callback.changeCategory = function (e) {
+TwinkleGlobal.arv.callback.changeCategory = function (e) {
 	var value = e.target.value;
 	var root = e.target.form;
 	var old_area = Morebits.quickForm.getElements(root, 'work_area')[0];
@@ -124,7 +124,7 @@ Twinkle.arv.callback.changeCategory = function (e) {
 	}
 };
 
-Twinkle.arv.callback.evaluate = function(e) {
+TwinkleGlobal.arv.callback.evaluate = function(e) {
 	var form = e.target;
 	var reason = '';
 	var comment = '';
@@ -197,7 +197,7 @@ Twinkle.arv.callback.evaluate = function(e) {
 
 			var statusIndicator = new Morebits.status('Reporting to Steward requests/Global', 'Fetching page...');
 
-			var metaapi = Twinkle.getPref('metaApi');
+			var metaapi = TwinkleGlobal.getPref('metaApi');
 			metaapi.edit('Steward requests/Global', function(revision) {
 				var text = revision.content;
 				if (new RegExp('{{\\s*([Ll]uxotool|[Ll]ock[Hh]ide|[Ll][Hh])\\s*\\|\\s*(1=)?\\s*' + RegExp.escape(uid, true) + '\\s*(\\||}})').test(text)) {
