@@ -21,7 +21,7 @@ TwinkleGlobal.batchundelete = function twinklebatchundelete() {
 		return;
 	}
 	if (Morebits.userIsInGroup('sysop')) {
-		TwinkleGlobal.addPortletLink(TwinkleGlobal.batchundelete.callback, 'Und-batch', 'tw-batch-undel', "Undelete 'em all");
+		TwinkleGlobal.addPortletLink(TwinkleGlobal.batchundelete.callback, 'Und-batch', 'twg-batch-undel', "Undelete 'em all");
 	}
 };
 

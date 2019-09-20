@@ -170,7 +170,7 @@ mw.loader.using('jquery.ui.dialog', function() {
 
 TwinkleGlobal.morebitsTestInit = function () {
 	if (mw.config.get('wgAction') === 'view' && mw.config.get('skin') === 'vector' && mw.config.get('wgNamespaceNumber') >= 0) {
-		TwinkleGlobal.addPortlet('javascript:Twinkle.morebitsTest.launchDialog(Twinkle.morebitsTest.$runTests)', 'Test', 'tw-test', 'Test morebits.js', '');
+		TwinkleGlobal.addPortlet('javascript:Twinkle.morebitsTest.launchDialog(Twinkle.morebitsTest.$runTests)', 'Test', 'twg-test', 'Test morebits.js', '');
 	}
 };
 

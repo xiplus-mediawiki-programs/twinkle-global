@@ -17,7 +17,7 @@ var api = new mw.Api(), relevantUserName;
 TwinkleGlobal.block = function twinkleblock() {
 	// should show on Contributions pages, anywhere there's a relevant user
 	if (Morebits.userIsInGroup('sysop') && mw.config.get('wgRelevantUserName')) {
-		TwinkleGlobal.addPortletLink(TwinkleGlobal.block.callback, 'Block', 'tw-block', 'Block relevant user');
+		TwinkleGlobal.addPortletLink(TwinkleGlobal.block.callback, 'Block', 'twg-block', 'Block relevant user');
 	}
 };
 

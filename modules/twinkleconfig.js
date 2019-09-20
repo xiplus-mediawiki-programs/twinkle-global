@@ -953,7 +953,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 		toctoggle.appendChild(document.createTextNode('['));
 		var toctogglelink = document.createElement('a');
 		toctogglelink.className = 'internal';
-		toctogglelink.setAttribute('href', '#tw-tocshowhide');
+		toctogglelink.setAttribute('href', '#twg-tocshowhide');
 		toctogglelink.textContent = 'hide';
 		toctoggle.appendChild(toctogglelink);
 		toctoggle.appendChild(document.createTextNode(']'));
@@ -1199,7 +1199,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 				// add reset link (custom lists don't need this, as their config value isn't displayed on the form)
 				if (pref.type !== 'customList') {
 					var resetlink = document.createElement('a');
-					resetlink.setAttribute('href', '#tw-reset');
+					resetlink.setAttribute('href', '#twg-reset');
 					resetlink.setAttribute('id', 'twinkle-config-reset-' + pref.name);
 					resetlink.addEventListener('click', TwinkleGlobal.config.resetPrefLink, false);
 					if (resetlink.style.styleFloat) {  // IE (inc. IE9)
@@ -1233,7 +1233,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 		footerspan.style.marginLeft = '2.4em';
 		footerspan.style.fontSize = '90%';
 		var footera = document.createElement('a');
-		footera.setAttribute('href', '#tw-reset-all');
+		footera.setAttribute('href', '#twg-reset-all');
 		footera.setAttribute('id', 'twinkle-config-resetall');
 		footera.addEventListener('click', TwinkleGlobal.config.resetAllPrefs, false);
 		footera.appendChild(document.createTextNode('Restore defaults'));

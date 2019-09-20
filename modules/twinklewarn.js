@@ -16,7 +16,7 @@
 
 TwinkleGlobal.warn = function twinklewarn() {
 	if (mw.config.get('wgRelevantUserName')) {
-		TwinkleGlobal.addPortletLink(TwinkleGlobal.warn.callback, 'Warn', 'tw-warn', 'Warn/notify user');
+		TwinkleGlobal.addPortletLink(TwinkleGlobal.warn.callback, 'Warn', 'twg-warn', 'Warn/notify user');
 		if (TwinkleGlobal.getPref('autoMenuAfterRollback') && mw.config.get('wgNamespaceNumber') === 3 &&
 				mw.util.getParamValue('vanarticle') && !mw.util.getParamValue('friendlywelcome') && !mw.util.getParamValue('noautowarn')) {
 			TwinkleGlobal.warn.callback();
@@ -1153,7 +1153,7 @@ TwinkleGlobal.warn.callback.change_category = function twinklewarnCallbackChange
 	Morebits.quickForm.setElementTooltipVisibility(e.target.root.article, true);
 	Morebits.quickForm.resetElementLabel(e.target.root.article);
 	// hide the big red notice
-	$('#tw-warn-red-notice').remove();
+	$('#twg-warn-red-notice').remove();
 	// Trigger custom label/change on main category change
 	TwinkleGlobal.warn.callback.change_subcategory(e);
 
@@ -1222,16 +1222,16 @@ TwinkleGlobal.warn.callback.change_subcategory = function twinklewarnCallbackCha
 	}
 
 	// add big red notice, warning users about how to use {{uw-[coi-]username}} appropriately
-	$('#tw-warn-red-notice').remove();
+	$('#twg-warn-red-notice').remove();
 
 	var $redWarning;
 	if (value === 'uw-username') {
-		$redWarning = $("<div style='color: red;' id='tw-warn-red-notice'>{{uw-username}} should <b>not</b> be used for <b>blatant</b> username policy violations. " +
+		$redWarning = $("<div style='color: red;' id='twg-warn-red-notice'>{{uw-username}} should <b>not</b> be used for <b>blatant</b> username policy violations. " +
 			"Blatant violations should be reported directly to UAA (via Twinkle's ARV tab). " +
 			'{{uw-username}} should only be used in edge cases in order to engage in discussion with the user.</div>');
 		$redWarning.insertAfter(Morebits.quickForm.getElementLabelObject(e.target.form.reasonGroup));
 	} else if (value === 'uw-coi-username') {
-		$redWarning = $("<div style='color: red;' id='tw-warn-red-notice'>{{uw-coi-username}} should <b>not</b> be used for <b>blatant</b> username policy violations. " +
+		$redWarning = $("<div style='color: red;' id='twg-warn-red-notice'>{{uw-coi-username}} should <b>not</b> be used for <b>blatant</b> username policy violations. " +
 			"Blatant violations should be reported directly to UAA (via Twinkle's ARV tab). " +
 			'{{uw-coi-username}} should only be used in edge cases in order to engage in discussion with the user.</div>');
 		$redWarning.insertAfter(Morebits.quickForm.getElementLabelObject(e.target.form.reasonGroup));

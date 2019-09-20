@@ -20,7 +20,7 @@ TwinkleGlobal.batchdelete = function twinklebatchdelete() {
 			mw.config.get('wgCanonicalSpecialPageName') === 'Prefixindex'
 		)
 	) {
-		TwinkleGlobal.addPortletLink(TwinkleGlobal.batchdelete.callback, 'D-batch', 'tw-batch', 'Delete pages found in this category/on this page');
+		TwinkleGlobal.addPortletLink(TwinkleGlobal.batchdelete.callback, 'D-batch', 'twg-batch', 'Delete pages found in this category/on this page');
 	}
 };
 
@@ -225,7 +225,7 @@ TwinkleGlobal.batchdelete.callback = function twinklebatchdeleteCallback() {
 		form.append({
 			type: 'checkbox',
 			name: 'pages',
-			id: 'tw-dbatch-pages',
+			id: 'twg-dbatch-pages',
 			list: $.map(TwinkleGlobal.batchdelete.pages, function (e) {
 				return e;
 			})
@@ -247,7 +247,7 @@ TwinkleGlobal.batchdelete.callback = function twinklebatchdeleteCallback() {
 
 function generateArrowLinks (checkbox) {
 	var link = Morebits.htmlNode('a', ' >');
-	link.setAttribute('class', 'tw-dbatch-page-link');
+	link.setAttribute('class', 'twg-dbatch-page-link');
 	link.setAttribute('href', mw.util.getUrl(checkbox.value));
 	link.setAttribute('target', '_blank');
 	checkbox.nextElementSibling.append(link);
@@ -268,7 +268,7 @@ TwinkleGlobal.batchdelete.generateNewPageList = function(form) {
 	return new Morebits.quickForm.element({
 		type: 'checkbox',
 		name: 'pages',
-		id: 'tw-dbatch-pages',
+		id: 'twg-dbatch-pages',
 		list: $.map(TwinkleGlobal.batchdelete.pages, function (e) {
 			return e;
 		})
@@ -298,7 +298,7 @@ TwinkleGlobal.batchdelete.callback.toggleSubpages = function twDbatchToggleSubpa
 			});
 
 			newPageList = TwinkleGlobal.batchdelete.generateNewPageList(form);
-			$('#tw-dbatch-pages').replaceWith(newPageList);
+			$('#twg-dbatch-pages').replaceWith(newPageList);
 
 			pageCheckboxes = Morebits.quickForm.getElements(newPageList, 'pages') || [];
 			pageCheckboxes.forEach(generateArrowLinks);
@@ -395,7 +395,7 @@ TwinkleGlobal.batchdelete.callback.toggleSubpages = function twDbatchToggleSubpa
 			// List 'em on the interface
 
 			newPageList = TwinkleGlobal.batchdelete.generateNewPageList(form);
-			$('#tw-dbatch-pages').replaceWith(newPageList);
+			$('#twg-dbatch-pages').replaceWith(newPageList);
 
 			pageCheckboxes = Morebits.quickForm.getElements(newPageList, 'pages') || [];
 			pageCheckboxes.forEach(generateArrowLinks);
@@ -425,7 +425,7 @@ TwinkleGlobal.batchdelete.callback.toggleSubpages = function twDbatchToggleSubpa
 		});
 
 		newPageList = TwinkleGlobal.batchdelete.generateNewPageList(form);
-		$('#tw-dbatch-pages').replaceWith(newPageList);
+		$('#twg-dbatch-pages').replaceWith(newPageList);
 
 		pageCheckboxes = Morebits.quickForm.getElements(newPageList, 'pages') || [];
 		pageCheckboxes.forEach(generateArrowLinks);

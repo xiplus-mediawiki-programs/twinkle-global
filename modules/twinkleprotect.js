@@ -20,7 +20,7 @@ TwinkleGlobal.protect = function twinkleprotect() {
 		return;
 	}
 
-	TwinkleGlobal.addPortletLink(TwinkleGlobal.protect.callback, Morebits.userIsInGroup('sysop') ? 'PP' : 'RPP', 'tw-rpp',
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.protect.callback, Morebits.userIsInGroup('sysop') ? 'PP' : 'RPP', 'twg-rpp',
 		Morebits.userIsInGroup('sysop') ? 'Protect page' : 'Request page protection');
 };
 

@@ -462,7 +462,7 @@ TwinkleGlobal.load = function () {
 		// TwinkleGlobal.batchundelete();
 	}
 
-	TwinkleGlobal.addPortletLink(TwinkleGlobal.getPref('configPage'), 'Pref', 'tw-config', 'Set Twinkle preferences');
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.getPref('configPage'), 'Pref', 'twg-config', 'Set Twinkle preferences');
 
 	// Run the initialization callbacks for any custom modules
 	TwinkleGlobal.initCallbacks.forEach(function (func) {

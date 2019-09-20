@@ -21,7 +21,7 @@ TwinkleGlobal.xfd = function twinklexfd() {
 	if (mw.config.get('wgNamespaceNumber') < 0 || !mw.config.get('wgArticleId') || (mw.config.get('wgNamespaceNumber') === 6 && document.getElementById('mw-sharedupload'))) {
 		return;
 	}
-	TwinkleGlobal.addPortletLink(TwinkleGlobal.xfd.callback, 'XFD', 'tw-xfd', 'Start a deletion discussion');
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.xfd.callback, 'XFD', 'twg-xfd', 'Start a deletion discussion');
 };
 
 TwinkleGlobal.xfd.num2order = function twinklexfdNum2order(num) {

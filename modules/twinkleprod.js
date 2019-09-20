@@ -20,7 +20,7 @@ TwinkleGlobal.prod = function twinkleprod() {
 		return;
 	}
 
-	TwinkleGlobal.addPortletLink(TwinkleGlobal.prod.callback, 'PROD', 'tw-prod', 'Propose deletion via WP:PROD');
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.prod.callback, 'PROD', 'twg-prod', 'Propose deletion via WP:PROD');
 };
 
 // Used in edit summaries, for comparisons, etc.

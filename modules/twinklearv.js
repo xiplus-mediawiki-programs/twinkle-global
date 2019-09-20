@@ -23,7 +23,7 @@ TwinkleGlobal.arv = function twinklearv() {
 
 	TwinkleGlobal.addPortletLink(function() {
 		TwinkleGlobal.arv.callback(username);
-	}, 'ARV', 'tw-arv', title);
+	}, 'ARV', 'twg-arv', title);
 };
 
 TwinkleGlobal.arv.callback = function (uid) {

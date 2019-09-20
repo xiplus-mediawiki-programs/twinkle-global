@@ -21,7 +21,7 @@ TwinkleGlobal.deprod = function() {
 	) {
 		return;
 	}
-	TwinkleGlobal.addPortletLink(TwinkleGlobal.deprod.callback, 'Deprod', 'tw-deprod', 'Delete prod pages found in this category');
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.deprod.callback, 'Deprod', 'twg-deprod', 'Delete prod pages found in this category');
 };
 
 var concerns = {};

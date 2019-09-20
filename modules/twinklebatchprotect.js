@@ -19,7 +19,7 @@ TwinkleGlobal.batchprotect = function twinklebatchprotect() {
 	if (Morebits.userIsInGroup('sysop') && ((mw.config.get('wgArticleId') > 0 && (mw.config.get('wgNamespaceNumber') === 2 ||
 		mw.config.get('wgNamespaceNumber') === 4)) || mw.config.get('wgNamespaceNumber') === 14 ||
 		mw.config.get('wgCanonicalSpecialPageName') === 'Prefixindex')) {
-		TwinkleGlobal.addPortletLink(TwinkleGlobal.batchprotect.callback, 'P-batch', 'tw-pbatch', 'Protect pages linked from this page');
+		TwinkleGlobal.addPortletLink(TwinkleGlobal.batchprotect.callback, 'P-batch', 'twg-pbatch', 'Protect pages linked from this page');
 	}
 };
 

@@ -85,7 +85,7 @@ TwinkleGlobal.fluff = {
 		// Don't show if there's a single revision or weird diff (cur on latest)
 		if (mw.config.get('wgDiffOldId') && (mw.config.get('wgDiffOldId') !== mw.config.get('wgDiffNewId'))) {
 			var revertToRevision = document.createElement('div');
-			revertToRevision.setAttribute('id', 'tw-revert-to-orevision');
+			revertToRevision.setAttribute('id', 'twg-revert-to-orevision');
 			revertToRevision.style.fontWeight = 'bold';
 
 			var revertToRevisionLink = TwinkleGlobal.fluff.buildLink('SaddleBrown', 'restore this version');
@@ -105,7 +105,7 @@ TwinkleGlobal.fluff = {
 		if (document.getElementById('differences-nextlink')) {
 			// Not latest revision
 			var revertToRevisionN = document.createElement('div');
-			revertToRevisionN.setAttribute('id', 'tw-revert-to-nrevision');
+			revertToRevisionN.setAttribute('id', 'twg-revert-to-nrevision');
 			revertToRevisionN.style.fontWeight = 'bold';
 
 			var revertToRevisionNLink = TwinkleGlobal.fluff.buildLink('SaddleBrown', 'restore this version');
@@ -120,7 +120,7 @@ TwinkleGlobal.fluff = {
 			var vandal = $('#mw-diff-ntitle2').find('a').first().text();
 
 			var revertNode = document.createElement('div');
-			revertNode.setAttribute('id', 'tw-revert');
+			revertNode.setAttribute('id', 'twg-revert');
 
 			var agfNode = document.createElement('strong');
 			var vandNode = document.createElement('strong');
@@ -159,7 +159,7 @@ TwinkleGlobal.fluff = {
 
 	oldid: function() { // Add a [restore this revision] link on old revisions
 		var revertToRevision = document.createElement('div');
-		revertToRevision.setAttribute('id', 'tw-revert-to-orevision');
+		revertToRevision.setAttribute('id', 'twg-revert-to-orevision');
 		revertToRevision.style.fontWeight = 'bold';
 
 		var revertToRevisionLink = TwinkleGlobal.fluff.buildLink('SaddleBrown', 'restore this version');

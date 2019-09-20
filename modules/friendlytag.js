@@ -253,7 +253,7 @@ TwinkleGlobal.tag.callback = function friendlytagCallback() {
 
 		// Add status text node after Submit button
 		var statusNode = document.createElement('small');
-		statusNode.id = 'tw-tag-status';
+		statusNode.id = 'twg-tag-status';
 		TwinkleGlobal.tag.status = {
 			// initial state; defined like this because these need to be available for reference
 			// in the click event handler
@@ -637,7 +637,7 @@ TwinkleGlobal.tag.updateSortOrder = function(e) {
 	}
 
 	// tally tags added/removed, update statusNode text
-	var statusNode = document.getElementById('tw-tag-status');
+	var statusNode = document.getElementById('twg-tag-status');
 	$('[name=articleTags], [name=alreadyPresentArticleTags]').click(function() {
 		if (this.name === 'articleTags') {
 			if (this.checked) {

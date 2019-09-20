@@ -18,7 +18,7 @@ TwinkleGlobal.unlink = function twinkleunlink() {
 		(!Morebits.userIsInGroup('extendedconfirmed') && !Morebits.userIsInGroup('sysop'))) {
 		return;
 	}
-	TwinkleGlobal.addPortletLink(TwinkleGlobal.unlink.callback, 'Unlink', 'tw-unlink', 'Unlink backlinks');
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.unlink.callback, 'Unlink', 'twg-unlink', 'Unlink backlinks');
 };
 
 TwinkleGlobal.unlink.getChecked2 = function twinkleunlinkGetChecked2(nodelist) {
