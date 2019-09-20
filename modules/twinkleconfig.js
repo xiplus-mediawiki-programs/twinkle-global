@@ -1249,7 +1249,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 				box.appendChild(document.createTextNode('You can customize Twinkle to suit your preferences by using the '));
 			}
 			link = document.createElement('a');
-			link.setAttribute('href', mw.util.getUrl(mw.config.get('wgFormattedNamespaces')[mw.config.get('wgNamespaceIds').project] + ':Twinkle/Preferences'));
+			link.setAttribute('href', TwinkleGlobal.getPref('configPage'));
 			link.appendChild(document.createTextNode('Twinkle preferences panel'));
 			box.appendChild(link);
 			box.appendChild(document.createTextNode(', or by editing this page.'));
