@@ -99,11 +99,15 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 				list: [
 					{
 						label: 'Long-term abuse',
-						value: 'lta'
+						value: 'Long-term abuse'
 					},
 					{
 						label: 'Cross-wiki abuse',
-						value: 'xwiki'
+						value: 'Cross-wiki abuse'
+					},
+					{
+						label: 'Abusive username',
+						value: 'Abusive username'
 					}
 				]
 			});
@@ -176,12 +180,8 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 
 			types = types.map(function(v) {
 				switch (v) {
-					case 'lta':
-						return 'Long-term abuse';
-					case 'xwiki':
-						return 'Cross-wiki abuse';
 					default:
-						return '';
+						return v;
 				}
 			}).join('. ');
 
