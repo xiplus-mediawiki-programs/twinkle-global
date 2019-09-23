@@ -217,7 +217,7 @@ TwinkleGlobal.config.sections = [
 			} */
 
 			{
-				name: 'customSRGReasomList',
+				name: 'customSRGReasonList',
 				label: 'Custom SRG report reason',
 				type: 'customList',
 				customListValueTitle: 'Reason used in the report',

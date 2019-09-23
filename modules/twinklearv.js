@@ -109,7 +109,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 						label: 'Abusive username',
 						value: 'Abusive username'
 					}
-				].concat(TwinkleGlobal.getPref('customSRGReasomList'))
+				].concat(TwinkleGlobal.getPref('customSRGReasonList'))
 			});
 			if (!mw.util.isIPAddress(mw.config.get('wgRelevantUserName'))) {
 				work_area.append({
