@@ -131,6 +131,7 @@ TwinkleGlobal.defaultConfig.twinkle = {
 	// Diff
 	diffDisabledWikis: [
 		{ 'value': 'enwiki', 'label': '' },
+		{ 'value': 'zh_classicalwiki', 'label': '' },
 		{ 'value': 'zhwiki', 'label': '' },
 		{ 'value': 'zhwikibooks', 'label': '' },
 		{ 'value': 'zhwikiquote', 'label': '' },
