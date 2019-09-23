@@ -34,7 +34,7 @@ TwinkleGlobal.arv = function twinklearv() {
 };
 
 TwinkleGlobal.arv.callback = function (uid) {
-	var Window = new Morebits.simpleWindow(600, 500);
+	var Window = new MorebitsGlobal.simpleWindow(600, 500);
 	Window.setTitle('Advance Reporting and Vetting'); // Backronym
 	Window.setScriptName('Twinkle');
 	if (mw.util.isIPAddress(uid)) {
@@ -43,7 +43,7 @@ TwinkleGlobal.arv.callback = function (uid) {
 		Window.addFooterLink('Global locks', 'm:Global locks');
 	}
 
-	var form = new Morebits.quickForm(TwinkleGlobal.arv.callback.evaluate);
+	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.arv.callback.evaluate);
 	var categories = form.append({
 		type: 'select',
 		name: 'category',
@@ -80,14 +80,14 @@ TwinkleGlobal.arv.callback = function (uid) {
 TwinkleGlobal.arv.callback.changeCategory = function (e) {
 	var value = e.target.value;
 	var root = e.target.form;
-	var old_area = Morebits.quickForm.getElements(root, 'work_area')[0];
+	var old_area = MorebitsGlobal.quickForm.getElements(root, 'work_area')[0];
 	var work_area = null;
 
 	switch (value) {
 		case 'global':
 		/* falls through */
 		default:
-			work_area = new Morebits.quickForm.element({
+			work_area = new MorebitsGlobal.quickForm.element({
 				type: 'field',
 				label: mw.util.isIPAddress(mw.config.get('wgRelevantUserName'))
 					? 'Request for global block' : 'Request for global lock',
@@ -199,17 +199,17 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			}
 			reason += ' --~~~~';
 
-			Morebits.simpleWindow.setButtonsEnabled(false);
-			Morebits.status.init(form);
+			MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
+			MorebitsGlobal.status.init(form);
 
-			var statusIndicator = new Morebits.status('Reporting to Steward requests/Global', 'Fetching page...');
+			var statusIndicator = new MorebitsGlobal.status('Reporting to Steward requests/Global', 'Fetching page...');
 
 			var metaapi = TwinkleGlobal.getPref('metaApi');
 			metaapi.edit('Steward requests/Global', function(revision) {
 				var text = revision.content;
 				if (new RegExp('{{\\s*([Ll]uxotool|[Ll]ock[Hh]ide|[Ll][Hh])\\s*\\|\\s*(1=)?\\s*' + RegExp.escape(uid, true) + '\\s*(\\||}})').test(text)) {
 					statusIndicator.error('Report already present, will not add a new one');
-					Morebits.status.printUserText(reason, 'The comments you typed are provided below, in case you wish to manually post them under the existing report for this user at SRG:');
+					MorebitsGlobal.status.printUserText(reason, 'The comments you typed are provided below, in case you wish to manually post them under the existing report for this user at SRG:');
 					return $.Deferred().reject('dup');
 				}
 				if (mw.util.isIPAddress(mw.config.get('wgRelevantUserName'))) {

@@ -15,7 +15,7 @@
 
 TwinkleGlobal.tag = function friendlytag() {
 	// redirect tagging
-	if (Morebits.wiki.isPageRedirect()) {
+	if (MorebitsGlobal.wiki.isPageRedirect()) {
 		TwinkleGlobal.tag.mode = 'redirect';
 		TwinkleGlobal.addPortletLink(TwinkleGlobal.tag.callback, 'Tag', 'friendly-tag', 'Tag redirect');
 	// file tagging
@@ -37,12 +37,12 @@ TwinkleGlobal.tag = function friendlytag() {
 TwinkleGlobal.tag.checkedTags = [];
 
 TwinkleGlobal.tag.callback = function friendlytagCallback() {
-	var Window = new Morebits.simpleWindow(630, TwinkleGlobal.tag.mode === 'article' ? 500 : 400);
+	var Window = new MorebitsGlobal.simpleWindow(630, TwinkleGlobal.tag.mode === 'article' ? 500 : 400);
 	Window.setScriptName('Twinkle');
 	// anyone got a good policy/guideline/info page/instructional page link??
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#tag');
 
-	var form = new Morebits.quickForm(TwinkleGlobal.tag.callback.evaluate);
+	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.tag.callback.evaluate);
 
 	if (document.getElementsByClassName('patrollink').length) {
 		form.append({
@@ -269,7 +269,7 @@ TwinkleGlobal.tag.callback = function friendlytagCallback() {
 
 	} else {
 		// Redirects and files: Add a link to each template's description page
-		Morebits.quickForm.getElements(result, TwinkleGlobal.tag.mode + 'Tags').forEach(generateLinks);
+		MorebitsGlobal.quickForm.getElements(result, TwinkleGlobal.tag.mode + 'Tags').forEach(generateLinks);
 	}
 };
 
@@ -280,7 +280,7 @@ TwinkleGlobal.tag.updateSortOrder = function(e) {
 	var sortorder = e.target.value;
 	TwinkleGlobal.tag.checkedTags = e.target.form.getChecked('articleTags') || [];
 
-	var container = new Morebits.quickForm.element({ type: 'fragment' });
+	var container = new MorebitsGlobal.quickForm.element({ type: 'fragment' });
 
 	// function to generate a checkbox, with appropriate subgroup if needed
 	var makeCheckbox = function(tag, description) {
@@ -580,7 +580,7 @@ TwinkleGlobal.tag.updateSortOrder = function(e) {
 				doCategoryCheckboxes(subdiv, content);
 			} else {
 				$.each(content, function(subtitle, subcontent) {
-					subdiv.append({ type: 'div', label: [ Morebits.htmlNode('b', subtitle) ] });
+					subdiv.append({ type: 'div', label: [ MorebitsGlobal.htmlNode('b', subtitle) ] });
 					doCategoryCheckboxes(subdiv, subcontent);
 				});
 			}
@@ -630,8 +630,8 @@ TwinkleGlobal.tag.updateSortOrder = function(e) {
 	$workarea.find('h5:not(:first-child)').css({ 'margin-top': '1em' });
 	$workarea.find('div').filter(':has(span.quickformDescription)').css({ 'margin-top': '0.4em' });
 
-	Morebits.quickForm.getElements(e.target.form, 'articleTags').forEach(generateLinks);
-	var alreadyPresentTags = Morebits.quickForm.getElements(e.target.form, 'alreadyPresentArticleTags');
+	MorebitsGlobal.quickForm.getElements(e.target.form, 'articleTags').forEach(generateLinks);
+	var alreadyPresentTags = MorebitsGlobal.quickForm.getElements(e.target.form, 'alreadyPresentArticleTags');
 	if (alreadyPresentTags) {
 		alreadyPresentTags.forEach(generateLinks);
 	}
@@ -663,10 +663,10 @@ TwinkleGlobal.tag.updateSortOrder = function(e) {
 
 /**
  * Adds a link to each template's description page
- * @param {Morebits.quickForm.element} checkbox  associated with the template
+ * @param {MorebitsGlobal.quickForm.element} checkbox  associated with the template
  */
 var generateLinks = function(checkbox) {
-	var link = Morebits.htmlNode('a', '>');
+	var link = MorebitsGlobal.htmlNode('a', '>');
 	link.setAttribute('class', 'tag-template-link');
 	var tagname = checkbox.values;
 	link.setAttribute('href', mw.util.getUrl(
@@ -1264,7 +1264,7 @@ TwinkleGlobal.tag.callbacks = {
 					var talkpageText = '\n\n== Proposed merge with [[' + params.nonDiscussArticle + ']] ==\n\n';
 					talkpageText += params.mergeReason.trim() + ' ~~~~';
 
-					var talkpage = new Morebits.wiki.page('Talk:' + params.discussArticle, 'Posting rationale on talk page');
+					var talkpage = new MorebitsGlobal.wiki.page('Talk:' + params.discussArticle, 'Posting rationale on talk page');
 					talkpage.setAppendText(talkpageText);
 					talkpage.setEditSummary('Proposing to merge [[:' + params.nonDiscussArticle + ']] ' +
 						(params.mergeTag === 'Merge' ? 'with' : 'into') + ' [[:' + params.discussArticle + ']]' +
@@ -1285,11 +1285,11 @@ TwinkleGlobal.tag.callbacks = {
 						tags: [otherTagName],
 						tagsToRemove: [],
 						tagsToRemain: [],
-						mergeTarget: Morebits.pageNameNorm,
+						mergeTarget: MorebitsGlobal.pageNameNorm,
 						discussArticle: params.discussArticle,
 						talkDiscussionTitle: params.talkDiscussionTitle
 					};
-					var otherpage = new Morebits.wiki.page(params.mergeTarget, 'Tagging other page (' +
+					var otherpage = new MorebitsGlobal.wiki.page(params.mergeTarget, 'Tagging other page (' +
 						params.mergeTarget + ')');
 					otherpage.setCallbackParameters(newParams);
 					otherpage.load(TwinkleGlobal.tag.callbacks.article);
@@ -1297,7 +1297,7 @@ TwinkleGlobal.tag.callbacks = {
 
 				// post at WP:PNT for {{not English}} and {{rough translation}} tag
 				if (params.translationPostAtPNT) {
-					var pntPage = new Morebits.wiki.page('Wikipedia:Pages needing translation into English',
+					var pntPage = new MorebitsGlobal.wiki.page('Wikipedia:Pages needing translation into English',
 						'Listing article at Wikipedia:Pages needing translation into English');
 					pntPage.setFollowRedirect(true);
 					pntPage.setCallbackParameters({
@@ -1310,7 +1310,7 @@ TwinkleGlobal.tag.callbacks = {
 						var params = pageobj.getCallbackParameters();
 						var statelem = pageobj.getStatusElement();
 
-						var templateText = '{{subst:' + params.template + '|pg=' + Morebits.pageNameNorm + '|Language=' +
+						var templateText = '{{subst:' + params.template + '|pg=' + MorebitsGlobal.pageNameNorm + '|Language=' +
 							(params.lang || 'uncertain') + '|Comments=' + params.reason.trim() + '}} ~~~~';
 
 						var text, summary;
@@ -1328,7 +1328,7 @@ TwinkleGlobal.tag.callbacks = {
 							return;
 						}
 						pageobj.setPageText(text);
-						pageobj.setEditSummary(summary + ' [[:' + Morebits.pageNameNorm + ']]' + TwinkleGlobal.getPref('summaryAd'));
+						pageobj.setEditSummary(summary + ' [[:' + MorebitsGlobal.pageNameNorm + ']]' + TwinkleGlobal.getPref('summaryAd'));
 						pageobj.setCreateOption('recreate');
 						pageobj.save();
 					});
@@ -1343,10 +1343,10 @@ TwinkleGlobal.tag.callbacks = {
 							return;
 						}
 
-						var userTalkPage = new Morebits.wiki.page('User talk:' + initialContrib,
+						var userTalkPage = new MorebitsGlobal.wiki.page('User talk:' + initialContrib,
 							'Notifying initial contributor (' + initialContrib + ')');
-						var notifytext = '\n\n== Your article [[' + Morebits.pageNameNorm + ']]==\n' +
-							'{{subst:uw-notenglish|1=' + Morebits.pageNameNorm +
+						var notifytext = '\n\n== Your article [[' + MorebitsGlobal.pageNameNorm + ']]==\n' +
+							'{{subst:uw-notenglish|1=' + MorebitsGlobal.pageNameNorm +
 							(params.translationPostAtPNT ? '' : '|nopnt=yes') + '}} ~~~~';
 						userTalkPage.setAppendText(notifytext);
 						userTalkPage.setEditSummary('Notice: Please use English when contributing to the English Wikipedia.' +
@@ -1378,7 +1378,7 @@ TwinkleGlobal.tag.callbacks = {
 				return;
 			}
 
-			Morebits.status.info('Info', 'Removing deselected tags that were already present');
+			MorebitsGlobal.status.info('Info', 'Removing deselected tags that were already present');
 
 			if (params.tags.length > 0) {
 				summaryText += (tags.length ? ' tag' + (tags.length > 1 ? 's' : '') : '') + ', and removed';
@@ -1393,7 +1393,7 @@ TwinkleGlobal.tag.callbacks = {
 			// later removal
 			params.tagsToRemove.forEach(function removeTag(tag, tagIndex) {
 
-				var tag_re = new RegExp('\\{\\{' + Morebits.pageNameRegex(tag) + '\\s*(\\|[^}]+)?\\}\\}\\n?');
+				var tag_re = new RegExp('\\{\\{' + MorebitsGlobal.pageNameRegex(tag) + '\\s*(\\|[^}]+)?\\}\\}\\n?');
 				if (tag === 'Globalize') {
 					// special case to catch occurrences like {{Globalize/UK}}, etc
 					tag_re = new RegExp('\\{\\{[gG]lobalize/?[^}]*\\}\\}\\n?');
@@ -1422,7 +1422,7 @@ TwinkleGlobal.tag.callbacks = {
 			}
 
 			// Remove tags which appear in page text as redirects
-			var api = new Morebits.wiki.api('Getting template redirects', {
+			var api = new MorebitsGlobal.wiki.api('Getting template redirects', {
 				'action': 'query',
 				'prop': 'linkshere',
 				'titles': getRedirectsFor.join('|'),
@@ -1436,7 +1436,7 @@ TwinkleGlobal.tag.callbacks = {
 					var removed = false;
 					$(page).find('lh').each(function(idx, el) {
 						var tag = $(el).attr('title').slice(9);
-						var tag_re = new RegExp('\\{\\{' + Morebits.pageNameRegex(tag) + '\\s*(\\|[^}]*)?\\}\\}\\n?');
+						var tag_re = new RegExp('\\{\\{' + MorebitsGlobal.pageNameRegex(tag) + '\\s*(\\|[^}]*)?\\}\\}\\n?');
 						if (tag_re.test(pageText)) {
 							pageText = pageText.replace(tag_re, '');
 							removed = true;
@@ -1444,7 +1444,7 @@ TwinkleGlobal.tag.callbacks = {
 						}
 					});
 					if (!removed) {
-						Morebits.status.warn('Info', 'Failed to find {{' +
+						MorebitsGlobal.status.warn('Info', 'Failed to find {{' +
 						$(page).attr('title').slice(9) + '}} on the page... excluding');
 					}
 
@@ -1549,7 +1549,7 @@ TwinkleGlobal.tag.callbacks = {
 					case 'Merge from':
 						if (params.mergeTarget) {
 							// normalize the merge target for now and later
-							params.mergeTarget = Morebits.string.toUpperCaseFirstChar(params.mergeTarget.replace(/_/g, ' '));
+							params.mergeTarget = MorebitsGlobal.string.toUpperCaseFirstChar(params.mergeTarget.replace(/_/g, ' '));
 
 							currentTag += '|' + params.mergeTarget;
 
@@ -1659,7 +1659,7 @@ TwinkleGlobal.tag.callbacks = {
 				if (tag === 'Merge from' || tag === 'History merge') {
 					tags.push(tag);
 				} else {
-					Morebits.status.warn('Info', 'Found {{' + tag +
+					MorebitsGlobal.status.warn('Info', 'Found {{' + tag +
 						'}} on the article already...excluding');
 					// don't do anything else with merge tags
 					if (['Merge', 'Merge to'].indexOf(tag) !== -1) {
@@ -1679,7 +1679,7 @@ TwinkleGlobal.tag.callbacks = {
 		var miTest = /\{\{(multiple ?issues|article ?issues|mi)(?!\s*\|\s*section\s*=)[^}]+\{/im.exec(pageText);
 
 		if (miTest && groupableTags.length > 0) {
-			Morebits.status.info('Info', 'Adding supported tags inside existing {{multiple issues}} tag');
+			MorebitsGlobal.status.info('Info', 'Adding supported tags inside existing {{multiple issues}} tag');
 
 			tagText = '';
 
@@ -1698,7 +1698,7 @@ TwinkleGlobal.tag.callbacks = {
 			addUngroupedTags();
 
 		} else if (params.group && !miTest && (groupableExistingTags.length + groupableTags.length) >= 2) {
-			Morebits.status.info('Info', 'Grouping supported tags inside {{multiple issues}}');
+			MorebitsGlobal.status.info('Info', 'Grouping supported tags inside {{multiple issues}}');
 
 			tagText += '{{Multiple issues|\n';
 
@@ -1727,7 +1727,7 @@ TwinkleGlobal.tag.callbacks = {
 			// Reposition the tags on the page into {{multiple issues}}, if found with its
 			// proper name, else moves it to `getRedirectsFor` array to be handled later
 			groupableExistingTags.forEach(function repositionTagIntoMI(tag) {
-				var tag_re = new RegExp('(\\{\\{' + Morebits.pageNameRegex(tag) + '\\s*(\\|[^}]+)?\\}\\}\\n?)');
+				var tag_re = new RegExp('(\\{\\{' + MorebitsGlobal.pageNameRegex(tag) + '\\s*(\\|[^}]+)?\\}\\}\\n?)');
 				if (tag_re.test(pageText)) {
 					tagText += tag_re.exec(pageText)[1];
 					pageText = pageText.replace(tag_re, '');
@@ -1741,7 +1741,7 @@ TwinkleGlobal.tag.callbacks = {
 				return;
 			}
 
-			var api = new Morebits.wiki.api('Getting template redirects', {
+			var api = new MorebitsGlobal.wiki.api('Getting template redirects', {
 				'action': 'query',
 				'prop': 'linkshere',
 				'titles': getRedirectsFor.join('|'),
@@ -1754,7 +1754,7 @@ TwinkleGlobal.tag.callbacks = {
 					var found = false;
 					$(page).find('lh').each(function(idx, el) {
 						var tag = $(el).attr('title').slice(9);
-						var tag_re = new RegExp('(\\{\\{' + Morebits.pageNameRegex(tag) + '\\s*(\\|[^}]*)?\\}\\}\\n?)');
+						var tag_re = new RegExp('(\\{\\{' + MorebitsGlobal.pageNameRegex(tag) + '\\s*(\\|[^}]*)?\\}\\}\\n?)');
 						if (tag_re.test(pageText)) {
 							tagText += tag_re.exec(pageText)[1];
 							pageText = pageText.replace(tag_re, '');
@@ -1763,7 +1763,7 @@ TwinkleGlobal.tag.callbacks = {
 						}
 					});
 					if (!found) {
-						Morebits.status.warn('Info', 'Failed to find the existing {{' +
+						MorebitsGlobal.status.warn('Info', 'Failed to find the existing {{' +
 						$(page).attr('title').slice(9) + '}} on the page... skip repositioning');
 					}
 				});
@@ -1789,7 +1789,7 @@ TwinkleGlobal.tag.callbacks = {
 			if (!tagRe.exec(pageText)) {
 				tags.push(params.tags[i]);
 			} else {
-				Morebits.status.warn('Info', 'Found {{' + params.tags[i] +
+				MorebitsGlobal.status.warn('Info', 'Found {{' + params.tags[i] +
 					'}} on the redirect already...excluding');
 			}
 		}
@@ -2065,16 +2065,16 @@ TwinkleGlobal.tag.callback.evaluate = function friendlytagCallbackEvaluate(e) {
 		return;
 	}
 
-	Morebits.simpleWindow.setButtonsEnabled(false);
-	Morebits.status.init(form);
+	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.status.init(form);
 
-	Morebits.wiki.actionCompleted.redirect = Morebits.pageNameNorm;
-	Morebits.wiki.actionCompleted.notice = 'Tagging complete, reloading article in a few seconds';
+	MorebitsGlobal.wiki.actionCompleted.redirect = MorebitsGlobal.pageNameNorm;
+	MorebitsGlobal.wiki.actionCompleted.notice = 'Tagging complete, reloading article in a few seconds';
 	if (TwinkleGlobal.tag.mode === 'redirect') {
-		Morebits.wiki.actionCompleted.followRedirect = false;
+		MorebitsGlobal.wiki.actionCompleted.followRedirect = false;
 	}
 
-	var wikipedia_page = new Morebits.wiki.page(Morebits.pageNameNorm, 'Tagging ' + TwinkleGlobal.tag.mode);
+	var wikipedia_page = new MorebitsGlobal.wiki.page(MorebitsGlobal.pageNameNorm, 'Tagging ' + TwinkleGlobal.tag.mode);
 	wikipedia_page.setCallbackParameters(params);
 	wikipedia_page.load(TwinkleGlobal.tag.callbacks[TwinkleGlobal.tag.mode]);
 

@@ -16,7 +16,7 @@
 
 TwinkleGlobal.prod = function twinkleprod() {
 	if ((([0, 6, 108].indexOf(mw.config.get('wgNamespaceNumber')) === -1) && (mw.config.get('wgNamespaceNumber') !== 2 || mw.config.get('wgCategories').indexOf('Wikipedia books (user books)') === -1))
-		|| !mw.config.get('wgCurRevisionId') || Morebits.wiki.isPageRedirect()) {
+		|| !mw.config.get('wgCurRevisionId') || MorebitsGlobal.wiki.isPageRedirect()) {
 		return;
 	}
 
@@ -43,11 +43,11 @@ TwinkleGlobal.prod.callback = function twinkleprodCallback() {
 		// no default
 	}
 
-	var Window = new Morebits.simpleWindow(800, 410);
+	var Window = new MorebitsGlobal.simpleWindow(800, 410);
 	Window.setTitle('Proposed deletion (PROD)');
 	Window.setScriptName('Twinkle');
 
-	var form = new Morebits.quickForm(TwinkleGlobal.prod.callback.evaluate);
+	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.prod.callback.evaluate);
 
 	if (namespace === 'article') {
 		Window.addFooterLink('Proposed deletion policy', 'WP:PROD');
@@ -112,7 +112,7 @@ TwinkleGlobal.prod.callback = function twinkleprodCallback() {
 
 TwinkleGlobal.prod.callback.prodtypechanged = function(event) {
 	// prepare frame for prod type dependant controls
-	var field = new Morebits.quickForm.element({
+	var field = new MorebitsGlobal.quickForm.element({
 		type: 'field',
 		label: 'Parameters',
 		name: 'parameters'
@@ -201,7 +201,7 @@ TwinkleGlobal.prod.callbacks = {
 			}
 		}
 
-		var ts = new Morebits.wiki.page(mw.config.get('wgPageName'));
+		var ts = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
 		ts.setFollowRedirect(true);  // for NPP, and also because redirects are ineligible for PROD
 		ts.setCallbackParameters(params);
 		ts.lookupCreation(TwinkleGlobal.prod.callbacks.creationInfo);
@@ -212,10 +212,10 @@ TwinkleGlobal.prod.callbacks = {
 		params.initialContrib = pageobj.getCreator();
 		params.creation = pageobj.getCreationTimestamp();
 
-		Morebits.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
-		Morebits.wiki.actionCompleted.notice = 'Tagging complete';
+		MorebitsGlobal.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
+		MorebitsGlobal.wiki.actionCompleted.notice = 'Tagging complete';
 
-		var wikipedia_page = new Morebits.wiki.page(mw.config.get('wgPageName'), 'Tagging page');
+		var wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Tagging page');
 		wikipedia_page.setFollowRedirect(true);  // for NPP, and also because redirects are ineligible for PROD
 		wikipedia_page.setCallbackParameters(params);
 		wikipedia_page.load(TwinkleGlobal.prod.callbacks.main);
@@ -274,11 +274,11 @@ TwinkleGlobal.prod.callbacks = {
 					} else {
 						notifyTemplate = 'proposed deletion notify';
 					}
-					var notifytext = '\n{{subst:' + notifyTemplate + '|1=' + Morebits.pageNameNorm + '|concern=' + params.reason + '}} ~~~~';
+					var notifytext = '\n{{subst:' + notifyTemplate + '|1=' + MorebitsGlobal.pageNameNorm + '|concern=' + params.reason + '}} ~~~~';
 
-					var usertalkpage = new Morebits.wiki.page('User talk:' + params.initialContrib, 'Notifying initial contributor (' + params.initialContrib + ')');
+					var usertalkpage = new MorebitsGlobal.wiki.page('User talk:' + params.initialContrib, 'Notifying initial contributor (' + params.initialContrib + ')');
 					usertalkpage.setAppendText(notifytext);
-					usertalkpage.setEditSummary('Notification: proposed deletion of [[:' + Morebits.pageNameNorm + ']].' + TwinkleGlobal.getPref('summaryAd'));
+					usertalkpage.setEditSummary('Notification: proposed deletion of [[:' + MorebitsGlobal.pageNameNorm + ']].' + TwinkleGlobal.getPref('summaryAd'));
 					usertalkpage.setCreateOption('recreate');
 					usertalkpage.setFollowRedirect(true);
 					usertalkpage.setCallbackParameters(params);
@@ -303,16 +303,16 @@ TwinkleGlobal.prod.callbacks = {
 				text = '{{subst:prod blp' + (params.usertalk ? '|help=off' : '') + '}}\n' + text;
 			} else if (params.book) {
 				summaryText = 'Proposing book for deletion per [[WP:BOOKPROD]].';
-				text = '{{subst:book-prod|1=' + Morebits.string.formatReasonText(params.reason) + (params.usertalk ? '|help=off' : '') + '}}\n' + text;
+				text = '{{subst:book-prod|1=' + MorebitsGlobal.string.formatReasonText(params.reason) + (params.usertalk ? '|help=off' : '') + '}}\n' + text;
 			} else {
 				summaryText = 'Proposing ' + namespace + ' for deletion per [[WP:PROD]].';
-				text = '{{subst:prod|1=' + Morebits.string.formatReasonText(params.reason) + (params.usertalk ? '|help=off' : '') + '}}\n' + text;
+				text = '{{subst:prod|1=' + MorebitsGlobal.string.formatReasonText(params.reason) + (params.usertalk ? '|help=off' : '') + '}}\n' + text;
 			}
 
 			// Add {{Old prod}} to the talk page
 			var oldprodfull = '{{Old prod|nom=' + mw.config.get('wgUserName') + '|nomdate={{subst:#time: Y-m-d}}}}\n';
 			var talktitle = new mw.Title(mw.config.get('wgPageName')).getTalkPage().getPrefixedText();
-			var talkpage = new Morebits.wiki.page(talktitle, 'Placing {{Old prod}} on talk page');
+			var talkpage = new MorebitsGlobal.wiki.page(talktitle, 'Placing {{Old prod}} on talk page');
 			talkpage.setPrependText(oldprodfull);
 			talkpage.setEditSummary('Placing {{Old prod}} on the talk page' + TwinkleGlobal.getPref('summaryAd'));
 			talkpage.setFollowRedirect(true);  // match behavior for page tagging
@@ -337,7 +337,7 @@ TwinkleGlobal.prod.callbacks = {
 			summaryText = 'Endorsing proposed deletion per [[WP:' + (params.blp ? 'BLP' : params.book ? 'BOOK' : '') + 'PROD]].';
 			text = text.replace(prod_re, text.match(prod_re) + '\n{{proposed deletion endorsed|1=' + (params.blp ?
 				'article is a [[WP:BLPPROD|biography of a living person with no sources]]' :
-				Morebits.string.formatReasonText(params.reason)) + '}}\n');
+				MorebitsGlobal.string.formatReasonText(params.reason)) + '}}\n');
 
 			if (TwinkleGlobal.getPref('logProdPages')) {
 				params.logEndorsing = true;
@@ -353,7 +353,7 @@ TwinkleGlobal.prod.callbacks = {
 	},
 
 	addToLog: function(params) {
-		var wikipedia_page = new Morebits.wiki.page('User:' + mw.config.get('wgUserName') + '/' + TwinkleGlobal.getPref('prodLogPageName'), 'Adding entry to userspace log');
+		var wikipedia_page = new MorebitsGlobal.wiki.page('User:' + mw.config.get('wgUserName') + '/' + TwinkleGlobal.getPref('prodLogPageName'), 'Adding entry to userspace log');
 		wikipedia_page.setCallbackParameters(params);
 		wikipedia_page.load(TwinkleGlobal.prod.callbacks.saveLog);
 	},
@@ -379,13 +379,13 @@ TwinkleGlobal.prod.callbacks = {
 
 		var summarytext;
 		if (params.logEndorsing) {
-			text += '\n# [[:' + Morebits.pageNameNorm + ']]: endorsed ' + (params.blp ? 'BLP ' : params.book ? 'BOOK' : '') + 'PROD. ~~~~~';
+			text += '\n# [[:' + MorebitsGlobal.pageNameNorm + ']]: endorsed ' + (params.blp ? 'BLP ' : params.book ? 'BOOK' : '') + 'PROD. ~~~~~';
 			if (params.reason) {
 				text += "\n#* '''Reason''': " + params.reason + '\n';
 			}
-			summarytext = 'Logging endorsement of PROD nomination of [[:' + Morebits.pageNameNorm + ']].';
+			summarytext = 'Logging endorsement of PROD nomination of [[:' + MorebitsGlobal.pageNameNorm + ']].';
 		} else {
-			text += '\n# [[:' + Morebits.pageNameNorm + ']]: ' + (params.blp ? 'BLP ' : params.book ? 'BOOK' : '') + 'PROD';
+			text += '\n# [[:' + MorebitsGlobal.pageNameNorm + ']]: ' + (params.blp ? 'BLP ' : params.book ? 'BOOK' : '') + 'PROD';
 			if (params.logInitialContrib) {
 				text += '; notified {{user|' + params.logInitialContrib + '}}';
 			}
@@ -393,7 +393,7 @@ TwinkleGlobal.prod.callbacks = {
 			if (!params.blp) {
 				text += "#* '''Reason''': " + params.reason + '\n';
 			}
-			summarytext = 'Logging PROD nomination of [[:' + Morebits.pageNameNorm + ']].';
+			summarytext = 'Logging PROD nomination of [[:' + MorebitsGlobal.pageNameNorm + ']].';
 		}
 
 		pageobj.setPageText(text);
@@ -424,8 +424,8 @@ TwinkleGlobal.prod.callback.evaluate = function twinkleprodCallbackEvaluate(e) {
 		reason: prodtype === 'prodblp' ? '' : form.reason.value  // using an empty string here as fallback will help with prod-2.
 	};
 
-	Morebits.simpleWindow.setButtonsEnabled(false);
-	Morebits.status.init(form);
+	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.status.init(form);
 
 	var talk_title = new mw.Title(mw.config.get('wgPageName')).getTalkPage().getPrefixedText();
 	// Talk page templates for PROD-able discussions
@@ -440,7 +440,7 @@ TwinkleGlobal.prod.callback.evaluate = function twinkleprodCallbackEvaluate(e) {
 		'tltemplates': blocking_templates
 	};
 
-	var wikipedia_api = new Morebits.wiki.api('Checking talk page for prior nominations', query, TwinkleGlobal.prod.callbacks.checkpriors);
+	var wikipedia_api = new MorebitsGlobal.wiki.api('Checking talk page for prior nominations', query, TwinkleGlobal.prod.callbacks.checkpriors);
 	wikipedia_api.params = params;
 	wikipedia_api.post();
 };

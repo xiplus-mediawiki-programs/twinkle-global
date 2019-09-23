@@ -27,12 +27,12 @@ TwinkleGlobal.speedy = function twinklespeedy() {
 		return;
 	}
 
-	TwinkleGlobal.addPortletLink(TwinkleGlobal.speedy.callback, 'CSD', 'twg-csd', Morebits.userIsInGroup('sysop') ? 'Delete page according to WP:CSD' : 'Request speedy deletion according to WP:CSD');
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.speedy.callback, 'CSD', 'twg-csd', MorebitsGlobal.userIsInGroup('sysop') ? 'Delete page according to WP:CSD' : 'Request speedy deletion according to WP:CSD');
 };
 
 // This function is run when the CSD tab/header link is clicked
 TwinkleGlobal.speedy.callback = function twinklespeedyCallback() {
-	TwinkleGlobal.speedy.initDialog(Morebits.userIsInGroup('sysop') ? TwinkleGlobal.speedy.callback.evaluateSysop : TwinkleGlobal.speedy.callback.evaluateUser, true);
+	TwinkleGlobal.speedy.initDialog(MorebitsGlobal.userIsInGroup('sysop') ? TwinkleGlobal.speedy.callback.evaluateSysop : TwinkleGlobal.speedy.callback.evaluateUser, true);
 };
 
 // Used by unlink feature
@@ -78,15 +78,15 @@ TwinkleGlobal.speedy.mode = {
 // Prepares the speedy deletion dialog and displays it
 TwinkleGlobal.speedy.initDialog = function twinklespeedyInitDialog(callbackfunc) {
 	var dialog;
-	var isSysop = Morebits.userIsInGroup('sysop');
-	TwinkleGlobal.speedy.dialog = new Morebits.simpleWindow(TwinkleGlobal.getPref('speedyWindowWidth'), TwinkleGlobal.getPref('speedyWindowHeight'));
+	var isSysop = MorebitsGlobal.userIsInGroup('sysop');
+	TwinkleGlobal.speedy.dialog = new MorebitsGlobal.simpleWindow(TwinkleGlobal.getPref('speedyWindowWidth'), TwinkleGlobal.getPref('speedyWindowHeight'));
 	dialog = TwinkleGlobal.speedy.dialog;
 	dialog.setTitle('Choose criteria for speedy deletion');
 	dialog.setScriptName('Twinkle');
 	dialog.addFooterLink('Speedy deletion policy', 'WP:CSD');
 	dialog.addFooterLink('Twinkle help', 'WP:TW/DOC#speedy');
 
-	var form = new Morebits.quickForm(callbackfunc, TwinkleGlobal.getPref('speedySelectionStyle') === 'radioClick' ? 'change' : null);
+	var form = new MorebitsGlobal.quickForm(callbackfunc, TwinkleGlobal.getPref('speedySelectionStyle') === 'radioClick' ? 'change' : null);
 	if (isSysop) {
 		form.append({
 			type: 'checkbox',
@@ -304,7 +304,7 @@ TwinkleGlobal.speedy.callback.modeChanged = function twinklespeedyCallbackModeCh
 		$('[name=tag_options]').show();
 	}
 
-	var work_area = new Morebits.quickForm.element({
+	var work_area = new MorebitsGlobal.quickForm.element({
 		type: 'div',
 		name: 'work_area'
 	});
@@ -402,7 +402,7 @@ TwinkleGlobal.speedy.callback.modeChanged = function twinklespeedyCallbackModeCh
 	work_area.append({ type: 'header', label: 'General criteria' });
 	work_area.append({ type: radioOrCheckbox, name: 'csd', list: TwinkleGlobal.speedy.generateCsdList(generalCriteria, mode) });
 
-	var old_area = Morebits.quickForm.getElements(form, 'work_area')[0];
+	var old_area = MorebitsGlobal.quickForm.getElements(form, 'work_area')[0];
 	form.replaceChild(work_area.render(), old_area);
 
 	// if sysop, check if CSD is already on the page and fill in custom rationale
@@ -514,7 +514,7 @@ TwinkleGlobal.speedy.generateCsdList = function twinklespeedyGenerateCsdList(lis
 
 TwinkleGlobal.speedy.customRationale = [
 	{
-		label: 'Custom rationale' + (Morebits.userIsInGroup('sysop') ? ' (custom deletion reason)' : ' using {{db}} template'),
+		label: 'Custom rationale' + (MorebitsGlobal.userIsInGroup('sysop') ? ' (custom deletion reason)' : ' using {{db}} template'),
 		value: 'reason',
 		tooltip: '{{db}} is short for "delete because". At least one of the other deletion criteria must still apply to the page, and you must make mention of this in your rationale. This is not a "catch-all" for when you can\'t find any criteria that fit.',
 		subgroup: {
@@ -612,7 +612,7 @@ TwinkleGlobal.speedy.fileList = [
 			name: 'commons_filename',
 			type: 'input',
 			label: 'Filename on Commons: ',
-			value: Morebits.pageNameNorm,
+			value: MorebitsGlobal.pageNameNorm,
 			tooltip: 'This can be left blank if the file has the same name on Commons as here. The "File:" prefix is optional.'
 		},
 		hideWhenMultiple: true
@@ -1207,8 +1207,8 @@ TwinkleGlobal.speedy.callbacks = {
 			title: mw.config.get('wgPageName')
 		};
 
-		var statusIndicator = new Morebits.status('Building deletion summary');
-		var api = new Morebits.wiki.api('Parsing deletion template', query, function(apiObj) {
+		var statusIndicator = new MorebitsGlobal.status('Building deletion summary');
+		var api = new MorebitsGlobal.wiki.api('Parsing deletion template', query, function(apiObj) {
 			var reason = decodeURIComponent($(apiObj.getXML().querySelector('text').childNodes[0].nodeValue).find('#delete-reason').text()).replace(/\+/g, ' ');
 			if (!reason) {
 				statusIndicator.warn('Unable to generate summary from deletion template');
@@ -1226,38 +1226,38 @@ TwinkleGlobal.speedy.callbacks = {
 
 		// disallow notifying yourself
 		if (initialContrib === mw.config.get('wgUserName')) {
-			Morebits.status.warn('You (' + initialContrib + ') created this page; skipping user notification');
+			MorebitsGlobal.status.warn('You (' + initialContrib + ') created this page; skipping user notification');
 			initialContrib = null;
 
 		// don't notify users when their user talk page is nominated/deleted
 		} else if (initialContrib === mw.config.get('wgTitle') && mw.config.get('wgNamespaceNumber') === 3) {
-			Morebits.status.warn('Notifying initial contributor: this user created their own user talk page; skipping notification');
+			MorebitsGlobal.status.warn('Notifying initial contributor: this user created their own user talk page; skipping notification');
 			initialContrib = null;
 
 		// quick hack to prevent excessive unwanted notifications, per request. Should actually be configurable on recipient page...
 		} else if ((initialContrib === 'Cyberbot I' || initialContrib === 'SoxBot') && params.normalizeds[0] === 'f2') {
-			Morebits.status.warn('Notifying initial contributor: page created procedurally by bot; skipping notification');
+			MorebitsGlobal.status.warn('Notifying initial contributor: page created procedurally by bot; skipping notification');
 			initialContrib = null;
 
 		// Check for already existing tags
 		} else if ($('#delete-reason').length && params.warnUser && !confirm('The page is has a deletion-related tag, and thus the creator has likely been notified.  Do you want to notify them for this deletion as well?')) {
-			Morebits.status.info('Notifying initial contributor', 'canceled by user; skipping notification.');
+			MorebitsGlobal.status.info('Notifying initial contributor', 'canceled by user; skipping notification.');
 			initialContrib = null;
 		} else {
-			var usertalkpage = new Morebits.wiki.page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')'),
+			var usertalkpage = new MorebitsGlobal.wiki.page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')'),
 				notifytext, i, editsummary;
 
 			// special cases: "db" and "db-multiple"
 			if (params.normalizeds.length > 1) {
-				notifytext = '\n{{subst:db-' + (params.warnUser ? 'deleted' : 'notice') + '-multiple|1=' + Morebits.pageNameNorm;
+				notifytext = '\n{{subst:db-' + (params.warnUser ? 'deleted' : 'notice') + '-multiple|1=' + MorebitsGlobal.pageNameNorm;
 				var count = 2;
 				$.each(params.normalizeds, function(index, norm) {
 					notifytext += '|' + count++ + '=' + norm.toUpperCase();
 				});
 			} else if (params.normalizeds[0] === 'db') {
-				notifytext = '\n{{subst:db-reason-' + (params.warnUser ? 'deleted' : 'notice') + '|1=' + Morebits.pageNameNorm;
+				notifytext = '\n{{subst:db-reason-' + (params.warnUser ? 'deleted' : 'notice') + '|1=' + MorebitsGlobal.pageNameNorm;
 			} else {
-				notifytext = '\n{{subst:db-csd-' + (params.warnUser ? 'deleted' : 'notice') + '-custom|1=' + Morebits.pageNameNorm + '|2=' + params.values[0];
+				notifytext = '\n{{subst:db-csd-' + (params.warnUser ? 'deleted' : 'notice') + '-custom|1=' + MorebitsGlobal.pageNameNorm + '|2=' + params.values[0];
 			}
 
 			for (i in params.utparams) {
@@ -1269,7 +1269,7 @@ TwinkleGlobal.speedy.callbacks = {
 
 			editsummary = 'Notification: speedy deletion' + (params.warnUser ? '' : ' nomination');
 			if (params.normalizeds.indexOf('g10') === -1) {  // no article name in summary for G10 taggings
-				editsummary += ' of [[:' + Morebits.pageNameNorm + ']].';
+				editsummary += ' of [[:' + MorebitsGlobal.pageNameNorm + ']].';
 			} else {
 				editsummary += ' of an attack page.';
 			}
@@ -1309,12 +1309,12 @@ TwinkleGlobal.speedy.callbacks = {
 			}
 		},
 		deletePage: function(reason, params) {
-			var thispage = new Morebits.wiki.page(mw.config.get('wgPageName'), 'Deleting page');
+			var thispage = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Deleting page');
 
 			if (reason === null) {
-				return Morebits.status.error('Asking for reason', 'User cancelled');
+				return MorebitsGlobal.status.error('Asking for reason', 'User cancelled');
 			} else if (!reason || !reason.replace(/^\s*/, '').replace(/\s*$/, '')) {
-				return Morebits.status.error('Asking for reason', "you didn't give one.  I don't know... what with admins and their apathetic antics... I give up...");
+				return MorebitsGlobal.status.error('Asking for reason', "you didn't give one.  I don't know... what with admins and their apathetic antics... I give up...");
 			}
 			thispage.setEditSummary(reason + TwinkleGlobal.getPref('deletionSummaryAd'));
 			thispage.deletePage(function() {
@@ -1334,8 +1334,8 @@ TwinkleGlobal.speedy.callbacks = {
 			if (params.deleteTalkPage &&
 					params.normalized !== 'f8' &&
 					document.getElementById('ca-talk').className !== 'new') {
-				var talkpage = new Morebits.wiki.page(mw.config.get('wgFormattedNamespaces')[mw.config.get('wgNamespaceNumber') + 1] + ':' + mw.config.get('wgTitle'), 'Deleting talk page');
-				talkpage.setEditSummary('[[WP:CSD#G8|G8]]: Talk page of deleted page "' + Morebits.pageNameNorm + '"' + TwinkleGlobal.getPref('deletionSummaryAd'));
+				var talkpage = new MorebitsGlobal.wiki.page(mw.config.get('wgFormattedNamespaces')[mw.config.get('wgNamespaceNumber') + 1] + ':' + mw.config.get('wgTitle'), 'Deleting talk page');
+				talkpage.setEditSummary('[[WP:CSD#G8|G8]]: Talk page of deleted page "' + MorebitsGlobal.pageNameNorm + '"' + TwinkleGlobal.getPref('deletionSummaryAd'));
 				talkpage.deletePage();
 				// this is ugly, but because of the architecture of wiki.api, it is needed
 				// (otherwise success/failure messages for the previous action would be suppressed)
@@ -1355,8 +1355,8 @@ TwinkleGlobal.speedy.callbacks = {
 					'prop': 'redirects',
 					'rdlimit': 5000  // 500 is max for normal users, 5000 for bots and sysops
 				};
-				var wikipedia_api = new Morebits.wiki.api('getting list of redirects...', query, TwinkleGlobal.speedy.callbacks.sysop.deleteRedirectsMain,
-					new Morebits.status('Deleting redirects'));
+				var wikipedia_api = new MorebitsGlobal.wiki.api('getting list of redirects...', query, TwinkleGlobal.speedy.callbacks.sysop.deleteRedirectsMain,
+					new MorebitsGlobal.status('Deleting redirects'));
 				wikipedia_api.params = params;
 				wikipedia_api.post();
 			}
@@ -1369,32 +1369,32 @@ TwinkleGlobal.speedy.callbacks = {
 					'text': 'click here to go to the Unlink tool',
 					'css': { 'fontSize': '130%', 'fontWeight': 'bold' },
 					'click': function() {
-						Morebits.wiki.actionCompleted.redirect = null;
+						MorebitsGlobal.wiki.actionCompleted.redirect = null;
 						TwinkleGlobal.speedy.dialog.close();
-						TwinkleGlobal.unlink.callback('Removing usages of and/or links to deleted file ' + Morebits.pageNameNorm);
+						TwinkleGlobal.unlink.callback('Removing usages of and/or links to deleted file ' + MorebitsGlobal.pageNameNorm);
 					}
 				});
 				$bigtext = $('<span/>', {
 					'text': 'To orphan backlinks and remove instances of file usage',
 					'css': { 'fontSize': '130%', 'fontWeight': 'bold' }
 				});
-				Morebits.status.info($bigtext[0], $link[0]);
+				MorebitsGlobal.status.info($bigtext[0], $link[0]);
 			} else if (params.normalized !== 'f8') {
 				$link = $('<a/>', {
 					'href': '#',
 					'text': 'click here to go to the Unlink tool',
 					'css': { 'fontSize': '130%', 'fontWeight': 'bold' },
 					'click': function() {
-						Morebits.wiki.actionCompleted.redirect = null;
+						MorebitsGlobal.wiki.actionCompleted.redirect = null;
 						TwinkleGlobal.speedy.dialog.close();
-						TwinkleGlobal.unlink.callback('Removing links to deleted page ' + Morebits.pageNameNorm);
+						TwinkleGlobal.unlink.callback('Removing links to deleted page ' + MorebitsGlobal.pageNameNorm);
 					}
 				});
 				$bigtext = $('<span/>', {
 					'text': 'To orphan backlinks',
 					'css': { 'fontSize': '130%', 'fontWeight': 'bold' }
 				});
-				Morebits.status.info($bigtext[0], $link[0]);
+				MorebitsGlobal.status.info($bigtext[0], $link[0]);
 			}
 		},
 		deleteRedirectsMain: function(apiobj) {
@@ -1417,16 +1417,16 @@ TwinkleGlobal.speedy.callbacks = {
 				apiobjInner.statelem.unlink();
 				if (current >= total) {
 					statusIndicator.info(now + ' (completed)');
-					Morebits.wiki.removeCheckpoint();
+					MorebitsGlobal.wiki.removeCheckpoint();
 				}
 			};
 
-			Morebits.wiki.addCheckpoint();
+			MorebitsGlobal.wiki.addCheckpoint();
 
 			$snapshot.each(function(key, value) {
 				var title = $(value).attr('title');
-				var page = new Morebits.wiki.page(title, 'Deleting redirect "' + title + '"');
-				page.setEditSummary('[[WP:CSD#G8|G8]]: Redirect to deleted page "' + Morebits.pageNameNorm + '"' + TwinkleGlobal.getPref('deletionSummaryAd'));
+				var page = new MorebitsGlobal.wiki.page(title, 'Deleting redirect "' + title + '"');
+				page.setEditSummary('[[WP:CSD#G8|G8]]: Redirect to deleted page "' + MorebitsGlobal.pageNameNorm + '"' + TwinkleGlobal.getPref('deletionSummaryAd'));
 				page.deletePage(onsuccess);
 			});
 		}
@@ -1465,7 +1465,7 @@ TwinkleGlobal.speedy.callbacks = {
 				code = buildData[0];
 			params.utparams = buildData[1];
 
-			var thispage = new Morebits.wiki.page(mw.config.get('wgPageName'));
+			var thispage = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
 			// patrol the page, if reached from Special:NewPages
 			if (TwinkleGlobal.getPref('markSpeedyPagesAsPatrolled')) {
 				thispage.patrol();
@@ -1511,7 +1511,7 @@ TwinkleGlobal.speedy.callbacks = {
 
 			// Notification to first contributor, will also log nomination to the user's userspace log
 			if (params.usertalk) {
-				var thispage = new Morebits.wiki.page(Morebits.pageNameNorm);
+				var thispage = new MorebitsGlobal.wiki.page(MorebitsGlobal.pageNameNorm);
 				thispage.setCallbackParameters(params);
 				thispage.lookupCreation(TwinkleGlobal.speedy.callbacks.noteToCreator);
 			// or, if not notifying, add this nomination to the user's userspace log without the initial contributor's name
@@ -1525,7 +1525,7 @@ TwinkleGlobal.speedy.callbacks = {
 		//   for CSD: params.values, params.normalizeds  (note: normalizeds is an array)
 		//   for DI: params.fromDI = true, params.templatename, params.normalized  (note: normalized is a string)
 		addToLog: function(params, initialContrib) {
-			var wikipedia_page = new Morebits.wiki.page('User:' + mw.config.get('wgUserName') + '/' + TwinkleGlobal.getPref('speedyLogPageName'), 'Adding entry to userspace log');
+			var wikipedia_page = new MorebitsGlobal.wiki.page('User:' + mw.config.get('wgUserName') + '/' + TwinkleGlobal.getPref('speedyLogPageName'), 'Adding entry to userspace log');
 			params.logInitialContrib = initialContrib;
 			wikipedia_page.setCallbackParameters(params);
 			wikipedia_page.load(TwinkleGlobal.speedy.callbacks.user.saveLog);
@@ -1543,7 +1543,7 @@ TwinkleGlobal.speedy.callbacks = {
 					"This is a log of all [[WP:CSD|speedy deletion]] nominations made by this user using [[WP:TW|Twinkle]]'s CSD module.\n\n" +
 					'If you no longer wish to keep this log, you can turn it off using the [[Wikipedia:Twinkle/Preferences|preferences panel]], and ' +
 					'nominate this page for speedy deletion under [[WP:CSD#U1|CSD U1]].';
-				if (Morebits.userIsInGroup('sysop')) {
+				if (MorebitsGlobal.userIsInGroup('sysop')) {
 					appendText += '\n\nThis log does not track outright speedy deletions made using Twinkle.';
 				}
 			}
@@ -1581,7 +1581,7 @@ TwinkleGlobal.speedy.callbacks = {
 			var fileLogLink = mw.config.get('wgNamespaceNumber') === 6 ? ' ([{{fullurl:Special:Log|page=' + mw.util.wikiUrlencode(mw.config.get('wgPageName')) + '}} log])' : '';
 
 			var editsummary = 'Logging speedy deletion nomination';
-			appendText += '\n# [[:' + Morebits.pageNameNorm;
+			appendText += '\n# [[:' + MorebitsGlobal.pageNameNorm;
 
 			if (params.fromDI) {
 				appendText += ']]' + fileLogLink + ': DI [[WP:CSD#' + params.normalized.toUpperCase() + '|CSD ' + params.normalized.toUpperCase() + ']] ({{tl|di-' + params.templatename + '}})';
@@ -1593,11 +1593,11 @@ TwinkleGlobal.speedy.callbacks = {
 						return false;
 					}
 				});
-				editsummary += ' of [[:' + Morebits.pageNameNorm + ']].';
+				editsummary += ' of [[:' + MorebitsGlobal.pageNameNorm + ']].';
 			} else {
 				if (params.normalizeds.indexOf('g10') === -1) {  // no article name in log for G10 taggings
 					appendText += ']]' + fileLogLink + ': ';
-					editsummary += ' of [[:' + Morebits.pageNameNorm + ']].';
+					editsummary += ' of [[:' + MorebitsGlobal.pageNameNorm + ']].';
 				} else {
 					appendText += '|This]] attack page' + fileLogLink + ': ';
 					editsummary += ' of an attack page.';
@@ -1792,7 +1792,7 @@ TwinkleGlobal.speedy.getParameters = function twinklespeedyGetParameters(form, v
 						prop: 'revisions',
 						rvprop: 'timestamp'
 					},
-					api = new Morebits.wiki.api('Grabbing the last revision timestamp', query, function(apiobj) {
+					api = new MorebitsGlobal.wiki.api('Grabbing the last revision timestamp', query, function(apiobj) {
 						var xmlDoc = apiobj.getXML(),
 							isoDateString = $(xmlDoc).find('rev').attr('timestamp');
 
@@ -1827,7 +1827,7 @@ TwinkleGlobal.speedy.getParameters = function twinklespeedyGetParameters(form, v
 			case 'commons':  // F8
 				if (form['csd.commons_filename']) {
 					var filename = form['csd.commons_filename'].value;
-					if (filename && filename !== Morebits.pageNameNorm) {
+					if (filename && filename !== MorebitsGlobal.pageNameNorm) {
 						currentParams.filename = filename.indexOf('Image:') === 0 || filename.indexOf('File:') === 0 ? filename : 'File:' + filename;
 					}
 				}
@@ -2023,8 +2023,8 @@ TwinkleGlobal.speedy.callback.evaluateSysop = function twinklespeedyCallbackEval
 		return;
 	}
 
-	Morebits.simpleWindow.setButtonsEnabled(false);
-	Morebits.status.init(form);
+	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.status.init(form);
 
 	TwinkleGlobal.speedy.callbacks.sysop.main(params);
 };
@@ -2104,15 +2104,15 @@ TwinkleGlobal.speedy.callback.evaluateUser = function twinklespeedyCallbackEvalu
 		return;
 	}
 
-	Morebits.simpleWindow.setButtonsEnabled(false);
-	Morebits.status.init(form);
+	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.status.init(form);
 
-	Morebits.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
-	Morebits.wiki.actionCompleted.notice = 'Tagging complete';
+	MorebitsGlobal.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
+	MorebitsGlobal.wiki.actionCompleted.notice = 'Tagging complete';
 
 	// Modules can't be tagged, follow standard at TfD and place on /doc subpage
 	var isScribunto = mw.config.get('wgPageContentModel') === 'Scribunto';
-	var wikipedia_page = isScribunto ? new Morebits.wiki.page(mw.config.get('wgPageName') + '/doc', 'Tagging module documentation page') : new Morebits.wiki.page(mw.config.get('wgPageName'), 'Tagging page');
+	var wikipedia_page = isScribunto ? new MorebitsGlobal.wiki.page(mw.config.get('wgPageName') + '/doc', 'Tagging module documentation page') : new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Tagging page');
 	wikipedia_page.setCallbackParameters(params);
 	wikipedia_page.load(TwinkleGlobal.speedy.callbacks.user.main);
 };

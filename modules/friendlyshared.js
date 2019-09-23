@@ -23,12 +23,12 @@ TwinkleGlobal.shared = function friendlyshared() {
 };
 
 TwinkleGlobal.shared.callback = function friendlysharedCallback() {
-	var Window = new Morebits.simpleWindow(600, 420);
+	var Window = new MorebitsGlobal.simpleWindow(600, 420);
 	Window.setTitle('Shared IP address tagging');
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#shared');
 
-	var form = new Morebits.quickForm(TwinkleGlobal.shared.callback.evaluate);
+	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.shared.callback.evaluate);
 
 	var div = form.append({
 		type: 'div',
@@ -137,7 +137,7 @@ TwinkleGlobal.shared.callbacks = {
 		for (var i = 0; i < TwinkleGlobal.shared.standardList.length; i++) {
 			var tagRe = new RegExp('(\\{\\{' + TwinkleGlobal.shared.standardList[i].value + '(\\||\\}\\}))', 'im');
 			if (tagRe.exec(pageText)) {
-				Morebits.status.warn('Info', 'Found {{' + TwinkleGlobal.shared.standardList[i].value + '}} on the user\'s talk page already...aborting');
+				MorebitsGlobal.status.warn('Info', 'Found {{' + TwinkleGlobal.shared.standardList[i].value + '}} on the user\'s talk page already...aborting');
 				found = true;
 			}
 		}
@@ -146,7 +146,7 @@ TwinkleGlobal.shared.callbacks = {
 			return;
 		}
 
-		Morebits.status.info('Info', 'Will add the shared IP address template to the top of the user\'s talk page.');
+		MorebitsGlobal.status.info('Info', 'Will add the shared IP address template to the top of the user\'s talk page.');
 		text += params.value + '|' + params.organization;
 		if (params.value === 'Shared IP edu' && params.contact !== '') {
 			text += '|' + params.contact;
@@ -186,13 +186,13 @@ TwinkleGlobal.shared.callback.evaluate = function friendlysharedCallbackEvaluate
 		contact: e.target.contact.value
 	};
 
-	Morebits.simpleWindow.setButtonsEnabled(false);
-	Morebits.status.init(e.target);
+	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.status.init(e.target);
 
-	Morebits.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
-	Morebits.wiki.actionCompleted.notice = 'Tagging complete, reloading talk page in a few seconds';
+	MorebitsGlobal.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
+	MorebitsGlobal.wiki.actionCompleted.notice = 'Tagging complete, reloading talk page in a few seconds';
 
-	var wikipedia_page = new Morebits.wiki.page(mw.config.get('wgPageName'), 'User talk page modification');
+	var wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'User talk page modification');
 	wikipedia_page.setFollowRedirect(true);
 	wikipedia_page.setCallbackParameters(params);
 	wikipedia_page.load(TwinkleGlobal.shared.callbacks.main);

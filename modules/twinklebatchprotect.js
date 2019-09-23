@@ -16,7 +16,7 @@
 
 
 TwinkleGlobal.batchprotect = function twinklebatchprotect() {
-	if (Morebits.userIsInGroup('sysop') && ((mw.config.get('wgArticleId') > 0 && (mw.config.get('wgNamespaceNumber') === 2 ||
+	if (MorebitsGlobal.userIsInGroup('sysop') && ((mw.config.get('wgArticleId') > 0 && (mw.config.get('wgNamespaceNumber') === 2 ||
 		mw.config.get('wgNamespaceNumber') === 4)) || mw.config.get('wgNamespaceNumber') === 14 ||
 		mw.config.get('wgCanonicalSpecialPageName') === 'Prefixindex')) {
 		TwinkleGlobal.addPortletLink(TwinkleGlobal.batchprotect.callback, 'P-batch', 'twg-pbatch', 'Protect pages linked from this page');
@@ -25,13 +25,13 @@ TwinkleGlobal.batchprotect = function twinklebatchprotect() {
 
 TwinkleGlobal.batchprotect.unlinkCache = {};
 TwinkleGlobal.batchprotect.callback = function twinklebatchprotectCallback() {
-	var Window = new Morebits.simpleWindow(600, 400);
+	var Window = new MorebitsGlobal.simpleWindow(600, 400);
 	Window.setTitle('Batch protection');
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Protection policy', 'WP:PROT');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#protect');
 
-	var form = new Morebits.quickForm(TwinkleGlobal.batchprotect.callback.evaluate);
+	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.batchprotect.callback.evaluate);
 	form.append({
 		type: 'checkbox',
 		name: 'editmodify',
@@ -283,9 +283,9 @@ TwinkleGlobal.batchprotect.callback = function twinklebatchprotectCallback() {
 		query = {
 			'action': 'query',
 			'generator': 'allpages',
-			'gapnamespace': Morebits.queryString.exists('namespace') ? Morebits.queryString.get('namespace') : $('select[name=namespace]').val(),
-			'gapprefix': Morebits.queryString.exists('from') ? Morebits.string.toUpperCaseFirstChar(Morebits.queryString.get('from').replace('+', ' ')) :
-				Morebits.string.toUpperCaseFirstChar($('input[name=prefix]').val()),
+			'gapnamespace': MorebitsGlobal.queryString.exists('namespace') ? MorebitsGlobal.queryString.get('namespace') : $('select[name=namespace]').val(),
+			'gapprefix': MorebitsGlobal.queryString.exists('from') ? MorebitsGlobal.string.toUpperCaseFirstChar(MorebitsGlobal.queryString.get('from').replace('+', ' ')) :
+				MorebitsGlobal.string.toUpperCaseFirstChar($('input[name=prefix]').val()),
 			'gaplimit': TwinkleGlobal.getPref('batchMax'), // the max for sysops
 			'prop': 'revisions',
 			'rvprop': 'size'
@@ -304,12 +304,12 @@ TwinkleGlobal.batchprotect.callback = function twinklebatchprotectCallback() {
 	var statusdiv = document.createElement('div');
 	statusdiv.style.padding = '15px';  // just so it doesn't look broken
 	Window.setContent(statusdiv);
-	Morebits.status.init(statusdiv);
+	MorebitsGlobal.status.init(statusdiv);
 	Window.display();
 
-	var statelem = new Morebits.status('Grabbing list of pages');
+	var statelem = new MorebitsGlobal.status('Grabbing list of pages');
 
-	var wikipedia_api = new Morebits.wiki.api('loading...', query, function(apiobj) {
+	var wikipedia_api = new MorebitsGlobal.wiki.api('loading...', query, function(apiobj) {
 		var xml = apiobj.responseXML;
 		var $pages = $(xml).find('page');
 		var list = [];
@@ -336,14 +336,14 @@ TwinkleGlobal.batchprotect.callback = function twinklebatchprotectCallback() {
 			type: 'button',
 			label: 'Select All',
 			event: function(e) {
-				$(Morebits.quickForm.getElements(e.target.form, 'pages')).prop('checked', true);
+				$(MorebitsGlobal.quickForm.getElements(e.target.form, 'pages')).prop('checked', true);
 			}
 		});
 		form.append({
 			type: 'button',
 			label: 'Deselect All',
 			event: function(e) {
-				$(Morebits.quickForm.getElements(e.target.form, 'pages')).prop('checked', false);
+				$(MorebitsGlobal.quickForm.getElements(e.target.form, 'pages')).prop('checked', false);
 			}
 		});
 		form.append({
@@ -380,15 +380,15 @@ TwinkleGlobal.batchprotect.callback.evaluate = function twinklebatchprotectCallb
 		return;
 	}
 
-	Morebits.simpleWindow.setButtonsEnabled(false);
-	Morebits.status.init(event.target);
+	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.status.init(event.target);
 
 	if (!pages) {
-		Morebits.status.error('Error', 'Nothing to protect, aborting');
+		MorebitsGlobal.status.error('Error', 'Nothing to protect, aborting');
 		return;
 	}
 
-	var batchOperation = new Morebits.batchOperation('Applying protection settings');
+	var batchOperation = new MorebitsGlobal.batchOperation('Applying protection settings');
 	batchOperation.setOption('chunkSize', TwinkleGlobal.getPref('batchProtectChunks'));
 	batchOperation.setOption('preserveIndividualStatusLines', true);
 	batchOperation.setPageList(pages);
@@ -397,7 +397,7 @@ TwinkleGlobal.batchprotect.callback.evaluate = function twinklebatchprotectCallb
 			'action': 'query',
 			'titles': pageName
 		};
-		var wikipedia_api = new Morebits.wiki.api('Checking if page ' + pageName + ' exists', query,
+		var wikipedia_api = new MorebitsGlobal.wiki.api('Checking if page ' + pageName + ' exists', query,
 			TwinkleGlobal.batchprotect.callbacks.main, null, batchOperation.workerFailure);
 		wikipedia_api.params = {
 			page: pageName,
@@ -427,7 +427,7 @@ TwinkleGlobal.batchprotect.callbacks = {
 
 		var exists = $(xml).find('page').attr('missing') !== '';
 
-		var page = new Morebits.wiki.page(apiobj.params.page, 'Protecting ' + apiobj.params.page);
+		var page = new MorebitsGlobal.wiki.page(apiobj.params.page, 'Protecting ' + apiobj.params.page);
 		var takenAction = false;
 		if (exists && apiobj.params.editmodify) {
 			page.setEditProtection(apiobj.params.editlevel, apiobj.params.editexpiry);
@@ -442,7 +442,7 @@ TwinkleGlobal.batchprotect.callbacks = {
 			takenAction = true;
 		}
 		if (!takenAction) {
-			Morebits.status.warn('Protecting ' + apiobj.params.page, 'page ' + (exists ? 'exists' : 'does not exist') + '; nothing to do, skipping');
+			MorebitsGlobal.status.warn('Protecting ' + apiobj.params.page, 'page ' + (exists ? 'exists' : 'does not exist') + '; nothing to do, skipping');
 			apiobj.params.batchOperation.workerFailure(apiobj);
 			return;
 		}

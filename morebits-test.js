@@ -1,4 +1,4 @@
-/* global TwinkleGlobal, Morebits */
+/* global TwinkleGlobal, MorebitsGlobal */
 
 // Script depends on jQuery dialog widget
 mw.loader.using('jquery.ui.dialog', function() {
@@ -10,10 +10,10 @@ mw.loader.using('jquery.ui.dialog', function() {
 		},
 
 		initSimpleWindow: function() {
-			var Window = new Morebits.simpleWindow(600, 400);
+			var Window = new MorebitsGlobal.simpleWindow(600, 400);
 			Window.setTitle('Test morebits.js');
 			Window.display();
-			var form = new Morebits.quickForm(null);
+			var form = new MorebitsGlobal.quickForm(null);
 			form.append({
 				type: 'select',
 				name: 'main_group',
@@ -23,9 +23,9 @@ mw.loader.using('jquery.ui.dialog', function() {
 			Window.setContent(result);
 			Window.display();
 			result.main_group.root = result;
-			Morebits.status.init(result);
-			Morebits.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
-			Morebits.wiki.actionCompleted.notice = 'Test complete, reloading talk page in a few seconds';
+			MorebitsGlobal.status.init(result);
+			MorebitsGlobal.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
+			MorebitsGlobal.wiki.actionCompleted.notice = 'Test complete, reloading talk page in a few seconds';
 		},
 
 		setPageOptions: function(page) {
@@ -80,7 +80,7 @@ mw.loader.using('jquery.ui.dialog', function() {
 		},
 
 		finalSaveCallback: function(page) {
-			Morebits.wiki.actionCompleted.redirect = page.getPageName(); // get result of redirects
+			MorebitsGlobal.wiki.actionCompleted.redirect = page.getPageName(); // get result of redirects
 		},
 
 		initialize: function() {
@@ -110,14 +110,14 @@ mw.loader.using('jquery.ui.dialog', function() {
 				.dialog({
 					width: 500,
 					autoOpen: false,
-					title: 'Test Morebits.wiki.page class',
+					title: 'Test MorebitsGlobal.wiki.page class',
 					modal: true,
 					buttons: {
 						'Append': function() {
 							$(this).dialog('close');
 							TwinkleGlobal.morebitsTest.initSimpleWindow();
 
-							var page = new Morebits.wiki.page(mw.config.get('wgPageName'));
+							var page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
 							page.setAppendText($('#message').val());
 							TwinkleGlobal.morebitsTest.setPageOptions(page);
 							page.append(TwinkleGlobal.morebitsTest.finalSaveCallback);
@@ -126,7 +126,7 @@ mw.loader.using('jquery.ui.dialog', function() {
 							$(this).dialog('close');
 							TwinkleGlobal.morebitsTest.initSimpleWindow();
 
-							var page = new Morebits.wiki.page(mw.config.get('wgPageName'));
+							var page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
 							page.setPrependText($('#message').val());
 							TwinkleGlobal.morebitsTest.setPageOptions(page);
 							page.prepend(TwinkleGlobal.morebitsTest.finalSaveCallback);
@@ -139,7 +139,7 @@ mw.loader.using('jquery.ui.dialog', function() {
 							$(this).dialog('close');
 							TwinkleGlobal.morebitsTest.initSimpleWindow();
 
-							var page = new Morebits.wiki.page(mw.config.get('wgPageName'));
+							var page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
 							page.setCallbackParameters({
 								beforeText: $('#beforeText').val(),
 								newText: $('#message').val()
@@ -151,7 +151,7 @@ mw.loader.using('jquery.ui.dialog', function() {
 							$(this).dialog('close');
 							TwinkleGlobal.morebitsTest.initSimpleWindow();
 
-							var page = new Morebits.wiki.page(mw.config.get('wgPageName'));
+							var page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
 							page.setCallbackParameters({
 								newText: $('#message').val()
 							});

@@ -35,7 +35,7 @@ TwinkleGlobal.diff = function twinklediff() {
 	TwinkleGlobal.addPortletLink(mw.util.wikiScript('index') + '?' + $.param(query), 'Last', 'twg-lastdiff', 'Show most recent diff');
 
 	// Show additional tabs only on diff pages
-	if (Morebits.queryString.exists('diff')) {
+	if (MorebitsGlobal.queryString.exists('diff')) {
 		TwinkleGlobal.addPortletLink(function() {
 			TwinkleGlobal.diff.evaluate(false);
 		}, 'Since', 'twg-since', 'Show difference between last diff and the revision made by previous user');
@@ -75,8 +75,8 @@ TwinkleGlobal.diff.evaluate = function twinklediffEvaluate(me) {
 		'rvstartid': mw.config.get('wgCurRevisionId') - 1, // i.e. not the current one
 		'rvuser': user
 	};
-	Morebits.status.init(document.getElementById('mw-content-text'));
-	var wikipedia_api = new Morebits.wiki.api('Grabbing data of initial contributor', query, TwinkleGlobal.diff.callbacks.main);
+	MorebitsGlobal.status.init(document.getElementById('mw-content-text'));
+	var wikipedia_api = new MorebitsGlobal.wiki.api('Grabbing data of initial contributor', query, TwinkleGlobal.diff.callbacks.main);
 	wikipedia_api.params = { user: user };
 	wikipedia_api.post();
 };
@@ -95,7 +95,7 @@ TwinkleGlobal.diff.callbacks = {
 			'oldid': revid,
 			'diff': mw.config.get('wgCurRevisionId')
 		};
-		window.location = mw.util.wikiScript('index') + '?' + Morebits.queryString.create(query);
+		window.location = mw.util.wikiScript('index') + '?' + MorebitsGlobal.queryString.create(query);
 	}
 };
 })(jQuery);

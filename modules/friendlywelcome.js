@@ -15,8 +15,8 @@
  */
 
 TwinkleGlobal.welcome = function friendlywelcome() {
-	if (Morebits.queryString.exists('friendlywelcome')) {
-		if (Morebits.queryString.get('friendlywelcome') === 'auto') {
+	if (MorebitsGlobal.queryString.exists('friendlywelcome')) {
+		if (MorebitsGlobal.queryString.get('friendlywelcome') === 'auto') {
 			TwinkleGlobal.welcome.auto();
 		} else {
 			TwinkleGlobal.welcome.semiauto();
@@ -27,7 +27,7 @@ TwinkleGlobal.welcome = function friendlywelcome() {
 };
 
 TwinkleGlobal.welcome.auto = function() {
-	if (Morebits.queryString.get('action') !== 'edit') {
+	if (MorebitsGlobal.queryString.get('action') !== 'edit') {
 		// userpage not empty, aborting auto-welcome
 		return;
 	}
@@ -40,7 +40,7 @@ TwinkleGlobal.welcome.semiauto = function() {
 };
 
 TwinkleGlobal.welcome.normal = function() {
-	if (Morebits.queryString.exists('diff')) {
+	if (MorebitsGlobal.queryString.exists('diff')) {
 		// check whether the contributors' talk pages exist yet
 		var $oList = $('#mw-diff-otitle2').find('span.mw-usertoollinks a.new:contains(talk)').first();
 		var $nList = $('#mw-diff-ntitle2').find('span.mw-usertoollinks a.new:contains(talk)').first();
@@ -64,9 +64,9 @@ TwinkleGlobal.welcome.normal = function() {
 				var oHref = $oList.attr('href');
 
 				var oWelcomeNode = welcomeNode.cloneNode(true);
-				oWelcomeNode.firstChild.setAttribute('href', oHref + '&' + Morebits.queryString.create({
+				oWelcomeNode.firstChild.setAttribute('href', oHref + '&' + MorebitsGlobal.queryString.create({
 					'friendlywelcome': TwinkleGlobal.getFriendlyPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
-					'vanarticle': Morebits.pageNameNorm
+					'vanarticle': MorebitsGlobal.pageNameNorm
 				}));
 				$oList[0].parentNode.parentNode.appendChild(document.createTextNode(' '));
 				$oList[0].parentNode.parentNode.appendChild(oWelcomeNode);
@@ -76,9 +76,9 @@ TwinkleGlobal.welcome.normal = function() {
 				var nHref = $nList.attr('href');
 
 				var nWelcomeNode = welcomeNode.cloneNode(true);
-				nWelcomeNode.firstChild.setAttribute('href', nHref + '&' + Morebits.queryString.create({
+				nWelcomeNode.firstChild.setAttribute('href', nHref + '&' + MorebitsGlobal.queryString.create({
 					'friendlywelcome': TwinkleGlobal.getFriendlyPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
-					'vanarticle': Morebits.pageNameNorm
+					'vanarticle': MorebitsGlobal.pageNameNorm
 				}));
 				$nList[0].parentNode.parentNode.appendChild(document.createTextNode(' '));
 				$nList[0].parentNode.parentNode.appendChild(nWelcomeNode);
@@ -93,20 +93,20 @@ TwinkleGlobal.welcome.normal = function() {
 };
 
 TwinkleGlobal.welcome.welcomeUser = function welcomeUser() {
-	Morebits.status.init(document.getElementById('mw-content-text'));
+	MorebitsGlobal.status.init(document.getElementById('mw-content-text'));
 	$('#catlinks').remove();
 
 	var params = {
 		value: TwinkleGlobal.getFriendlyPref('quickWelcomeTemplate'),
-		article: Morebits.queryString.exists('vanarticle') ? Morebits.queryString.get('vanarticle') : '',
+		article: MorebitsGlobal.queryString.exists('vanarticle') ? MorebitsGlobal.queryString.get('vanarticle') : '',
 		mode: 'auto'
 	};
 
 	var userTalkPage = mw.config.get('wgFormattedNamespaces')[3] + ':' + mw.config.get('wgRelevantUserName');
-	Morebits.wiki.actionCompleted.redirect = userTalkPage;
-	Morebits.wiki.actionCompleted.notice = 'Welcoming complete, reloading talk page in a few seconds';
+	MorebitsGlobal.wiki.actionCompleted.redirect = userTalkPage;
+	MorebitsGlobal.wiki.actionCompleted.notice = 'Welcoming complete, reloading talk page in a few seconds';
 
-	var wikipedia_page = new Morebits.wiki.page(userTalkPage, 'User talk page modification');
+	var wikipedia_page = new MorebitsGlobal.wiki.page(userTalkPage, 'User talk page modification');
 	wikipedia_page.setFollowRedirect(true);
 	wikipedia_page.setCallbackParameters(params);
 	wikipedia_page.load(TwinkleGlobal.welcome.callbacks.main);
@@ -117,13 +117,13 @@ TwinkleGlobal.welcome.callback = function friendlywelcomeCallback(uid) {
 		return;
 	}
 
-	var Window = new Morebits.simpleWindow(600, 420);
+	var Window = new MorebitsGlobal.simpleWindow(600, 420);
 	Window.setTitle('Welcome user');
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Welcoming Committee', 'WP:WC');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#welcome');
 
-	var form = new Morebits.quickForm(TwinkleGlobal.welcome.callback.evaluate);
+	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.welcome.callback.evaluate);
 
 	form.append({
 		type: 'select',
@@ -148,7 +148,7 @@ TwinkleGlobal.welcome.callback = function friendlywelcomeCallback(uid) {
 		type: 'input',
 		name: 'article',
 		label: '* Linked article (if supported by template):',
-		value: Morebits.queryString.exists('vanarticle') ? Morebits.queryString.get('vanarticle') : '',
+		value: MorebitsGlobal.queryString.exists('vanarticle') ? MorebitsGlobal.queryString.get('vanarticle') : '',
 		tooltip: 'An article might be linked from within the welcome if the template supports it. Leave empty for no article to be linked.  Templates that support a linked article are marked with an asterisk.'
 	});
 
@@ -175,7 +175,7 @@ TwinkleGlobal.welcome.callback = function friendlywelcomeCallback(uid) {
 TwinkleGlobal.welcome.populateWelcomeList = function(e) {
 	var type = e.target.value;
 
-	var container = new Morebits.quickForm.element({ type: 'fragment' });
+	var container = new MorebitsGlobal.quickForm.element({ type: 'fragment' });
 
 	if ((type === 'standard' || type === 'anonymous') && TwinkleGlobal.getFriendlyPref('customWelcomeList').length) {
 		container.append({ type: 'header', label: 'Custom welcome templates' });
@@ -722,7 +722,7 @@ TwinkleGlobal.welcome.getTemplateWikitext = function(template, article) {
 
 TwinkleGlobal.welcome.callbacks = {
 	preview: function(form) {
-		var previewDialog = new Morebits.simpleWindow(750, 400);
+		var previewDialog = new MorebitsGlobal.simpleWindow(750, 400);
 		previewDialog.setTitle('Welcome template preview');
 		previewDialog.setScriptName('Welcome user');
 		previewDialog.setModality(true);
@@ -732,7 +732,7 @@ TwinkleGlobal.welcome.callbacks = {
 		previewdiv.style.fontSize = 'small';
 		previewDialog.setContent(previewdiv);
 
-		var previewer = new Morebits.wiki.preview(previewdiv);
+		var previewer = new MorebitsGlobal.wiki.preview(previewdiv);
 		previewer.beginRender(TwinkleGlobal.welcome.getTemplateWikitext(form.getChecked('template'), form.article.value), 'User talk:' + mw.config.get('wgRelevantUserName')); // Force wikitext/correct username
 
 		var submit = document.createElement('input');
@@ -752,8 +752,8 @@ TwinkleGlobal.welcome.callbacks = {
 
 		// abort if mode is auto and form is not empty
 		if (pageobj.exists() && params.mode === 'auto') {
-			Morebits.status.info('Warning', 'User talk page not empty; aborting automatic welcome');
-			Morebits.wiki.actionCompleted.event();
+			MorebitsGlobal.status.info('Warning', 'User talk page not empty; aborting automatic welcome');
+			MorebitsGlobal.wiki.actionCompleted.event();
 			return;
 		}
 
@@ -783,14 +783,14 @@ TwinkleGlobal.welcome.callback.evaluate = function friendlywelcomeCallbackEvalua
 		mode: 'manual'
 	};
 
-	Morebits.simpleWindow.setButtonsEnabled(false);
-	Morebits.status.init(form);
+	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.status.init(form);
 
 	var userTalkPage = mw.config.get('wgFormattedNamespaces')[3] + ':' + mw.config.get('wgRelevantUserName');
-	Morebits.wiki.actionCompleted.redirect = userTalkPage;
-	Morebits.wiki.actionCompleted.notice = 'Welcoming complete, reloading talk page in a few seconds';
+	MorebitsGlobal.wiki.actionCompleted.redirect = userTalkPage;
+	MorebitsGlobal.wiki.actionCompleted.notice = 'Welcoming complete, reloading talk page in a few seconds';
 
-	var wikipedia_page = new Morebits.wiki.page(userTalkPage, 'User talk page modification');
+	var wikipedia_page = new MorebitsGlobal.wiki.page(userTalkPage, 'User talk page modification');
 	wikipedia_page.setFollowRedirect(true);
 	wikipedia_page.setCallbackParameters(params);
 	wikipedia_page.load(TwinkleGlobal.welcome.callbacks.main);

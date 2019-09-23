@@ -18,7 +18,7 @@
  */
 // <nowiki>
 
-/* global Morebits */
+/* global MorebitsGlobal */
 
 (function (window, document, $, undefined) { // Wrap with anonymous function
 
@@ -26,7 +26,7 @@ var TwinkleGlobal = {};
 window.TwinkleGlobal = TwinkleGlobal;  // allow global access
 
 // Check if account is experienced enough to use Twinkle
-TwinkleGlobal.userAuthorized = Morebits.userIsInGroup('autoconfirmed') || Morebits.userIsInGroup('confirmed');
+TwinkleGlobal.userAuthorized = MorebitsGlobal.userIsInGroup('autoconfirmed') || MorebitsGlobal.userIsInGroup('confirmed');
 
 // for use by custom modules (normally empty)
 TwinkleGlobal.initCallbacks = [];
@@ -436,13 +436,13 @@ TwinkleGlobal.load = function () {
 	}
 
 	// Set custom Api-User-Agent header, for server-side logging purposes
-	Morebits.wiki.api.setApiUserAgent('Twinkle/2.0 (' + mw.config.get('wgDBname') + ')');
+	MorebitsGlobal.wiki.api.setApiUserAgent('Twinkle/2.0 (' + mw.config.get('wgDBname') + ')');
 
 	// Load the modules in the order that the tabs should appear
 	// User/user talk-related
 	TwinkleGlobal.arv();
 	// TwinkleGlobal.warn();
-	if (Morebits.userIsInGroup('sysop')) {
+	if (MorebitsGlobal.userIsInGroup('sysop')) {
 		// TwinkleGlobal.block();
 	}
 	// TwinkleGlobal.welcome();
@@ -461,7 +461,7 @@ TwinkleGlobal.load = function () {
 	// TwinkleGlobal.unlink();
 	TwinkleGlobal.config.init();
 	TwinkleGlobal.fluff.init();
-	if (Morebits.userIsInGroup('sysop')) {
+	if (MorebitsGlobal.userIsInGroup('sysop')) {
 		// TwinkleGlobal.deprod();
 		// TwinkleGlobal.batchdelete();
 		// TwinkleGlobal.batchprotect();

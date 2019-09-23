@@ -943,7 +943,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 		contentdiv.appendChild(contentnotice);
 
 		// look and see if the user does in fact have any old settings in their skin JS file
-		var skinjs = new Morebits.wiki.page('User:' + mw.config.get('wgUserName') + '/' + mw.config.get('skin') + '.js');
+		var skinjs = new MorebitsGlobal.wiki.page('User:' + mw.config.get('wgUserName') + '/' + mw.config.get('skin') + '.js');
 		skinjs.setCallbackParameters(contentnotice);
 		skinjs.load(TwinkleGlobal.config.legacyPrefsNotice);
 
@@ -995,7 +995,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 		contentform.appendChild(container);
 
 		$(TwinkleGlobal.config.sections).each(function(sectionkey, section) {
-			if (section.hidden || (section.adminOnly && !Morebits.userIsInGroup('sysop'))) {
+			if (section.hidden || (section.adminOnly && !MorebitsGlobal.userIsInGroup('sysop'))) {
 				return true;  // i.e. "continue" in this context
 			}
 
@@ -1031,7 +1031,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 
 			// add each of the preferences to the form
 			$(section.preferences).each(function(prefkey, pref) {
-				if (pref.adminOnly && !Morebits.userIsInGroup('sysop')) {
+				if (pref.adminOnly && !MorebitsGlobal.userIsInGroup('sysop')) {
 					return true;  // i.e. "continue" in this context
 				}
 
@@ -1305,7 +1305,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 	}
 };
 
-// Morebits.wiki.page callback from init code
+// MorebitsGlobal.wiki.page callback from init code
 TwinkleGlobal.config.legacyPrefsNotice = function twinkleconfigLegacyPrefsNotice(pageobj) {
 	var text = pageobj.getPageText();
 	var contentnotice = pageobj.getCallbackParameters();
@@ -1369,7 +1369,7 @@ TwinkleGlobal.config.listDialog.display = function twinkleconfigListDialogDispla
 	var curvalue = $prefbutton.data('value');
 	var curpref = $prefbutton.data('pref');
 
-	var dialog = new Morebits.simpleWindow(720, 400);
+	var dialog = new MorebitsGlobal.simpleWindow(720, 400);
 	dialog.setTitle(curpref.label);
 	dialog.setScriptName('Twinkle preferences');
 
@@ -1432,7 +1432,7 @@ TwinkleGlobal.config.listDialog.display = function twinkleconfigListDialogDispla
 
 	// buttonpane buttons: [Save changes] [Reset] [Cancel]
 	var button = document.createElement('button');
-	button.setAttribute('type', 'submit');  // so Morebits.simpleWindow puts the button in the button pane
+	button.setAttribute('type', 'submit');  // so MorebitsGlobal.simpleWindow puts the button in the button pane
 	button.addEventListener('click', function() {
 		TwinkleGlobal.config.listDialog.save($prefbutton, dlgtbody);
 		dialog.close();
@@ -1440,14 +1440,14 @@ TwinkleGlobal.config.listDialog.display = function twinkleconfigListDialogDispla
 	button.textContent = 'Save changes';
 	dialogcontent.appendChild(button);
 	button = document.createElement('button');
-	button.setAttribute('type', 'submit');  // so Morebits.simpleWindow puts the button in the button pane
+	button.setAttribute('type', 'submit');  // so MorebitsGlobal.simpleWindow puts the button in the button pane
 	button.addEventListener('click', function() {
 		TwinkleGlobal.config.listDialog.reset($prefbutton, dlgtbody);
 	}, false);
 	button.textContent = 'Reset';
 	dialogcontent.appendChild(button);
 	button = document.createElement('button');
-	button.setAttribute('type', 'submit');  // so Morebits.simpleWindow puts the button in the button pane
+	button.setAttribute('type', 'submit');  // so MorebitsGlobal.simpleWindow puts the button in the button pane
 	button.addEventListener('click', function() {
 		dialog.close();  // the event parameter on this function seems to be broken
 	}, false);
@@ -1504,7 +1504,7 @@ TwinkleGlobal.config.resetPrefLink = function twinkleconfigResetPrefLink(e) {
 
 	// search tactics
 	$(TwinkleGlobal.config.sections).each(function(sectionkey, section) {
-		if (section.hidden || (section.adminOnly && !Morebits.userIsInGroup('sysop'))) {
+		if (section.hidden || (section.adminOnly && !MorebitsGlobal.userIsInGroup('sysop'))) {
 			return true;  // continue: skip impossibilities
 		}
 
@@ -1564,11 +1564,11 @@ TwinkleGlobal.config.resetPref = function twinkleconfigResetPref(pref, inFriendl
 TwinkleGlobal.config.resetAllPrefs = function twinkleconfigResetAllPrefs() {
 	// no confirmation message - the user can just refresh/close the page to abort
 	$(TwinkleGlobal.config.sections).each(function(sectionkey, section) {
-		if (section.hidden || (section.adminOnly && !Morebits.userIsInGroup('sysop'))) {
+		if (section.hidden || (section.adminOnly && !MorebitsGlobal.userIsInGroup('sysop'))) {
 			return true;  // continue: skip impossibilities
 		}
 		$(section.preferences).each(function(prefkey, pref) {
-			if (!pref.adminOnly || Morebits.userIsInGroup('sysop')) {
+			if (!pref.adminOnly || MorebitsGlobal.userIsInGroup('sysop')) {
 				TwinkleGlobal.config.resetPref(pref, section.inFriendlyConfig);
 			}
 		});
@@ -1578,12 +1578,12 @@ TwinkleGlobal.config.resetAllPrefs = function twinkleconfigResetAllPrefs() {
 };
 
 TwinkleGlobal.config.save = function twinkleconfigSave(e) {
-	Morebits.status.init(document.getElementById('twinkle-config-content'));
+	MorebitsGlobal.status.init(document.getElementById('twinkle-config-content'));
 
-	Morebits.wiki.actionCompleted.notice = 'Save';
+	MorebitsGlobal.wiki.actionCompleted.notice = 'Save';
 
 	var userjs = mw.config.get('wgFormattedNamespaces')[mw.config.get('wgNamespaceIds').user] + ':' + mw.config.get('wgUserName') + '/twinkleoptions.js';
-	var wikipedia_page = new Morebits.wiki.page(userjs, 'Saving preferences to ' + userjs);
+	var wikipedia_page = new MorebitsGlobal.wiki.page(userjs, 'Saving preferences to ' + userjs);
 	wikipedia_page.setCallbackParameters(e.target);
 	wikipedia_page.load(TwinkleGlobal.config.writePrefs);
 
@@ -1632,7 +1632,7 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 	};
 
 	$(TwinkleGlobal.config.sections).each(function(sectionkey, section) {
-		if (section.adminOnly && !Morebits.userIsInGroup('sysop')) {
+		if (section.adminOnly && !MorebitsGlobal.userIsInGroup('sysop')) {
 			return;  // i.e. "continue" in this context
 		}
 
@@ -1641,7 +1641,7 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 			var userValue;  // = undefined
 
 			// only read form values for those prefs that have them
-			if (!section.hidden && (!pref.adminOnly || Morebits.userIsInGroup('sysop'))) {
+			if (!section.hidden && (!pref.adminOnly || MorebitsGlobal.userIsInGroup('sysop'))) {
 				switch (pref.type) {
 
 					case 'boolean':  // read from the checkbox
@@ -1656,7 +1656,7 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 					case 'integer':  // read from the input box
 						userValue = parseInt(form[pref.name].value, 10);
 						if (isNaN(userValue)) {
-							Morebits.status.warn('Saving', 'The value you specified for ' + pref.name + ' (' + pref.value + ') was invalid.  The save will continue, but the invalid data value will be skipped.');
+							MorebitsGlobal.status.warn('Saving', 'The value you specified for ' + pref.name + ' (' + pref.value + ') was invalid.  The save will continue, but the invalid data value will be skipped.');
 							userValue = null;
 						}
 						break;
@@ -1722,7 +1722,7 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 		'// twinkleoptions.js: personal Twinkle preferences file\n' +
 		'//\n' +
 		'// NOTE: The easiest way to change your Twinkle preferences is by using the\n' +
-		'// Twinkle preferences panel, at [[' + Morebits.pageNameNorm + ']].\n' +
+		'// Twinkle preferences panel, at [[' + MorebitsGlobal.pageNameNorm + ']].\n' +
 		'//\n' +
 		'// This file is AUTOMATICALLY GENERATED.  Any changes you make (aside from\n' +
 		'// changing the configuration parameters in a valid-JavaScript way) will be\n' +
@@ -1739,7 +1739,7 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 		'// End of twinkleoptions.js\n';
 
 	pageobj.setPageText(text);
-	pageobj.setEditSummary('Saving Twinkle preferences: automatic edit from [[:' + Morebits.pageNameNorm + ']]');
+	pageobj.setEditSummary('Saving Twinkle preferences: automatic edit from [[:' + MorebitsGlobal.pageNameNorm + ']]');
 	pageobj.setCreateOption('recreate');
 	pageobj.save(TwinkleGlobal.config.saveSuccess);
 };
@@ -1752,10 +1752,10 @@ TwinkleGlobal.config.saveSuccess = function twinkleconfigSaveSuccess(pageobj) {
 	noticebox.style.fontSize = '100%';
 	noticebox.style.marginTop = '2em';
 	noticebox.innerHTML = '<p><b>Your Twinkle preferences have been saved.</b></p><p>To see the changes, you will need to <b>clear your browser cache entirely</b> (see <a href="' + mw.util.getUrl('WP:BYPASS') + '" title="WP:BYPASS">WP:BYPASS</a> for instructions).</p>';
-	Morebits.status.root.appendChild(noticebox);
+	MorebitsGlobal.status.root.appendChild(noticebox);
 	var noticeclear = document.createElement('br');
 	noticeclear.style.clear = 'both';
-	Morebits.status.root.appendChild(noticeclear);
+	MorebitsGlobal.status.root.appendChild(noticeclear);
 };
 })(jQuery);
 

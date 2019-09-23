@@ -42,7 +42,7 @@ TwinkleGlobal.fluff = {
 
 		var vandal = $('#mw-diff-ntitle2').find('a.mw-userlink').text();
 
-		TwinkleGlobal.fluff.revert(Morebits.queryString.get('twinklerevert'), vandal, true);
+		TwinkleGlobal.fluff.revert(MorebitsGlobal.queryString.get('twinklerevert'), vandal, true);
 	},
 
 	contributions: function() {
@@ -69,11 +69,11 @@ TwinkleGlobal.fluff = {
 					var href = $(current).find('.mw-changeslist-diff').attr('href');
 					current.appendChild(document.createTextNode(' '));
 					var tmpNode = revNode.cloneNode(true);
-					tmpNode.firstChild.setAttribute('href', href + '&' + Morebits.queryString.create({ 'twinklerevert': 'norm' }));
+					tmpNode.firstChild.setAttribute('href', href + '&' + MorebitsGlobal.queryString.create({ 'twinklerevert': 'norm' }));
 					current.appendChild(tmpNode);
 					current.appendChild(document.createTextNode(' '));
 					tmpNode = revVandNode.cloneNode(true);
-					tmpNode.firstChild.setAttribute('href', href + '&' + Morebits.queryString.create({ 'twinklerevert': 'vand' }));
+					tmpNode.firstChild.setAttribute('href', href + '&' + MorebitsGlobal.queryString.create({ 'twinklerevert': 'vand' }));
 					current.appendChild(tmpNode);
 				});
 			}
@@ -175,13 +175,13 @@ TwinkleGlobal.fluff = {
 
 TwinkleGlobal.fluff.revert = function revertPage(type, vandal, autoRevert, rev, page) {
 	if (mw.util.isIPv6Address(vandal)) {
-		vandal = Morebits.sanitizeIPv6(vandal);
+		vandal = MorebitsGlobal.sanitizeIPv6(vandal);
 	}
 
 	var pagename = page || mw.config.get('wgPageName');
 	var revid = rev || mw.config.get('wgCurRevisionId');
 
-	Morebits.status.init(document.getElementById('mw-content-text'));
+	MorebitsGlobal.status.init(document.getElementById('mw-content-text'));
 	$('#catlinks').remove();
 
 	var params = {
@@ -199,14 +199,14 @@ TwinkleGlobal.fluff.revert = function revertPage(type, vandal, autoRevert, rev, 
 		'rvprop': [ 'ids', 'timestamp', 'user', 'comment' ],
 		'intoken': 'edit'
 	};
-	var wikipedia_api = new Morebits.wiki.api('Grabbing data of earlier revisions', query, TwinkleGlobal.fluff.callbacks.main);
+	var wikipedia_api = new MorebitsGlobal.wiki.api('Grabbing data of earlier revisions', query, TwinkleGlobal.fluff.callbacks.main);
 	wikipedia_api.params = params;
 	wikipedia_api.post();
 };
 
 TwinkleGlobal.fluff.revertToRevision = function revertToRevision(oldrev) {
 
-	Morebits.status.init(document.getElementById('mw-content-text'));
+	MorebitsGlobal.status.init(document.getElementById('mw-content-text'));
 
 	var query = {
 		'action': 'query',
@@ -218,7 +218,7 @@ TwinkleGlobal.fluff.revertToRevision = function revertToRevision(oldrev) {
 		'intoken': 'edit',
 		'format': 'xml'
 	};
-	var wikipedia_api = new Morebits.wiki.api('Grabbing data of the earlier revision', query, TwinkleGlobal.fluff.callbacks.toRevision.main);
+	var wikipedia_api = new MorebitsGlobal.wiki.api('Grabbing data of the earlier revision', query, TwinkleGlobal.fluff.callbacks.toRevision.main);
 	wikipedia_api.params = { rev: oldrev };
 	wikipedia_api.post();
 };
@@ -264,10 +264,10 @@ TwinkleGlobal.fluff.callbacks = {
 				'minor': TwinkleGlobal.getPref('markRevertedPagesAsMinor').indexOf('torev') !== -1 ? true : undefined
 			};
 
-			Morebits.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
-			Morebits.wiki.actionCompleted.notice = 'Reversion completed';
+			MorebitsGlobal.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
+			MorebitsGlobal.wiki.actionCompleted.notice = 'Reversion completed';
 
-			var wikipedia_api = new Morebits.wiki.api('Saving reverted contents', query, TwinkleGlobal.fluff.callbacks.complete, self.statelem);
+			var wikipedia_api = new MorebitsGlobal.wiki.api('Saving reverted contents', query, TwinkleGlobal.fluff.callbacks.complete, self.statelem);
 			wikipedia_api.params = self.params;
 			wikipedia_api.post();
 
@@ -290,31 +290,31 @@ TwinkleGlobal.fluff.callbacks = {
 		}
 		var top = revs[0];
 		if (lastrevid < self.params.revid) {
-			Morebits.status.error('Error', [ 'The most recent revision ID received from the server, ', Morebits.htmlNode('strong', lastrevid), ', is less than the ID of the displayed revision. This could indicate that the current revision has been deleted, the server is lagging, or that bad data has been received. Stopping revert.' ]);
+			MorebitsGlobal.status.error('Error', [ 'The most recent revision ID received from the server, ', MorebitsGlobal.htmlNode('strong', lastrevid), ', is less than the ID of the displayed revision. This could indicate that the current revision has been deleted, the server is lagging, or that bad data has been received. Stopping revert.' ]);
 			return;
 		}
 		var index = 1;
 		if (self.params.revid !== lastrevid) {
-			Morebits.status.warn('Warning', [ 'Latest revision ', Morebits.htmlNode('strong', lastrevid), ' doesn\'t equal our revision ', Morebits.htmlNode('strong', self.params.revid) ]);
+			MorebitsGlobal.status.warn('Warning', [ 'Latest revision ', MorebitsGlobal.htmlNode('strong', lastrevid), ' doesn\'t equal our revision ', MorebitsGlobal.htmlNode('strong', self.params.revid) ]);
 			if (lastuser === self.params.user) {
 				switch (self.params.type) {
 					case 'vand':
-						Morebits.status.info('Info', [ 'Latest revision was made by ', Morebits.htmlNode('strong', self.params.user), '. As we assume vandalism, we will proceed to revert.' ]);
+						MorebitsGlobal.status.info('Info', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', self.params.user), '. As we assume vandalism, we will proceed to revert.' ]);
 						break;
 					case 'agf':
-						Morebits.status.warn('Warning', [ 'Latest revision was made by ', Morebits.htmlNode('strong', self.params.user), '. As we assume good faith, we will stop the revert, as the problem might have been fixed.' ]);
+						MorebitsGlobal.status.warn('Warning', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', self.params.user), '. As we assume good faith, we will stop the revert, as the problem might have been fixed.' ]);
 						return;
 					default:
-						Morebits.status.warn('Notice', [ 'Latest revision was made by ', Morebits.htmlNode('strong', self.params.user), ', but we will stop the revert.' ]);
+						MorebitsGlobal.status.warn('Notice', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', self.params.user), ', but we will stop the revert.' ]);
 						return;
 				}
 			} else if (self.params.type === 'vand' &&
 					TwinkleGlobal.fluff.whiteList.indexOf(top.getAttribute('user')) !== -1 && revs.length > 1 &&
 					revs[1].getAttribute('pageId') === self.params.revid) {
-				Morebits.status.info('Info', [ 'Latest revision was made by ', Morebits.htmlNode('strong', lastuser), ', a trusted bot, and the revision before was made by our vandal, so we will proceed with the revert.' ]);
+				MorebitsGlobal.status.info('Info', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', lastuser), ', a trusted bot, and the revision before was made by our vandal, so we will proceed with the revert.' ]);
 				index = 2;
 			} else {
-				Morebits.status.error('Error', [ 'Latest revision was made by ', Morebits.htmlNode('strong', lastuser), ', so it might have already been reverted, we will stop the revert.']);
+				MorebitsGlobal.status.error('Error', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', lastuser), ', so it might have already been reverted, we will stop the revert.']);
 				return;
 			}
 
@@ -323,23 +323,23 @@ TwinkleGlobal.fluff.callbacks = {
 		if (TwinkleGlobal.fluff.whiteList.indexOf(self.params.user) !== -1) {
 			switch (self.params.type) {
 				case 'vand':
-					Morebits.status.info('Info', [ 'Vandalism revert was chosen on ', Morebits.htmlNode('strong', self.params.user), '. As this is a whitelisted bot, we assume you wanted to revert vandalism made by the previous user instead.' ]);
+					MorebitsGlobal.status.info('Info', [ 'Vandalism revert was chosen on ', MorebitsGlobal.htmlNode('strong', self.params.user), '. As this is a whitelisted bot, we assume you wanted to revert vandalism made by the previous user instead.' ]);
 					index = 2;
 					self.params.user = revs[1].getAttribute('user');
 					break;
 				case 'agf':
-					Morebits.status.warn('Notice', [ 'Good faith revert was chosen on ', Morebits.htmlNode('strong', self.params.user), '. This is a whitelisted bot and thus AGF rollback will not proceed.' ]);
+					MorebitsGlobal.status.warn('Notice', [ 'Good faith revert was chosen on ', MorebitsGlobal.htmlNode('strong', self.params.user), '. This is a whitelisted bot and thus AGF rollback will not proceed.' ]);
 					return;
 				case 'norm':
 				/* falls through */
 				default:
 					var cont = confirm('Normal revert was chosen, but the most recent edit was made by a whitelisted bot (' + self.params.user + '). Do you want to revert the revision before instead?');
 					if (cont) {
-						Morebits.status.info('Info', [ 'Normal revert was chosen on ', Morebits.htmlNode('strong', self.params.user), '. This is a whitelisted bot, and per confirmation, we\'ll revert the previous revision instead.' ]);
+						MorebitsGlobal.status.info('Info', [ 'Normal revert was chosen on ', MorebitsGlobal.htmlNode('strong', self.params.user), '. This is a whitelisted bot, and per confirmation, we\'ll revert the previous revision instead.' ]);
 						index = 2;
 						self.params.user = revs[1].getAttribute('user');
 					} else {
-						Morebits.status.warn('Notice', [ 'Normal revert was chosen on ', Morebits.htmlNode('strong', self.params.user), '. This is a whitelisted bot, but per confirmation, revert on selected revision will proceed.' ]);
+						MorebitsGlobal.status.warn('Notice', [ 'Normal revert was chosen on ', MorebitsGlobal.htmlNode('strong', self.params.user), '. This is a whitelisted bot, but per confirmation, revert on selected revision will proceed.' ]);
 					}
 					break;
 			}
@@ -356,12 +356,12 @@ TwinkleGlobal.fluff.callbacks = {
 		}
 
 		if (!found) {
-			self.statelem.error([ 'No previous revision found. Perhaps ', Morebits.htmlNode('strong', self.params.user), ' is the only contributor, or that the user has made more than ' + TwinkleGlobal.getPref('revertMaxRevisions') + ' edits in a row.' ]);
+			self.statelem.error([ 'No previous revision found. Perhaps ', MorebitsGlobal.htmlNode('strong', self.params.user), ' is the only contributor, or that the user has made more than ' + TwinkleGlobal.getPref('revertMaxRevisions') + ' edits in a row.' ]);
 			return;
 		}
 
 		if (!count) {
-			Morebits.status.error('Error', 'As it is not possible to revert zero revisions, we will stop this revert. It could be that the edit has already been reverted, but the revision ID was still the same.');
+			MorebitsGlobal.status.error('Error', 'As it is not possible to revert zero revisions, we will stop this revert. It could be that the edit has already been reverted, but the revision ID was still the same.');
 			return;
 		}
 
@@ -369,7 +369,7 @@ TwinkleGlobal.fluff.callbacks = {
 		var userHasAlreadyConfirmedAction = false;
 		if (self.params.type !== 'vand' && count > 1) {
 			if (!confirm(self.params.user + ' has made ' + count + ' edits in a row. Are you sure you want to revert them all?')) {
-				Morebits.status.info('Notice', 'Stopping revert.');
+				MorebitsGlobal.status.info('Notice', 'Stopping revert.');
 				return;
 			}
 			userHasAlreadyConfirmedAction = true;
@@ -380,7 +380,7 @@ TwinkleGlobal.fluff.callbacks = {
 		self.params.goodid = good_revision.getAttribute('revid');
 		self.params.gooduser = good_revision.getAttribute('user');
 
-		self.statelem.status([ ' revision ', Morebits.htmlNode('strong', self.params.goodid), ' that was made ', Morebits.htmlNode('strong', count), ' revisions ago by ', Morebits.htmlNode('strong', self.params.gooduser) ]);
+		self.statelem.status([ ' revision ', MorebitsGlobal.htmlNode('strong', self.params.goodid), ' that was made ', MorebitsGlobal.htmlNode('strong', count), ' revisions ago by ', MorebitsGlobal.htmlNode('strong', self.params.gooduser) ]);
 
 		var summary, extra_summary;
 		switch (self.params.type) {
@@ -428,7 +428,7 @@ TwinkleGlobal.fluff.callbacks = {
 		if ((!self.params.autoRevert || TwinkleGlobal.getPref('openTalkPageOnAutoRevert')) &&
 				TwinkleGlobal.getPref('openTalkPage').indexOf(self.params.type) !== -1 &&
 				mw.config.get('wgUserName') !== self.params.user) {
-			Morebits.status.info('Info', [ 'Opening user talk page edit form for user ', Morebits.htmlNode('strong', self.params.user) ]);
+			MorebitsGlobal.status.info('Info', [ 'Opening user talk page edit form for user ', MorebitsGlobal.htmlNode('strong', self.params.user) ]);
 
 			query = {
 				'title': 'User talk:' + self.params.user,
@@ -443,16 +443,16 @@ TwinkleGlobal.fluff.callbacks = {
 
 			switch (TwinkleGlobal.getPref('userTalkPageMode')) {
 				case 'tab':
-					window.open(mw.util.wikiScript('index') + '?' + Morebits.queryString.create(query), '_blank');
+					window.open(mw.util.wikiScript('index') + '?' + MorebitsGlobal.queryString.create(query), '_blank');
 					break;
 				case 'blank':
-					window.open(mw.util.wikiScript('index') + '?' + Morebits.queryString.create(query), '_blank',
+					window.open(mw.util.wikiScript('index') + '?' + MorebitsGlobal.queryString.create(query), '_blank',
 						'location=no,toolbar=no,status=no,directories=no,scrollbars=yes,width=1200,height=800');
 					break;
 				case 'window':
 				/* falls through */
 				default:
-					window.open(mw.util.wikiScript('index') + '?' + Morebits.queryString.create(query),
+					window.open(mw.util.wikiScript('index') + '?' + MorebitsGlobal.queryString.create(query),
 						window.name === 'twinklewarnwindow' ? '_blank' : 'twinklewarnwindow',
 						'location=no,toolbar=no,status=no,directories=no,scrollbars=yes,width=1200,height=800');
 					break;
@@ -461,7 +461,7 @@ TwinkleGlobal.fluff.callbacks = {
 
 		// figure out whether we need to/can review the edit
 		var $flagged = $(xmlDoc).find('flagged');
-		if ((Morebits.userIsInGroup('reviewer') || Morebits.userIsInGroup('sysop')) &&
+		if ((MorebitsGlobal.userIsInGroup('reviewer') || MorebitsGlobal.userIsInGroup('sysop')) &&
 				$flagged.length &&
 				$flagged.attr('stable_revid') >= self.params.goodid &&
 				$flagged.attr('pending_since')) {
@@ -482,16 +482,16 @@ TwinkleGlobal.fluff.callbacks = {
 			'minor': TwinkleGlobal.getPref('markRevertedPagesAsMinor').indexOf(self.params.type) !== -1 ? true : undefined
 		};
 
-		Morebits.wiki.actionCompleted.redirect = self.params.pagename;
-		Morebits.wiki.actionCompleted.notice = 'Reversion completed';
+		MorebitsGlobal.wiki.actionCompleted.redirect = self.params.pagename;
+		MorebitsGlobal.wiki.actionCompleted.notice = 'Reversion completed';
 
-		var wikipedia_api = new Morebits.wiki.api('Saving reverted contents', query, TwinkleGlobal.fluff.callbacks.complete, self.statelem);
+		var wikipedia_api = new MorebitsGlobal.wiki.api('Saving reverted contents', query, TwinkleGlobal.fluff.callbacks.complete, self.statelem);
 		wikipedia_api.params = self.params;
 		wikipedia_api.post();
 
 	},
 	complete: function (apiobj) {
-		// TODO Most of this is copy-pasted from Morebits.wiki.page#fnSaveSuccess. Unify it
+		// TODO Most of this is copy-pasted from MorebitsGlobal.wiki.page#fnSaveSuccess. Unify it
 		var xml = apiobj.getXML();
 		var $edit = $(xml).find('edit');
 		var blacklist = $edit.attr('spamblacklist');
@@ -524,7 +524,7 @@ TwinkleGlobal.fluff.callbacks = {
 					'token': apiobj.params.edittoken,
 					'comment': TwinkleGlobal.getPref('summaryAd').trim()
 				};
-				var wikipedia_api = new Morebits.wiki.api('Automatically accepting your changes', query);
+				var wikipedia_api = new MorebitsGlobal.wiki.api('Automatically accepting your changes', query);
 				wikipedia_api.post();
 			}
 		}
@@ -538,7 +538,7 @@ TwinkleGlobal.fluff.formatSummary = function(builtInString, userName, userString
 
 	// append user's custom reason
 	if (userString) {
-		result += ': ' + Morebits.string.toUpperCaseFirstChar(userString);
+		result += ': ' + MorebitsGlobal.string.toUpperCaseFirstChar(userString);
 	}
 	result += TwinkleGlobal.getPref('summaryAd');
 
@@ -551,12 +551,12 @@ TwinkleGlobal.fluff.formatSummary = function(builtInString, userName, userString
 	if (resultLen + contribsLen <= 255) {
 		var talkLink = ' ([[User talk:' + userName + '|talk]])';
 		if (resultLen + contribsLen + unescape(encodeURIComponent(talkLink)).length <= 255) {
-			result = Morebits.string.safeReplace(result, '$USER', contribsLink + talkLink);
+			result = MorebitsGlobal.string.safeReplace(result, '$USER', contribsLink + talkLink);
 		} else {
-			result = Morebits.string.safeReplace(result, '$USER', contribsLink);
+			result = MorebitsGlobal.string.safeReplace(result, '$USER', contribsLink);
 		}
 	} else {
-		result = Morebits.string.safeReplace(result, '$USER', userName);
+		result = MorebitsGlobal.string.safeReplace(result, '$USER', userName);
 	}
 
 	return result;
@@ -582,7 +582,7 @@ TwinkleGlobal.fluff.init = function twinklefluffinit() {
 			'SineBot'
 		];
 
-		if (Morebits.queryString.exists('twinklerevert')) {
+		if (MorebitsGlobal.queryString.exists('twinklerevert')) {
 			// Return if the user can't edit the page in question
 			if (!mw.config.get('wgIsProbablyEditable')) {
 				alert("Unable to edit the page, it's probably protected.");

@@ -14,19 +14,19 @@
  */
 
 TwinkleGlobal.image = function twinkleimage() {
-	if (mw.config.get('wgNamespaceNumber') === 6 && mw.config.get('wgArticleId') && !document.getElementById('mw-sharedupload') && !Morebits.wiki.isPageRedirect()) {
+	if (mw.config.get('wgNamespaceNumber') === 6 && mw.config.get('wgArticleId') && !document.getElementById('mw-sharedupload') && !MorebitsGlobal.wiki.isPageRedirect()) {
 		TwinkleGlobal.addPortletLink(TwinkleGlobal.image.callback, 'DI', 'twg-di', 'Nominate file for delayed speedy deletion');
 	}
 };
 
 TwinkleGlobal.image.callback = function twinkleimageCallback() {
-	var Window = new Morebits.simpleWindow(600, 330);
+	var Window = new MorebitsGlobal.simpleWindow(600, 330);
 	Window.setTitle('File for dated speedy deletion');
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Speedy deletion policy', 'WP:CSD#Files');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#image');
 
-	var form = new Morebits.quickForm(TwinkleGlobal.image.callback.evaluate);
+	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.image.callback.evaluate);
 	form.append({
 		type: 'checkbox',
 		list: [
@@ -112,7 +112,7 @@ TwinkleGlobal.image.callback = function twinkleimageCallback() {
 TwinkleGlobal.image.callback.choice = function twinkleimageCallbackChoose(event) {
 	var value = event.target.values;
 	var root = event.target.form;
-	var work_area = new Morebits.quickForm.element({
+	var work_area = new MorebitsGlobal.quickForm.element({
 		type: 'div',
 		name: 'work_area'
 	});
@@ -242,14 +242,14 @@ TwinkleGlobal.image.callback.evaluate = function twinkleimageCallbackEvaluate(ev
 		'replacement': replacement,
 		'lognomination': lognomination
 	};
-	Morebits.simpleWindow.setButtonsEnabled(false);
-	Morebits.status.init(event.target);
+	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.status.init(event.target);
 
-	Morebits.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
-	Morebits.wiki.actionCompleted.notice = 'Tagging complete';
+	MorebitsGlobal.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
+	MorebitsGlobal.wiki.actionCompleted.notice = 'Tagging complete';
 
 	// Tagging image
-	var wikipedia_page = new Morebits.wiki.page(mw.config.get('wgPageName'), 'Tagging file with deletion tag');
+	var wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Tagging file with deletion tag');
 	wikipedia_page.setCallbackParameters(params);
 	wikipedia_page.load(TwinkleGlobal.image.callbacks.taggingImage);
 
@@ -265,7 +265,7 @@ TwinkleGlobal.image.callback.evaluate = function twinkleimageCallbackEvaluate(ev
 		// No auto-notification, display what was going to be added.
 		var noteData = document.createElement('pre');
 		noteData.appendChild(document.createTextNode('{{subst:di-' + templatename + '-notice|1=' + mw.config.get('wgTitle') + '}} ~~~~'));
-		Morebits.status.info('Notification', [ 'Following/similar data should be posted to the original uploader:', document.createElement('br'), noteData ]);
+		MorebitsGlobal.status.info('Notification', [ 'Following/similar data should be posted to the original uploader:', document.createElement('br'), noteData ]);
 	}
 };
 
@@ -324,14 +324,14 @@ TwinkleGlobal.image.callbacks = {
 		if (initialContrib === mw.config.get('wgUserName')) {
 			pageobj.getStatusElement().warn('You (' + initialContrib + ') created this page; skipping user notification');
 		} else {
-			var usertalkpage = new Morebits.wiki.page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')');
+			var usertalkpage = new MorebitsGlobal.wiki.page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')');
 			var notifytext = '\n{{subst:di-' + params.templatename + '-notice|1=' + mw.config.get('wgTitle');
 			if (params.type === 'no permission') {
 				notifytext += params.source ? '|source=' + params.source : '';
 			}
 			notifytext += '}} ~~~~';
 			usertalkpage.setAppendText(notifytext);
-			usertalkpage.setEditSummary('Notification: tagging for deletion of [[:' + Morebits.pageNameNorm + ']].' + TwinkleGlobal.getPref('summaryAd'));
+			usertalkpage.setEditSummary('Notification: tagging for deletion of [[:' + MorebitsGlobal.pageNameNorm + ']].' + TwinkleGlobal.getPref('summaryAd'));
 			usertalkpage.setCreateOption('recreate');
 			switch (TwinkleGlobal.getPref('deliWatchUser')) {
 				case 'yes':
