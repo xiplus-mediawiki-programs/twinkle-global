@@ -71,6 +71,7 @@ TwinkleGlobal.defaultConfig.twinkle = {
 	showRollbackLinks: [ 'diff', 'others' ],
 	fluffDisabledWikis: [
 		{ 'value': 'enwiki', 'label': '' },
+		{ 'value': 'zh_classicalwiki', 'label': '' },
 		{ 'value': 'zhwiki', 'label': '' },
 		{ 'value': 'zhwikibooks', 'label': '' },
 		{ 'value': 'zhwikiquote', 'label': '' },
