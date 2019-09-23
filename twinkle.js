@@ -53,6 +53,7 @@ TwinkleGlobal.defaultConfig.twinkle = {
 
 	// ARV
 	spiWatchReport: 'yes',
+	customSRGReasomList: [],
 	arvDisabledWikis: [
 		{ 'value': 'zhwiki', 'label': '' },
 		{ 'value': 'zhwiktionary', 'label': '' }

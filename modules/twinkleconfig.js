@@ -216,6 +216,14 @@ TwinkleGlobal.config.sections = [
 				enumValues: TwinkleGlobal.config.commonEnums.watchlist
 			} */
 
+			{
+				name: 'customSRGReasomList',
+				label: 'Custom SRG report reason',
+				type: 'customList',
+				customListValueTitle: 'Reason used in the report',
+				customListLabelTitle: 'Text to show in ARV dialog'
+			},
+
 			// Disable arv on these wikis.
 			{
 				name: 'arvDisabledWikis',
