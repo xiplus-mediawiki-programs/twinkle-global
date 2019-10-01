@@ -77,6 +77,7 @@ TwinkleGlobal.defaultConfig.twinkle = {
 		{ 'value': 'zhwikibooks', 'label': '' },
 		{ 'value': 'zhwikiquote', 'label': '' },
 		{ 'value': 'zhwikiversity', 'label': '' },
+		{ 'value': 'zhwikivoyage', 'label': '' },
 		{ 'value': 'zhwiktionary', 'label': '' }
 	],
 
@@ -137,6 +138,7 @@ TwinkleGlobal.defaultConfig.twinkle = {
 		{ 'value': 'zhwikibooks', 'label': '' },
 		{ 'value': 'zhwikiquote', 'label': '' },
 		{ 'value': 'zhwikiversity', 'label': '' },
+		{ 'value': 'zhwikivoyage', 'label': '' },
 		{ 'value': 'zhwiktionary', 'label': '' }
 	],
 
