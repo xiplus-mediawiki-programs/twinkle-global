@@ -72,6 +72,7 @@ TwinkleGlobal.defaultConfig.twinkle = {
 	showRollbackLinks: [ 'diff', 'others' ],
 	fluffDisabledWikis: [
 		{ 'value': 'enwiki', 'label': '' },
+		{ 'value': 'simplewiki', 'label': '' },
 		{ 'value': 'zh_classicalwiki', 'label': '' },
 		{ 'value': 'zhwiki', 'label': '' },
 		{ 'value': 'zhwikibooks', 'label': '' },
@@ -133,6 +134,7 @@ TwinkleGlobal.defaultConfig.twinkle = {
 	// Diff
 	diffDisabledWikis: [
 		{ 'value': 'enwiki', 'label': '' },
+		{ 'value': 'simplewiki', 'label': '' },
 		{ 'value': 'zh_classicalwiki', 'label': '' },
 		{ 'value': 'zhwiki', 'label': '' },
 		{ 'value': 'zhwikibooks', 'label': '' },
