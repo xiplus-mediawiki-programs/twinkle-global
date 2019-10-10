@@ -54,10 +54,7 @@ TwinkleGlobal.defaultConfig.twinkle = {
 	// ARV
 	spiWatchReport: 'yes',
 	customSRGReasonList: [],
-	arvDisabledWikis: [
-		{ 'value': 'zhwiki', 'label': '' },
-		{ 'value': 'zhwiktionary', 'label': '' }
-	],
+	arvDisabledWikis: [],
 
 	// Block
 	blankTalkpageOnIndefBlock: false,
