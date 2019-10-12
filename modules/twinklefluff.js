@@ -28,7 +28,7 @@ TwinkleGlobal.fluff = function twinklefluff() {
 			'SineBot'
 		];
 
-		if (MorebitsGlobal.queryString.exists('twinklerevert')) {
+		if (mw.util.getParamValue('twinklerevert')) {
 			// Return if the user can't edit the page in question
 			if (!mw.config.get('wgIsProbablyEditable')) {
 				alert("Unable to edit the page, it's probably protected.");
@@ -80,7 +80,7 @@ TwinkleGlobal.fluff.auto = function twinklefluffauto() {
 
 	var vandal = $('#mw-diff-ntitle2').find('a.mw-userlink').text();
 
-	TwinkleGlobal.fluff.revert(MorebitsGlobal.queryString.get('twinklerevert'), vandal, true);
+	TwinkleGlobal.fluff.revert(mw.util.getParamValue('twinklerevert'), vandal, true);
 };
 
 TwinkleGlobal.fluff.addLinks = {
@@ -108,11 +108,11 @@ TwinkleGlobal.fluff.addLinks = {
 					var href = $(current).find('.mw-changeslist-diff').attr('href');
 					current.appendChild(document.createTextNode(' '));
 					var tmpNode = revNode.cloneNode(true);
-					tmpNode.firstChild.setAttribute('href', href + '&' + MorebitsGlobal.queryString.create({ 'twinklerevert': 'norm' }));
+					tmpNode.firstChild.setAttribute('href', href + '&twinklerevert=norm');
 					current.appendChild(tmpNode);
 					current.appendChild(document.createTextNode(' '));
 					tmpNode = revVandNode.cloneNode(true);
-					tmpNode.firstChild.setAttribute('href', href + '&' + MorebitsGlobal.queryString.create({ 'twinklerevert': 'vand' }));
+					tmpNode.firstChild.setAttribute('href', href + '&twinklerevert=vand');
 					current.appendChild(tmpNode);
 				});
 			}
@@ -483,16 +483,16 @@ TwinkleGlobal.fluff.callbacks = {
 
 			switch (TwinkleGlobal.getPref('userTalkPageMode')) {
 				case 'tab':
-					window.open(mw.util.wikiScript('index') + '?' + MorebitsGlobal.queryString.create(query), '_blank');
+					window.open(mw.util.getUrl('', query), '_blank');
 					break;
 				case 'blank':
-					window.open(mw.util.wikiScript('index') + '?' + MorebitsGlobal.queryString.create(query), '_blank',
+					window.open(mw.util.getUrl('', query), '_blank',
 						'location=no,toolbar=no,status=no,directories=no,scrollbars=yes,width=1200,height=800');
 					break;
 				case 'window':
 				/* falls through */
 				default:
-					window.open(mw.util.wikiScript('index') + '?' + MorebitsGlobal.queryString.create(query),
+					window.open(mw.util.getUrl('', query),
 						window.name === 'twinklewarnwindow' ? '_blank' : 'twinklewarnwindow',
 						'location=no,toolbar=no,status=no,directories=no,scrollbars=yes,width=1200,height=800');
 					break;

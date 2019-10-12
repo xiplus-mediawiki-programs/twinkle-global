@@ -280,10 +280,9 @@ TwinkleGlobal.batchprotect.callback = function twinklebatchprotectCallback() {
 		query.gcmlimit = TwinkleGlobal.getPref('batchMax'); // the max for sysops
 	} else if (mw.config.get('wgCanonicalSpecialPageName') === 'Prefixindex') {
 		query.generator = 'allpages';
-		query.gapnamespace = MorebitsGlobal.queryString.exists('namespace') ? MorebitsGlobal.queryString.get('namespace') : $('select[name=namespace]').val();
-		query.gapprefix = MorebitsGlobal.queryString.exists('from') ? MorebitsGlobal.string.toUpperCaseFirstChar(MorebitsGlobal.queryString.get('from').replace('+', ' ')) :
-			MorebitsGlobal.string.toUpperCaseFirstChar($('input[name=prefix]').val());
-		query.gaplimit = TwinkleGlobal.getPref('batchMax'); // the max for sysops
+		query.gapnamespace = mw.util.getParamValue('namespace') || $('select[name=namespace]').val();
+		query.gapprefix = MorebitsGlobal.string.toUpperCaseFirstChar(mw.util.getParamValue('from') ? mw.util.getParamValue('from').replace('+', ' ') : $('input[name=prefix]').val());
+		query.gaplimit = TwinkleGlobal.getPref('batchMax');
 	} else {
 		query.generator = 'links';
 		query.titles = mw.config.get('wgPageName');

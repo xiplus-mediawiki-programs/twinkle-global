@@ -14,8 +14,8 @@
  */
 
 TwinkleGlobal.welcome = function friendlywelcome() {
-	if (MorebitsGlobal.queryString.exists('friendlywelcome')) {
-		if (MorebitsGlobal.queryString.get('friendlywelcome') === 'auto') {
+	if (mw.util.getParamValue('friendlywelcome')) {
+		if (mw.util.getParamValue('friendlywelcome') === 'auto') {
 			TwinkleGlobal.welcome.auto();
 		} else {
 			TwinkleGlobal.welcome.semiauto();
@@ -26,7 +26,7 @@ TwinkleGlobal.welcome = function friendlywelcome() {
 };
 
 TwinkleGlobal.welcome.auto = function() {
-	if (MorebitsGlobal.queryString.get('action') !== 'edit') {
+	if (mw.util.getParamValue('action') !== 'edit') {
 		// userpage not empty, aborting auto-welcome
 		return;
 	}
@@ -39,7 +39,7 @@ TwinkleGlobal.welcome.semiauto = function() {
 };
 
 TwinkleGlobal.welcome.normal = function() {
-	if (MorebitsGlobal.queryString.exists('diff')) {
+	if (mw.util.getParamValue('diff')) {
 		// check whether the contributors' talk pages exist yet
 		var $oList = $('#mw-diff-otitle2').find('span.mw-usertoollinks a.new:contains(talk)').first();
 		var $nList = $('#mw-diff-ntitle2').find('span.mw-usertoollinks a.new:contains(talk)').first();
@@ -63,7 +63,7 @@ TwinkleGlobal.welcome.normal = function() {
 				var oHref = $oList.attr('href');
 
 				var oWelcomeNode = welcomeNode.cloneNode(true);
-				oWelcomeNode.firstChild.setAttribute('href', oHref + '&' + MorebitsGlobal.queryString.create({
+				oWelcomeNode.firstChild.setAttribute('href', oHref + '&' + $.param({
 					'friendlywelcome': TwinkleGlobal.getPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
 					'vanarticle': MorebitsGlobal.pageNameNorm
 				}));
@@ -75,7 +75,7 @@ TwinkleGlobal.welcome.normal = function() {
 				var nHref = $nList.attr('href');
 
 				var nWelcomeNode = welcomeNode.cloneNode(true);
-				nWelcomeNode.firstChild.setAttribute('href', nHref + '&' + MorebitsGlobal.queryString.create({
+				nWelcomeNode.firstChild.setAttribute('href', nHref + '&' + $.param({
 					'friendlywelcome': TwinkleGlobal.getPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
 					'vanarticle': MorebitsGlobal.pageNameNorm
 				}));
@@ -97,7 +97,7 @@ TwinkleGlobal.welcome.welcomeUser = function welcomeUser() {
 
 	var params = {
 		value: TwinkleGlobal.getPref('quickWelcomeTemplate'),
-		article: MorebitsGlobal.queryString.exists('vanarticle') ? MorebitsGlobal.queryString.get('vanarticle') : '',
+		article: mw.util.getParamValue('vanarticle') || '',
 		mode: 'auto'
 	};
 
@@ -147,7 +147,7 @@ TwinkleGlobal.welcome.callback = function friendlywelcomeCallback(uid) {
 		type: 'input',
 		name: 'article',
 		label: '* Linked article (if supported by template):',
-		value: MorebitsGlobal.queryString.exists('vanarticle') ? MorebitsGlobal.queryString.get('vanarticle') : '',
+		value: mw.util.getParamValue('vanarticle') || '',
 		tooltip: 'An article might be linked from within the welcome if the template supports it. Leave empty for no article to be linked.  Templates that support a linked article are marked with an asterisk.'
 	});
 

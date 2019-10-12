@@ -127,10 +127,10 @@ TwinkleGlobal.batchdelete.callback = function twinklebatchdeleteCallback() {
 	} else if (mw.config.get('wgCanonicalSpecialPageName') === 'Prefixindex') {
 
 		query.generator = 'allpages';
-		query.gaplimit = TwinkleGlobal.getPref('batchMax'); // the max for sysops
-		if (MorebitsGlobal.queryString.exists('prefix')) {
-			query.gapnamespace = MorebitsGlobal.queryString.get('namespace');
-			query.gapprefix = MorebitsGlobal.string.toUpperCaseFirstChar(MorebitsGlobal.queryString.get('prefix'));
+		query.gaplimit = TwinkleGlobal.getPref('batchMax');
+		if (mw.util.getParamValue('prefix')) {
+			query.gapnamespace = mw.util.getParamValue('namespace');
+			query.gapprefix = MorebitsGlobal.string.toUpperCaseFirstChar(mw.util.getParamValue('prefix'));
 		} else {
 			var pathSplit = decodeURIComponent(location.pathname).split('/');
 			if (pathSplit.length < 3 || pathSplit[2] !== 'Special:PrefixIndex') {
