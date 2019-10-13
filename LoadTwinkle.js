@@ -112,7 +112,7 @@ function main() {
 	});
 }
 
-mw.loader.using(['mediawiki.user', 'mediawiki.util', 'mediawiki.notify', 'mediawiki.RegExp', 'mediawiki.Title', 'jquery.ui.dialog', 'jquery.tipsy', 'mediawiki.ForeignApi']).done(function() {
+mw.loader.using(['mediawiki.user', 'mediawiki.util', 'mediawiki.notify', 'mediawiki.Title', 'jquery.ui.dialog', 'jquery.tipsy', 'mediawiki.ForeignApi']).done(function() {
 	main();
 });
 
