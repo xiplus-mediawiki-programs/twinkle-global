@@ -26,7 +26,7 @@ var TwinkleGlobal = {};
 window.TwinkleGlobal = TwinkleGlobal;  // allow global access
 
 // Check if account is experienced enough to use Twinkle
-TwinkleGlobal.userAuthorized = MorebitsGlobal.userIsInGroup('autoconfirmed') || MorebitsGlobal.userIsInGroup('confirmed');
+TwinkleGlobal.userAuthorized = true;
 
 // for use by custom modules (normally empty)
 TwinkleGlobal.initCallbacks = [];
