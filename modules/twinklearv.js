@@ -207,7 +207,6 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			var metaapi = TwinkleGlobal.getPref('metaApi');
 			metaapi.edit('Steward requests/Global', function(revision) {
 				var text = revision.content;
-				if (new RegExp('{{\\s*([Ll]uxotool|[Ll]ock[Hh]ide|[Ll][Hh]|[Mm]ulti[Ll]ock)\\s*(\\|.*?)*?\\|\\s*(\\d+\\s*=\\s*)?' + RegExp.escape(uid, true) + '\\s*(\\||}})').test(text)) {
 					statusIndicator.error('Report already present, will not add a new one');
 					MorebitsGlobal.status.printUserText(reason, 'The comments you typed are provided below, in case you wish to manually post them under the existing report for this user at SRG:');
 					return $.Deferred().reject('dup');
