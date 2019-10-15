@@ -45,9 +45,9 @@ TwinkleGlobal.defaultConfig = {};
  */
 TwinkleGlobal.defaultConfig.twinkle = {
 	// General
-	summaryAd: '',
-	deletionSummaryAd: '',
-	protectionSummaryAd: '',
+	summaryAd: ' ([[:m:User:Xiplus/TwinkleGlobal|TW]])',
+	deletionSummaryAd: ' ([[:m:User:Xiplus/TwinkleGlobal|TW]])',
+	protectionSummaryAd: ' ([[:m:User:Xiplus/TwinkleGlobal|TW]])',
 	userTalkPageMode: 'tab',
 	dialogLargeFont: false,
 
