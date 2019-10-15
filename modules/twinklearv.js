@@ -219,7 +219,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				}
 				return {
 					text: text,
-					summary: summary,
+					summary: summary + TwinkleGlobal.getPref('summaryAd'),
 					assert: 'user'
 				};
 			}).then(function() {
