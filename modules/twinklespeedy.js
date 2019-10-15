@@ -367,7 +367,7 @@ TwinkleGlobal.speedy.callbacks = {
 			statelem.status('Checking for tags on the page...');
 
 			// check for existing deletion tags
-			var tag = /(?:\{\{\s*(db|delete|db-.*?|speedy deletion-.*?)(?:\s*\||\s*\}\}))/.exec(text);
+			var tag = /(?:\{\{\s*(db|delete|db-.*?|speedy(delete)?|speedy deletion-.*?)(?:\s*\||\s*\}\}))/i.exec(text);
 			// This won't make use of the db-multiple template but it probably should
 			if (tag && !confirm('The page already has the CSD-related template {{' + tag[1] + '}} on it.  Do you want to add another CSD template?')) {
 				return;
