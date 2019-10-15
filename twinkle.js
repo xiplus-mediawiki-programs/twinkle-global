@@ -101,6 +101,16 @@ TwinkleGlobal.defaultConfig.twinkle = {
 	logSpeedyNominations: false,
 	speedyLogPageName: 'CSD log',
 	noLogOnSpeedyNomination: [ 'u1' ],
+	speedyDisabledWikis: [
+		{ 'value': 'enwiki', 'label': '' },
+		{ 'value': 'simplewiki', 'label': '' },
+		{ 'value': 'zh_classicalwiki', 'label': '' },
+		{ 'value': 'zhwiki', 'label': '' },
+		{ 'value': 'zhwikiquote', 'label': '' },
+		{ 'value': 'zhwikiversity', 'label': '' },
+		{ 'value': 'zhwikivoyage', 'label': '' },
+		{ 'value': 'zhwiktionary', 'label': '' }
+	],
 
 	// Unlink
 	unlinkNamespaces: [ '0', '10', '100', '118' ],

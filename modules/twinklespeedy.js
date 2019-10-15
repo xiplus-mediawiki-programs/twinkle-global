@@ -27,6 +27,14 @@ TwinkleGlobal.speedy = function twinklespeedy() {
 		return;
 	}
 
+	var disabledWikis = $.map(TwinkleGlobal.getPref('speedyDisabledWikis'), function(el) {
+		return el.value.trim();
+	});
+
+	if (disabledWikis.indexOf(mw.config.get('wgDBname')) !== -1) {
+		return;
+	}
+
 	TwinkleGlobal.addPortletLink(TwinkleGlobal.speedy.callback, 'CSD', 'twg-csd', MorebitsGlobal.userIsInGroup('sysop') ? 'Delete page according to WP:CSD' : 'Request speedy deletion according to WP:CSD');
 };
 

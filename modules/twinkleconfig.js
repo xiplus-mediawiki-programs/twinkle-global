@@ -402,6 +402,16 @@ TwinkleGlobal.config.sections = [
 				label: 'Height of speedy deletion window (pixels)',
 				helptip: 'If you have a big monitor, you might like to increase this.',
 				type: 'integer'
+			},
+
+			// Disable speedy on these wikis.
+			{
+				name: 'speedyDisabledWikis',
+				label: 'Disable speedy deletion function on these wikis',
+				helptip: 'Use wiki\'s database name.',
+				type: 'customList',
+				customListValueTitle: 'Database name',
+				customListLabelTitle: '(unused)'
 			}
 		]
 	},
