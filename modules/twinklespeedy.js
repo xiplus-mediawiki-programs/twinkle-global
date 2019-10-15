@@ -284,29 +284,34 @@ TwinkleGlobal.speedy.customRationale = [
 
 TwinkleGlobal.speedy.generalList = [
 	{
-		label: 'Nonsense',
-		value: 'Nonsense'
-	},
-	{
-		label: 'Test page',
-		value: 'Test page'
+		label: 'Spam',
+		value: 'Spam'
 	},
 	{
 		label: 'Vandalism',
 		value: 'Vandalism'
 	},
 	{
-		label: 'Spam',
-		value: 'Spam'
+		label: 'Out of project scope',
+		value: 'Out of project scope'
+	},
+	{
+		label: 'Nonsense',
+		value: 'Nonsense'
+	},
+	{
+		label: 'Test page',
+		value: 'Test page'
 	}
 ];
 
 TwinkleGlobal.speedy.normalizeHash = {
 	'reason': 'db',
-	'Nonsense': 'nonsense',
-	'Test page': 'test',
+	'Spam': 'spam',
 	'Vandalism': 'vandalism',
-	'Spam': 'spam'
+	'Out of project scope': 'scope',
+	'Nonsense': 'nonsense',
+	'Test page': 'test'
 };
 
 TwinkleGlobal.speedy.callbacks = {
