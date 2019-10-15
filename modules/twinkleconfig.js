@@ -50,51 +50,6 @@ TwinkleGlobal.config.commonSets = {
 		'r2', 'r3', 'r4',
 		'p1', 'p2'
 	],
-	csdCriteriaNotification: {
-		db: 'Custom rationale ({{db}})',
-		g1: 'G1', g2: 'G2', g3: 'G3', g4: 'G4', g6: 'G6 ("copy-paste move" only)',
-		g10: 'G10', g11: 'G11', g12: 'G12', g13: 'G13', g14: 'G14',
-		a1: 'A1', a2: 'A2', a3: 'A3', a5: 'A5', a7: 'A7', a9: 'A9', a10: 'A10', a11: 'A11',
-		u3: 'U3', u5: 'U5',
-		f1: 'F1', f2: 'F2', f3: 'F3', f7: 'F7', f9: 'F9', f10: 'F10',
-		c1: 'C1',
-		t2: 'T2', t3: 'T3',
-		r2: 'R2', r3: 'R3', r4: 'R4',
-		p1: 'P1', p2: 'P2'
-	},
-	csdCriteriaNotificationDisplayOrder: [
-		'db',
-		'g1', 'g2', 'g3', 'g4', 'g6', 'g10', 'g11', 'g12', 'g13', 'g14',
-		'a1', 'a2', 'a3', 'a5', 'a7', 'a9', 'a10', 'a11',
-		'u3', 'u5',
-		'f1', 'f2', 'f3', 'f7', 'f9', 'f10',
-		'c1',
-		't2', 't3',
-		'r2', 'r3', 'r4',
-		'p1', 'p2'
-	],
-	csdAndDICriteria: {
-		db: 'Custom rationale ({{db}})',
-		g1: 'G1', g2: 'G2', g3: 'G3', g4: 'G4', g5: 'G5', g6: 'G6', g7: 'G7', g8: 'G8', g10: 'G10', g11: 'G11', g12: 'G12', g13: 'G13', g14: 'G14',
-		a1: 'A1', a2: 'A2', a3: 'A3', a5: 'A5', a7: 'A7', a9: 'A9', a10: 'A10', a11: 'A11',
-		u1: 'U1', u2: 'U2', u3: 'U3', u5: 'U5',
-		f1: 'F1', f2: 'F2', f3: 'F3', f4: 'F4', f5: 'F5', f6: 'F6', f7: 'F7', f8: 'F8', f9: 'F9', f10: 'F10', f11: 'F11',
-		c1: 'C1',
-		t2: 'T2', t3: 'T3',
-		r2: 'R2', r3: 'R3', r4: 'R4',
-		p1: 'P1', p2: 'P2'
-	},
-	csdAndDICriteriaDisplayOrder: [
-		'db',
-		'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8', 'g10', 'g11', 'g12', 'g13', 'g14',
-		'a1', 'a2', 'a3', 'a5', 'a7', 'a9', 'a10', 'a11',
-		'u1', 'u2', 'u3', 'u5',
-		'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11',
-		'c1',
-		't2', 't3',
-		'r2', 'r3', 'r4',
-		'p1', 'p2'
-	],
 	namespacesNoSpecial: {
 		'0': 'Article',
 		'1': 'Talk (article)',
@@ -414,7 +369,7 @@ TwinkleGlobal.config.sections = [
 		]
 	}, */
 
-	/* {
+	{
 		title: 'Speedy deletion (CSD)',
 		preferences: [
 			{
@@ -424,91 +379,11 @@ TwinkleGlobal.config.sections = [
 				enumValues: { 'buttonClick': 'When I click "Submit"', 'radioClick': 'As soon as I click an option' }
 			},
 
-			// TwinkleConfig.watchSpeedyPages (array)
-			// Whether to add speedy tagged or deleted pages to watchlist
-			{
-				name: 'watchSpeedyPages',
-				label: 'Add page to watchlist when using these criteria',
-				type: 'set',
-				setValues: TwinkleGlobal.config.commonSets.csdCriteria,
-				setDisplayOrder: TwinkleGlobal.config.commonSets.csdCriteriaDisplayOrder
-			},
-
 			// TwinkleConfig.markSpeedyPagesAsPatrolled (boolean)
 			// If, when applying speedy template to page, to mark the page as patrolled (if the page was reached from NewPages)
 			{
 				name: 'markSpeedyPagesAsPatrolled',
 				label: 'Mark page as patrolled when tagging (if possible)',
-				type: 'boolean'
-			},
-
-			// TwinkleConfig.welcomeUserOnSpeedyDeletionNotification (array of strings)
-			// On what types of speedy deletion notifications shall the user be welcomed
-			// with a "firstarticle" notice if their talk page has not yet been created.
-			{
-				name: 'welcomeUserOnSpeedyDeletionNotification',
-				label: 'Welcome page creator when notifying with these criteria',
-				helptip: 'The welcome is issued only if the user is notified about the deletion, and only if their talk page does not already exist. The template used is {{firstarticle}}.',
-				type: 'set',
-				setValues: TwinkleGlobal.config.commonSets.csdCriteriaNotification,
-				setDisplayOrder: TwinkleGlobal.config.commonSets.csdCriteriaNotificationDisplayOrder
-			},
-
-			// TwinkleConfig.notifyUserOnSpeedyDeletionNomination (array)
-			// What types of actions should result in the author of the page being notified of nomination
-			{
-				name: 'notifyUserOnSpeedyDeletionNomination',
-				label: 'Notify page creator when tagging with these criteria',
-				helptip: 'Even if you choose to notify from the CSD screen, the notification will only take place for those criteria selected here.',
-				type: 'set',
-				setValues: TwinkleGlobal.config.commonSets.csdCriteriaNotification,
-				setDisplayOrder: TwinkleGlobal.config.commonSets.csdCriteriaNotificationDisplayOrder
-			},
-
-			// TwinkleConfig.warnUserOnSpeedyDelete (array)
-			// What types of actions should result in the author of the page being notified of speedy deletion (admin only)
-			{
-				name: 'warnUserOnSpeedyDelete',
-				label: 'Notify page creator when deleting under these criteria',
-				helptip: 'Even if you choose to notify from the CSD screen, the notification will only take place for those criteria selected here.',
-				adminOnly: true,
-				type: 'set',
-				setValues: TwinkleGlobal.config.commonSets.csdCriteriaNotification,
-				setDisplayOrder: TwinkleGlobal.config.commonSets.csdCriteriaNotificationDisplayOrder
-			},
-
-			// TwinkleConfig.promptForSpeedyDeletionSummary (array of strings)
-			{
-				name: 'promptForSpeedyDeletionSummary',
-				label: 'Allow editing of deletion summary when deleting under these criteria',
-				adminOnly: true,
-				type: 'set',
-				setValues: TwinkleGlobal.config.commonSets.csdAndDICriteria,
-				setDisplayOrder: TwinkleGlobal.config.commonSets.csdAndDICriteriaDisplayOrder
-			},
-
-			// TwinkleConfig.deleteTalkPageOnDelete (boolean)
-			// If talk page if exists should also be deleted (CSD G8) when spedying a page (admin only)
-			{
-				name: 'deleteTalkPageOnDelete',
-				label: 'Check the "also delete talk page" box by default',
-				adminOnly: true,
-				type: 'boolean'
-			},
-
-			{
-				name: 'deleteRedirectsOnDelete',
-				label: 'Check the "also delete redirects" box by default',
-				adminOnly: true,
-				type: 'boolean'
-			},
-
-			// TwinkleConfig.deleteSysopDefaultToTag (boolean)
-			// Make the CSD screen default to "tag" instead of "delete" (admin only)
-			{
-				name: 'deleteSysopDefaultToTag',
-				label: 'Default to speedy tagging instead of outright deletion',
-				adminOnly: true,
 				type: 'boolean'
 			},
 
@@ -527,29 +402,9 @@ TwinkleGlobal.config.sections = [
 				label: 'Height of speedy deletion window (pixels)',
 				helptip: 'If you have a big monitor, you might like to increase this.',
 				type: 'integer'
-			},
-
-			{
-				name: 'logSpeedyNominations',
-				label: 'Keep a log in userspace of all CSD nominations',
-				helptip: 'Since non-admins do not have access to their deleted contributions, the userspace log offers a good way to keep track of all pages you nominate for CSD using Twinkle. Files tagged using DI are also added to this log.',
-				type: 'boolean'
-			},
-			{
-				name: 'speedyLogPageName',
-				label: 'Keep the CSD userspace log at this user subpage',
-				helptip: 'Enter a subpage name in this box. You will find your CSD log at User:<i>username</i>/<i>subpage name</i>. Only works if you turn on the CSD userspace log.',
-				type: 'string'
-			},
-			{
-				name: 'noLogOnSpeedyNomination',
-				label: 'Do not create a userspace log entry when tagging with these criteria',
-				type: 'set',
-				setValues: TwinkleGlobal.config.commonSets.csdAndDICriteria,
-				setDisplayOrder: TwinkleGlobal.config.commonSets.csdAndDICriteriaDisplayOrder
 			}
 		]
-	}, */
+	},
 
 	/* {
 		title: 'Tag',
