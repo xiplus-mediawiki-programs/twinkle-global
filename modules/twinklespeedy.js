@@ -184,6 +184,11 @@ TwinkleGlobal.speedy.callback.modeChanged = function twinklespeedyCallbackModeCh
 	work_area.append({ type: 'header', label: 'General criteria' });
 	work_area.append({ type: radioOrCheckbox, name: 'csd', list: TwinkleGlobal.speedy.generateCsdList(generalCriteria, mode) });
 
+	work_area.append({
+		type: 'div',
+		label: $.parseHTML('<span>Note: Not all wikis use {{delete}} as speedy deletion template. Report bug <a href="https://meta.wikimedia.org/wiki/User_talk:Xiplus" target="_blank">here</a>.<br>Suggest new useful reasons <a href="https://meta.wikimedia.org/wiki/User_talk:Xiplus" target="_blank">here</a>.</span>')
+	});
+
 	var old_area = MorebitsGlobal.quickForm.getElements(form, 'work_area')[0];
 	form.replaceChild(work_area.render(), old_area);
 };
