@@ -311,13 +311,14 @@ TwinkleGlobal.speedy.normalizeHash = {
 
 TwinkleGlobal.speedy.callbacks = {
 	getTemplateCodeAndParams: function(params) {
-		var code, parameters;
+		var code, norm, parameters;
 
 		code = '{{' + TwinkleGlobal.speedy.getSpeedyTemplate() + '|1=';
 		params.utparams = {};
-		$.each(params.normalizeds, function(index, norm) {
+		$.each(params.values, function(index, value) {
+			norm = TwinkleGlobal.speedy.normalizeHash[value];
 			if (norm !== 'db') {
-				code += norm + ', ';
+				code += value + ', ';
 			}
 			parameters = params.templateParams[index] || [];
 			for (var i in parameters) {
@@ -409,12 +410,13 @@ TwinkleGlobal.speedy.callbacks = {
 			}
 
 			// Generate edit summary for edit
-			var editsummary, parameters;
-			if (params.normalizeds.length > 1) {
+			var editsummary, norm, parameters;
+			if (params.values.length > 1) {
 				editsummary = 'Requesting speedy deletion (';
-				$.each(params.normalizeds, function(index, norm) {
+				$.each(params.values, function(index, value) {
+					norm = TwinkleGlobal.speedy.normalizeHash[value];
 					if (norm !== 'db') {
-						editsummary += norm + ', ';
+						editsummary += value + ', ';
 					}
 					parameters = params.templateParams[index] || [];
 					for (var i in parameters) {
@@ -428,10 +430,10 @@ TwinkleGlobal.speedy.callbacks = {
 			} else if (params.normalizeds[0] === 'db') {
 				editsummary = 'Requesting speedy deletion with rationale "' + params.templateParams[0]['1'] + '".';
 			} else {
-				editsummary = 'Requesting speedy deletion (' + params.normalizeds[0] + ').';
+				editsummary = 'Requesting speedy deletion (' + params.values[0] + ').';
 			}
 
-			pageobj.setPageText(code + (params.normalizeds.indexOf('g10') !== -1 ? '' : '\n' + text)); // cause attack pages to be blanked
+			pageobj.setPageText(code + (params.values.indexOf('g10') !== -1 ? '' : '\n' + text)); // cause attack pages to be blanked
 			pageobj.setEditSummary(editsummary + TwinkleGlobal.getPref('summaryAd'));
 			pageobj.setCreateOption('recreate'); // Module /doc might not exist
 			pageobj.save(TwinkleGlobal.speedy.callbacks.user.tagComplete);
