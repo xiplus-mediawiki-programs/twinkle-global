@@ -38,9 +38,25 @@ TwinkleGlobal.speedy = function twinklespeedy() {
 	TwinkleGlobal.addPortletLink(TwinkleGlobal.speedy.callback, 'CSD', 'twg-csd', 'Request speedy deletion');
 };
 
+TwinkleGlobal.speedy.speedyTemplate = null;
+
 // This function is run when the CSD tab/header link is clicked
 TwinkleGlobal.speedy.callback = function twinklespeedyCallback() {
-	TwinkleGlobal.speedy.initDialog(TwinkleGlobal.speedy.callback.evaluateUser, true);
+	var dataapi = TwinkleGlobal.getPref('dataApi');
+	dataapi.get({
+		'action': 'wbgetentities',
+		'format': 'json',
+		'ids': TwinkleGlobal.getPref('speedyTemplateItem'),
+		'props': 'sitelinks',
+		'sitefilter': mw.config.get('wgDBname')
+	}).done(function (data) {
+		var site = data['entities']['Q541406']['sitelinks'][mw.config.get('wgDBname')];
+		if (site !== undefined) {
+			TwinkleGlobal.speedy.speedyTemplate = site['title'].replace(/^[^:]+:/, '');
+		}
+	}).always(function () {
+		TwinkleGlobal.speedy.initDialog(TwinkleGlobal.speedy.callback.evaluateUser, true);
+	});
 };
 
 // Used by unlink feature
@@ -194,9 +210,21 @@ TwinkleGlobal.speedy.callback.modeChanged = function twinklespeedyCallbackModeCh
 	work_area.append({ type: 'header', label: 'General criteria' });
 	work_area.append({ type: radioOrCheckbox, name: 'csd', list: TwinkleGlobal.speedy.generateCsdList(generalCriteria, mode) });
 
+	if (TwinkleGlobal.speedy.speedyTemplate) {
+		work_area.append({
+			type: 'div',
+			label: $.parseHTML('<span>Note: {{<a href="' + mw.util.getUrl('Template:' + TwinkleGlobal.speedy.speedyTemplate) + '" target="_blank">' + TwinkleGlobal.speedy.speedyTemplate + '</a>}} will be used as speedy deletion template on this wiki. Wrong? Fix it <a href="' + mw.util.getUrl('d:' + TwinkleGlobal.getPref('speedyTemplateItem')) + '" target="_blank">on Wikidata</a> or report bug <a href="https://meta.wikimedia.org/wiki/User_talk:Xiplus" target="_blank">here</a></span>')
+		});
+	} else {
+		work_area.append({
+			type: 'div',
+			label: $.parseHTML('<span>Note: Fail to retrieve speedy deletion template name. {{<a href="' + mw.util.getUrl('Template:Delete') + '" target="_blank">Delete</a>}} will be used as speedy deletion template. Add template name <a href="' + mw.util.getUrl('d:' + TwinkleGlobal.getPref('speedyTemplateItem')) + '" target="_blank">on Wikidata</a> or report bug <a href="https://meta.wikimedia.org/wiki/User_talk:Xiplus" target="_blank">here</a></span>')
+		});
+	}
+
 	work_area.append({
 		type: 'div',
-		label: $.parseHTML('<span>Note: Not all wikis use {{delete}} as speedy deletion template. Report bug <a href="https://meta.wikimedia.org/wiki/User_talk:Xiplus" target="_blank">here</a>.<br>Suggest new useful reasons <a href="https://meta.wikimedia.org/wiki/User_talk:Xiplus" target="_blank">here</a>.</span>')
+		label: $.parseHTML('<span>Suggest new useful reasons <a href="https://meta.wikimedia.org/wiki/User_talk:Xiplus" target="_blank">here</a>.</span>')
 	});
 
 	var old_area = MorebitsGlobal.quickForm.getElements(form, 'work_area')[0];
@@ -626,14 +654,7 @@ TwinkleGlobal.speedy.getUserTalkParameters = function twinklespeedyGetUserTalkPa
 };
 
 TwinkleGlobal.speedy.getSpeedyTemplate = function twinklespeedyGetSpeedyTemplate() {
-	switch (mw.config.get('wgDBname')) {
-		case 'commonswiki':
-			return 'Speedydelete';
-		case 'mediawikiwiki':
-			return 'Speedy';
-		default:
-			return 'Delete';
-	}
+	return TwinkleGlobal.speedy.speedyTemplate || 'Delete';
 };
 
 
