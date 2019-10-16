@@ -50,7 +50,7 @@ TwinkleGlobal.speedy.callback = function twinklespeedyCallback() {
 		'props': 'sitelinks',
 		'sitefilter': mw.config.get('wgDBname')
 	}).done(function (data) {
-		var site = data['entities']['Q541406']['sitelinks'][mw.config.get('wgDBname')];
+		var site = data['entities'][TwinkleGlobal.getPref('speedyTemplateItem')]['sitelinks'][mw.config.get('wgDBname')];
 		if (site !== undefined) {
 			TwinkleGlobal.speedy.speedyTemplate = site['title'].replace(/^[^:]+:/, '');
 		}
