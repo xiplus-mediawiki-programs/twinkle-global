@@ -384,11 +384,6 @@ TwinkleGlobal.speedy.callbacks = {
 				return;
 			}
 
-			var xfd = /\{\{((?:article for deletion|proposed deletion|prod blp|template for discussion)\/dated|[cfm]fd\b)/i.exec(text) || /#invoke:(RfD)/.exec(text);
-			if (xfd && !confirm('The deletion-related template {{' + xfd[1] + '}} was found on the page. Do you still want to add a CSD template?')) {
-				return;
-			}
-
 			// given the params, builds the template and also adds the user talk page parameters to the params that were passed in
 			// returns => [<string> wikitext, <object> utparams]
 			var buildData = TwinkleGlobal.speedy.callbacks.getTemplateCodeAndParams(params),
@@ -405,13 +400,6 @@ TwinkleGlobal.speedy.callbacks = {
 			// Won't work with userboxes in userspace, or any other transcluded page outside template space
 			if (mw.config.get('wgNamespaceNumber') === 10) {  // Template:
 				code = '<noinclude>' + code + '</noinclude>';
-			}
-
-			// Remove tags that become superfluous with this action
-			text = text.replace(/\{\{\s*([Uu]serspace draft)\s*(\|(?:\{\{[^{}]*\}\}|[^{}])*)?\}\}\s*/g, '');
-			if (mw.config.get('wgNamespaceNumber') === 6) {
-				// remove "move to Commons" tag - deletion-tagged files cannot be moved to Commons
-				text = text.replace(/\{\{(mtc|(copy |move )?to ?commons|move to wikimedia commons|copy to wikimedia commons)[^}]*\}\}/gi, '');
 			}
 
 			// Generate edit summary for edit
