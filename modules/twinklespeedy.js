@@ -35,7 +35,7 @@ TwinkleGlobal.speedy = function twinklespeedy() {
 		return;
 	}
 
-	TwinkleGlobal.addPortletLink(TwinkleGlobal.speedy.callback, 'CSD', 'twg-csd', MorebitsGlobal.userIsInGroup('sysop') ? 'Delete page according to WP:CSD' : 'Request speedy deletion according to WP:CSD');
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.speedy.callback, 'CSD', 'twg-csd', 'Request speedy deletion');
 };
 
 // This function is run when the CSD tab/header link is clicked
@@ -90,8 +90,6 @@ TwinkleGlobal.speedy.initDialog = function twinklespeedyInitDialog(callbackfunc)
 	dialog = TwinkleGlobal.speedy.dialog;
 	dialog.setTitle('Choose criteria for speedy deletion');
 	dialog.setScriptName('Twinkle');
-	dialog.addFooterLink('Speedy deletion policy', 'WP:CSD');
-	dialog.addFooterLink('Twinkle help', 'WP:TW/DOC#speedy');
 
 	var form = new MorebitsGlobal.quickForm(callbackfunc, TwinkleGlobal.getPref('speedySelectionStyle') === 'radioClick' ? 'change' : null);
 
