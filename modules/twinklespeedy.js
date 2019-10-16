@@ -116,6 +116,18 @@ TwinkleGlobal.speedy.initDialog = function twinklespeedyInitDialog(callbackfunc)
 		]
 	});
 
+	tagOptions.append({
+		type: 'checkbox',
+		list: [
+			{
+				label: 'Blank the page',
+				value: 'blank',
+				name: 'blank',
+				tooltip: 'When selected, blank the page before tagging.'
+			}
+		]
+	});
+
 	form.append({
 		type: 'div',
 		name: 'work_area',
@@ -426,7 +438,7 @@ TwinkleGlobal.speedy.callbacks = {
 				editsummary = 'Requesting speedy deletion (' + params.values[0] + ').';
 			}
 
-			pageobj.setPageText(code + (params.values.indexOf('g10') !== -1 ? '' : '\n' + text)); // cause attack pages to be blanked
+			pageobj.setPageText(code + (params.blank ? '' : '\n' + text));
 			pageobj.setEditSummary(editsummary + TwinkleGlobal.getPref('summaryAd'));
 			pageobj.setCreateOption('recreate'); // Module /doc might not exist
 			pageobj.save(TwinkleGlobal.speedy.callbacks.user.tagComplete);
@@ -656,10 +668,13 @@ TwinkleGlobal.speedy.callback.evaluateUser = function twinklespeedyCallbackEvalu
 		normalizeds.push(norm);
 	});
 
+	var blank = form.blank.checked;
+
 	var params = {
 		values: values,
 		normalizeds: normalizeds,
-		templateParams: TwinkleGlobal.speedy.getParameters(form, values)
+		templateParams: TwinkleGlobal.speedy.getParameters(form, values),
+		blank: blank
 	};
 	if (!params.templateParams) {
 		return;
