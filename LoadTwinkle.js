@@ -12,9 +12,9 @@
 
 (function() {
 
-var VERSION = 'ece9855';
+var VERSION = 'e0735ce';
 var PREFIX = 'User:Xiplus/Twinkle/';
-var rebuildcache = true; // localStorage.Twinkle_global_xiplus_version !== VERSION;
+var rebuildcache = localStorage.Twinkle_global_xiplus_version !== VERSION;
 var tests = [];
 var api;
 if (mw.config.get('wgServer') === '//meta.wikimedia.org') {
@@ -75,7 +75,7 @@ tests.push({ name: 'modules/twinklediff.js', test: true });
 tests.push({ name: 'modules/twinklefluff.js', test: true });
 // tests.push({name: 'modules/twinkleimage.js',         test: true});
 // tests.push({name: 'modules/twinkleprotect.js',       test: true});
-// tests.push({name: 'modules/twinklespeedy.js',        test: true});
+tests.push({ name: 'modules/twinklespeedy.js', test: true });
 // tests.push({name: 'modules/twinklestub.js',          test: true});
 // tests.push({name: 'modules/twinkleunlink.js',        test: true});
 // tests.push({name: 'modules/twinklexfd.js',           test: true});
@@ -112,7 +112,7 @@ function main() {
 	});
 }
 
-mw.loader.using(['mediawiki.user', 'mediawiki.util', 'mediawiki.notify', 'mediawiki.Title', 'jquery.ui.dialog', 'jquery.tipsy', 'mediawiki.ForeignApi']).done(function() {
+mw.loader.using(['mediawiki.user', 'mediawiki.util', 'mediawiki.notify', 'mediawiki.Title', 'jquery.ui', 'jquery.tipsy', 'mediawiki.ForeignApi']).done(function() {
 	main();
 });
 
