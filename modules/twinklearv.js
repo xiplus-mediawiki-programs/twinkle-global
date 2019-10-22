@@ -93,6 +93,40 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					? 'Request for global block' : 'Request for global lock',
 				name: 'work_area'
 			});
+			if (mw.util.isIPAddress(mw.config.get('wgRelevantUserName'))) {
+				work_area.append({
+					type: 'dyninput',
+					name: 'username',
+					label: 'IPs',
+					sublabel: 'IP: ',
+					tooltip: 'Without the User:-prefix',
+					min: 1
+				});
+			} else {
+				work_area.append({
+					type: 'dyninput',
+					name: 'username',
+					label: 'Usernames',
+					sublabel: 'Username: ',
+					tooltip: 'Without the User:-prefix',
+					min: 1
+				});
+				work_area.append({
+					type: 'checkbox',
+					list: [
+						{
+							label: 'Hide username',
+							tooltip: 'Check it if you do not want the name to be visible on this page',
+							name: 'hidename',
+							value: 'hidename'
+						}
+					]
+				});
+			}
+			work_area.append({
+				type: 'header',
+				label: 'Comment: '
+			});
 			work_area.append({
 				type: 'checkbox',
 				name: 'globaltype',
@@ -111,25 +145,12 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					}
 				].concat(TwinkleGlobal.getPref('customSRGReasonList'))
 			});
-			if (!mw.util.isIPAddress(mw.config.get('wgRelevantUserName'))) {
-				work_area.append({
-					type: 'checkbox',
-					list: [
-						{
-							label: 'Hide username',
-							tooltip: 'Check it if you do not want the name to be visible on this page',
-							name: 'hidename',
-							value: 'hidename'
-						}
-					]
-				});
-			}
 			work_area.append({
 				type: 'textarea',
-				name: 'reason',
-				label: 'Comment: '
+				name: 'reason'
 			});
 			work_area = work_area.render();
+			$('input:text[name=username]', work_area).first().val(mw.config.get('wgRelevantUserName'));
 			old_area.parentNode.replaceChild(work_area, old_area);
 			break;
 	}
@@ -157,25 +178,57 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				return;
 			}
 
-			if (mw.util.isIPAddress(mw.config.get('wgRelevantUserName'))) {
+			var usernames = $.map($('input:text[name=username]', form), function(o) {
+				return $(o).val() || null;
+			});
+
+			if (!usernames.length) {
+				alert('You must specify at least one ' + mw.util.isIPAddress(uid) ? 'IP' : 'user');
+				return;
+			}
+
+			if (mw.util.isIPAddress(uid)) {
 				header = '=== Global block for [[Special:Contributions/' + uid + '|' + uid + ']] ===\n';
 				header += '{{Status}}\n';
-				header += '* {{Luxotool|' + uid + '}}\n';
-				summary = 'Report [[Special:Contributions/' + uid + '|' + uid + ']]';
+				usernames.forEach(function(v) {
+					header += '* {{Luxotool|' + v + '}}\n';
+				});
+				summary = 'Reporting [[Special:Contributions/' + uid + '|' + uid + ']]';
+				if (usernames.length > 1) {
+					summary += ' and ' + (usernames.length - 1) + ' other IP';
+					if (usernames.length > 2) {
+						summary += 's';
+					}
+				}
 			} else {
 				if (form.hidename && form.hidename.checked) {
 					header = '=== Global lock ===\n';
-					summary = 'Report an account';
+					summary = 'Reporting ' + (usernames.length > 1 ? usernames.length + ' accounts' : 'an account');
 				} else {
 					header = '=== Global lock for [[User:' + uid + '|' + uid + ']] ===\n';
-					summary = 'Report [[Special:Contributions/' + uid + '|' + uid + ']]';
+					summary = 'Reporting [[Special:Contributions/' + uid + '|' + uid + ']]';
+					if (usernames.length > 1) {
+						summary += ' and ' + (usernames.length - 1) + ' other account';
+						if (usernames.length > 2) {
+							summary += 's';
+						}
+					}
 				}
 				header += '{{Status}}\n';
-				header += '*{{LockHide|' + uid;
-				if (form.hidename && form.hidename.checked) {
-					header += '|hidename=1';
+				if (usernames.length === 1) {
+					header += '*{{LockHide|' + uid;
+					if (form.hidename && form.hidename.checked) {
+						header += '|hidename=1';
+					}
+					header += '}}\n';
+				} else {
+					header += '*{{MultiLock|';
+					header += usernames.join('|');
+					if (form.hidename && form.hidename.checked) {
+						header += '|hidename=1';
+					}
+					header += '}}\n';
 				}
-				header += '}}\n';
 			}
 
 			types = types.map(function(v) {
@@ -209,10 +262,10 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				var text = revision.content;
 				if (new RegExp('{{\\s*([Ll]uxotool|[Ll]ock[Hh]ide|[Ll][Hh]|[Mm]ulti[Ll]ock).*?\\|\\s*(\\d+\\s*=\\s*)?' + RegExp.escape(uid, true) + '\\s*(\\||}})').test(text)) {
 					statusIndicator.error('Report already present, will not add a new one');
-					MorebitsGlobal.status.printUserText(reason, 'The comments you typed are provided below, in case you wish to manually post them under the existing report for this user at SRG:');
+					MorebitsGlobal.status.printUserText(header + reason, 'The comments you typed are provided below, in case you wish to manually post them under the existing report for this user at SRG:');
 					return $.Deferred().reject('dup');
 				}
-				if (mw.util.isIPAddress(mw.config.get('wgRelevantUserName'))) {
+				if (mw.util.isIPAddress(uid)) {
 					text = text.replace(/\n+(== Requests for global \(un\)lock and \(un\)hiding == *\n)/, '\n\n' + header + reason + '\n\n$1');
 				} else {
 					text = text.replace(/\n+(== See also == *\n)/, '\n\n' + header + reason + '\n\n$1');
