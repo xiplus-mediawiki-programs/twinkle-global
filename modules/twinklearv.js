@@ -82,6 +82,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 	var root = e.target.form;
 	var old_area = MorebitsGlobal.quickForm.getElements(root, 'work_area')[0];
 	var work_area = null;
+	var username = mw.config.get('wgRelevantUserName');
 
 	switch (value) {
 		case 'global':
@@ -89,11 +90,18 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 		default:
 			work_area = new MorebitsGlobal.quickForm.element({
 				type: 'field',
-				label: mw.util.isIPAddress(mw.config.get('wgRelevantUserName'))
+				label: mw.util.isIPAddress(username)
 					? 'Request for global block' : 'Request for global lock',
 				name: 'work_area'
 			});
-			if (mw.util.isIPAddress(mw.config.get('wgRelevantUserName'))) {
+			if (mw.util.isIPAddress(username)) {
+				work_area.append({
+					type: 'input',
+					name: 'header',
+					label: 'Header: Global block for ',
+					value: '[[Special:Contributions/' + username + '|' + username + ']]',
+					size: 50
+				});
 				work_area.append({
 					type: 'dyninput',
 					name: 'username',
@@ -103,6 +111,13 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					min: 1
 				});
 			} else {
+				work_area.append({
+					type: 'input',
+					name: 'header',
+					label: 'Header: Global lock for ',
+					value: '[[User:' + username + '|' + username + ']]',
+					size: 50
+				});
 				work_area.append({
 					type: 'dyninput',
 					name: 'username',
@@ -118,7 +133,8 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 							label: 'Hide username',
 							tooltip: 'Check it if you do not want the name to be visible on this page',
 							name: 'hidename',
-							value: 'hidename'
+							value: 'hidename',
+							event: TwinkleGlobal.arv.callback.changeHidename
 						}
 					]
 				});
@@ -150,9 +166,21 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 				name: 'reason'
 			});
 			work_area = work_area.render();
-			$('input:text[name=username]', work_area).first().val(mw.config.get('wgRelevantUserName'));
+			$('input:text[name=username]', work_area).first().val(username);
 			old_area.parentNode.replaceChild(work_area, old_area);
 			break;
+	}
+};
+
+TwinkleGlobal.arv.callback.changeHidename = function(e) {
+	var checked = e.target.checked;
+	var form = e.target.form;
+	var username = mw.config.get('wgRelevantUserName');
+
+	if (checked) {
+		form.header.value = '';
+	} else {
+		form.header.value = '[[User:' + username + '|' + username + ']]';
 	}
 };
 
@@ -188,7 +216,11 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			}
 
 			if (mw.util.isIPAddress(uid)) {
-				header = '=== Global block for [[Special:Contributions/' + uid + '|' + uid + ']] ===\n';
+				header = '=== Global block ';
+				if (form.header.value.trim()) {
+					header += 'for ' + form.header.value.trim();
+				}
+				header += ' ===\n';
 				header += '{{Status}}\n';
 				usernames.forEach(function(v) {
 					header += '* {{Luxotool|' + v + '}}\n';
@@ -201,11 +233,14 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 					}
 				}
 			} else {
+				header = '=== Global lock ';
+				if (form.header.value.trim()) {
+					header += 'for ' + form.header.value.trim();
+				}
+				header += ' ===\n';
 				if (form.hidename && form.hidename.checked) {
-					header = '=== Global lock ===\n';
 					summary = 'Reporting ' + (usernames.length > 1 ? usernames.length + ' accounts' : 'an account');
 				} else {
-					header = '=== Global lock for [[User:' + uid + '|' + uid + ']] ===\n';
 					summary = 'Reporting [[Special:Contributions/' + uid + '|' + uid + ']]';
 					if (usernames.length > 1) {
 						summary += ' and ' + (usernames.length - 1) + ' other account';
