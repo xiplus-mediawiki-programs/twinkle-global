@@ -213,7 +213,7 @@ TwinkleGlobal.speedy.callback.modeChanged = function twinklespeedyCallbackModeCh
 	if (TwinkleGlobal.speedy.speedyTemplate) {
 		work_area.append({
 			type: 'div',
-			label: $.parseHTML('<span>Note: {{<a href="' + mw.util.getUrl('Template:' + TwinkleGlobal.speedy.speedyTemplate) + '" target="_blank">' + TwinkleGlobal.speedy.speedyTemplate + '</a>}} will be used as speedy deletion template on this wiki. Wrong? Fix it <a href="' + mw.util.getUrl('d:' + TwinkleGlobal.getPref('speedyTemplateItem')) + '" target="_blank">on Wikidata</a> or report bug <a href="https://meta.wikimedia.org/wiki/User_talk:Xiplus" target="_blank">here</a></span>')
+			label: $.parseHTML('<span>Note: {{<a href="' + mw.util.getUrl('Template:' + TwinkleGlobal.speedy.speedyTemplate) + '" target="_blank">' + TwinkleGlobal.speedy.speedyTemplate + '</a>}} will be used as speedy deletion template on this wiki. Wrong? Fix it <a href="' + mw.util.getUrl('d:' + TwinkleGlobal.getPref('speedyTemplateItem')) + '" target="_blank">on Wikidata</a> or report bug <a href="https://meta.wikimedia.org/wiki/User_talk:Xiplus" target="_blank">here</a>.</span>')
 		});
 	} else {
 		work_area.append({
