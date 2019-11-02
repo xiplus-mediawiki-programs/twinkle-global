@@ -105,9 +105,9 @@ function main() {
 		localStorage.Twinkle_global_xiplus_version = VERSION;
 		eval(code.join('\n;\n'));
 		message('Twinkle Done');
-		if ($('#twinkle-config-titlebar').length) {
-			$('#twinkle-config-titlebar').append('--Version: Xiplus ' + localStorage.Twinkle_global_xiplus_version);
-			$('#twinkle-config-titlebar').append('<button onclick="localStorage.Twinkle_global_xiplus_version = \'\';location.reload();">Purge</button>');
+		if ($('#twinkleglobal-config-titlebar').length) {
+			$('#twinkleglobal-config-titlebar').append('--Version: Xiplus ' + localStorage.Twinkle_global_xiplus_version);
+			$('#twinkleglobal-config-titlebar').append('<button onclick="localStorage.Twinkle_global_xiplus_version = \'\';location.reload();">Purge</button>');
 		}
 	});
 }

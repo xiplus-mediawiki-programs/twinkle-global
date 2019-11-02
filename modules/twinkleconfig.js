@@ -798,14 +798,14 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 			mw.config.get('wgAction') === 'view') {
 		// create the config page at Wikipedia:Twinkle/Preferences, and at user subpages (for testing purposes)
 
-		if (!document.getElementById('twinkle-config')) {
+		if (!document.getElementById('twinkleglobal-config')) {
 			return;  // maybe the page is misconfigured, or something - but any attempt to modify it will be pointless
 		}
 
 		// set style (the url() CSS function doesn't seem to work from wikicode - ?!)
-		document.getElementById('twinkle-config-titlebar').style.backgroundImage = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAMAAAB%2FqqA%2BAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAEhQTFRFr73ZobTPusjdsMHZp7nVwtDhzNbnwM3fu8jdq7vUt8nbxtDkw9DhpbfSvMrfssPZqLvVztbno7bRrr7W1d%2Fs1N7qydXk0NjpkW7Q%2BgAAADVJREFUeNoMwgESQCAAAMGLkEIi%2FP%2BnbnbpdB59app5Vdg0sXAoMZCpGoFbK6ciuy6FX4ABAEyoAef0BXOXAAAAAElFTkSuQmCC)';
+		document.getElementById('twinkleglobal-config-titlebar').style.backgroundImage = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAkCAMAAAB%2FqqA%2BAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAEhQTFRFr73ZobTPusjdsMHZp7nVwtDhzNbnwM3fu8jdq7vUt8nbxtDkw9DhpbfSvMrfssPZqLvVztbno7bRrr7W1d%2Fs1N7qydXk0NjpkW7Q%2BgAAADVJREFUeNoMwgESQCAAAMGLkEIi%2FP%2BnbnbpdB59app5Vdg0sXAoMZCpGoFbK6ciuy6FX4ABAEyoAef0BXOXAAAAAElFTkSuQmCC)';
 
-		var contentdiv = document.getElementById('twinkle-config-content');
+		var contentdiv = document.getElementById('twinkleglobal-config-content');
 		contentdiv.textContent = '';  // clear children
 
 		// let user know about possible conflict with monobook.js/vector.js file
@@ -883,7 +883,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 			var tocli = document.createElement('li');
 			tocli.className = 'toclevel-1';
 			var toca = document.createElement('a');
-			toca.setAttribute('href', '#twinkle-config-section-' + tocnumber.toString());
+			toca.setAttribute('href', '#twinkleglobal-config-section-' + tocnumber.toString());
 			toca.appendChild(document.createTextNode(section.title));
 			tocli.appendChild(toca);
 			tocul.appendChild(tocli);
@@ -894,7 +894,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 			var heading = document.createElement('h4');
 			heading.style.borderBottom = '1px solid gray';
 			heading.style.marginTop = '0.2em';
-			heading.id = 'twinkle-config-section-' + (tocnumber++).toString();
+			heading.id = 'twinkleglobal-config-section-' + (tocnumber++).toString();
 			heading.appendChild(document.createTextNode(section.title));
 			cell.appendChild(heading);
 			row.appendChild(cell);
@@ -1083,7 +1083,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 				if (pref.type !== 'customList') {
 					var resetlink = document.createElement('a');
 					resetlink.setAttribute('href', '#twg-reset');
-					resetlink.setAttribute('id', 'twinkle-config-reset-' + pref.name);
+					resetlink.setAttribute('id', 'twinkleglobal-config-reset-' + pref.name);
 					resetlink.addEventListener('click', TwinkleGlobal.config.resetPrefLink, false);
 					if (resetlink.style.styleFloat) {  // IE (inc. IE9)
 						resetlink.style.styleFloat = 'right';
@@ -1103,11 +1103,11 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 		});
 
 		var footerbox = document.createElement('div');
-		footerbox.setAttribute('id', 'twinkle-config-buttonpane');
+		footerbox.setAttribute('id', 'twinkleglobal-config-buttonpane');
 		footerbox.style.backgroundColor = '#BCCADF';
 		footerbox.style.padding = '0.5em';
 		var button = document.createElement('button');
-		button.setAttribute('id', 'twinkle-config-submit');
+		button.setAttribute('id', 'twinkleglobal-config-submit');
 		button.setAttribute('type', 'submit');
 		button.appendChild(document.createTextNode('Save changes'));
 		footerbox.appendChild(button);
@@ -1117,7 +1117,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 		footerspan.style.fontSize = '90%';
 		var footera = document.createElement('a');
 		footera.setAttribute('href', '#twg-reset-all');
-		footera.setAttribute('id', 'twinkle-config-resetall');
+		footera.setAttribute('id', 'twinkleglobal-config-resetall');
 		footera.addEventListener('click', TwinkleGlobal.config.resetAllPrefs, false);
 		footera.appendChild(document.createTextNode('Restore defaults'));
 		footerspan.appendChild(footera);
@@ -1134,7 +1134,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 			mw.config.get('wgPageName').slice(-3) === '.js') {
 
 		var box = document.createElement('div');
-		box.setAttribute('id', 'twinkle-config-headerbox');
+		box.setAttribute('id', 'twinkleglobal-config-headerbox');
 		box.style.border = '1px #f60 solid';
 		box.style.background = '#fed';
 		box.style.padding = '0.6em';
@@ -1214,7 +1214,7 @@ TwinkleGlobal.config.listDialog.addRow = function twinkleconfigListDialogAddRow(
 	contenttd = document.createElement('td');
 	var input = document.createElement('input');
 	input.setAttribute('type', 'text');
-	input.className = 'twinkle-config-customlist-value';
+	input.className = 'twinkleglobal-config-customlist-value';
 	input.style.width = '97%';
 	if (value) {
 		input.setAttribute('value', value);
@@ -1226,7 +1226,7 @@ TwinkleGlobal.config.listDialog.addRow = function twinkleconfigListDialogAddRow(
 	contenttd = document.createElement('td');
 	input = document.createElement('input');
 	input.setAttribute('type', 'text');
-	input.className = 'twinkle-config-customlist-label';
+	input.className = 'twinkleglobal-config-customlist-label';
 	input.style.width = '98%';
 	if (label) {
 		input.setAttribute('value', label);
@@ -1357,7 +1357,7 @@ TwinkleGlobal.config.listDialog.save = function twinkleconfigListDialogSave(butt
 	var result = [];
 	var current = {};
 	$(tbody).find('input[type="text"]').each(function(inputkey, input) {
-		if ($(input).hasClass('twinkle-config-customlist-value')) {
+		if ($(input).hasClass('twinkleglobal-config-customlist-value')) {
 			current = { value: input.value };
 		} else {
 			current.label = input.value;
@@ -1373,7 +1373,7 @@ TwinkleGlobal.config.listDialog.save = function twinkleconfigListDialogSave(butt
 // reset/restore defaults
 
 TwinkleGlobal.config.resetPrefLink = function twinkleconfigResetPrefLink(e) {
-	var wantedpref = e.target.id.substring(21); // "twinkle-config-reset-" prefix is stripped
+	var wantedpref = e.target.id.substring(21); // "twinkleglobal-config-reset-" prefix is stripped
 
 	// search tactics
 	$(TwinkleGlobal.config.sections).each(function(sectionkey, section) {
@@ -1451,7 +1451,7 @@ TwinkleGlobal.config.resetAllPrefs = function twinkleconfigResetAllPrefs() {
 };
 
 TwinkleGlobal.config.save = function twinkleconfigSave(e) {
-	MorebitsGlobal.status.init(document.getElementById('twinkle-config-content'));
+	MorebitsGlobal.status.init(document.getElementById('twinkleglobal-config-content'));
 
 	MorebitsGlobal.wiki.actionCompleted.notice = 'Save';
 
