@@ -2608,7 +2608,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 	// and hence should be used sparingly.
 	var fnGetToken = function() {
 		var token;
-		var tokenApi = new Morebits.wiki.api('Getting token', {
+		var tokenApi = new MorebitsGlobal.wiki.api('Getting token', {
 			action: 'query',
 			meta: 'tokens'
 		}, function(apiobj) {
@@ -2683,7 +2683,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 		} else if ((errorCode === 'badtoken' || errorCode === 'notoken') && ctx.retries++ < ctx.maxRetries) {
 
 			ctx.statusElement.info('Edit token is invalid, retrying');
-			--Morebits.wiki.numberOfActionsLeft;  // allow for normal completion if retry succeeds
+			--MorebitsGlobal.wiki.numberOfActionsLeft;  // allow for normal completion if retry succeeds
 			ctx.saveApi.query.token = fnGetToken.call(this);
 			ctx.saveApi.post();
 
@@ -2866,7 +2866,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 			ctx.deleteProcessApi.post(); // give it another go!
 		} else if ((errorCode === 'badtoken' || errorCode === 'notoken') && ctx.retries++ < ctx.maxRetries) {
 			ctx.statusElement.info('Invalid token, retrying');
-			--Morebits.wiki.numberOfActionsLeft;
+			--MorebitsGlobal.wiki.numberOfActionsLeft;
 			ctx.deleteProcessApi.query.token = fnGetToken.call(this);
 			ctx.deleteProcessApi.post();
 		} else if (errorCode === 'missingtitle') {
@@ -2948,7 +2948,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 			ctx.undeleteProcessApi.post(); // give it another go!
 		} else if ((errorCode === 'badtoken' || errorCode === 'notoken') && ctx.retries++ < ctx.maxRetries) {
 			ctx.statusElement.info('Invalid token, retrying');
-			--Morebits.wiki.numberOfActionsLeft;
+			--MorebitsGlobal.wiki.numberOfActionsLeft;
 			ctx.undeleteProcessApi.query.token = fnGetToken.call(this);
 			ctx.undeleteProcessApi.post();
 
