@@ -1612,7 +1612,7 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 		'// End of twinkleoptions.js\n';
 
 	pageobj.setPageText(text);
-	pageobj.setEditSummary('Saving Twinkle preferences: automatic edit from [[:' + MorebitsGlobal.pageNameNorm + ']]');
+	pageobj.setEditSummary('Saving Twinkle preferences: automatic edit from [[:' + MorebitsGlobal.pageNameNorm + ']]' + TwinkleGlobal.getPref('summaryAd'));
 	pageobj.setCreateOption('recreate');
 	pageobj.save(TwinkleGlobal.config.saveSuccess);
 };
