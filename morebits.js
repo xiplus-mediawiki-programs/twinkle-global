@@ -1361,7 +1361,6 @@ MorebitsGlobal.wiki.removeCheckpoint = function() {
 MorebitsGlobal.wiki.api = function(currentAction, query, onSuccess, statusElement, onError) {
 	this.currentAction = currentAction;
 	this.query = query;
-	this.query.format = 'xml';
 	this.query.assert = 'user';
 	this.onSuccess = onSuccess;
 	this.onError = onError;
@@ -1371,6 +1370,11 @@ MorebitsGlobal.wiki.api = function(currentAction, query, onSuccess, statusElemen
 	} else {
 		this.statelem = new MorebitsGlobal.status(currentAction);
 	}
+	if (!query.format) {
+		this.query.format = 'xml';
+	} else if (['xml', 'json'].indexOf(query.format) === -1) {
+		this.statelem.error('Invalid API format: only xml and json are supported.');
+	}
 };
 
 MorebitsGlobal.wiki.api.prototype = {
@@ -1379,7 +1383,8 @@ MorebitsGlobal.wiki.api.prototype = {
 	onError: null,
 	parent: window,  // use global context if there is no parent object
 	query: null,
-	responseXML: null,
+	response: null,
+	responseXML: null,  // use `response` instead; retained for backwards compatibility
 	setParent: function(parent) {
 		this.parent = parent;
 	},  // keep track of parent object for callbacks
@@ -1402,18 +1407,23 @@ MorebitsGlobal.wiki.api.prototype = {
 			type: 'POST',
 			url: mw.util.wikiScript('api'),
 			data: MorebitsGlobal.queryString.create(this.query),
-			dataType: 'xml',
+			dataType: this.query.format,
 			headers: {
 				'Api-User-Agent': morebitsWikiApiUserAgent
 			}
 		}, callerAjaxParameters);
 
 		return $.ajax(ajaxparams).done(
-			function(xml, statusText) {
+			function(response, statusText) {
 				this.statusText = statusText;
-				this.responseXML = xml;
-				this.errorCode = $(xml).find('error').attr('code');
-				this.errorText = $(xml).find('error').attr('info');
+				this.response = this.responseXML = response;
+				if (this.query.format === 'json') {
+					this.errorCode = response.error && response.error.code;
+					this.errorText = response.error && response.error.info;
+				} else {
+					this.errorCode = $(response).find('error').attr('code');
+					this.errorText = $(response).find('error').attr('info');
+				}
 
 				if (typeof this.errorCode === 'string') {
 
@@ -1474,9 +1484,14 @@ MorebitsGlobal.wiki.api.prototype = {
 		return this.errorText;
 	},
 
-	getXML: function() {
+	getXML: function() { // retained for backwards compatibility, use getResponse() instead
 		return this.responseXML;
+	},
+
+	getResponse: function() {
+		return this.response;
 	}
+
 };
 
 // Custom user agent header, used by WMF for server-side logging
