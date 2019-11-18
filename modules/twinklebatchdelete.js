@@ -435,8 +435,7 @@ TwinkleGlobal.batchdelete.callback.toggleSubpages = function twDbatchToggleSubpa
 };
 
 TwinkleGlobal.batchdelete.callback.evaluate = function twinklebatchdeleteCallbackEvaluate(event) {
-	MorebitsGlobal.wiki.actionCompleted.notice = 'Status';
-	MorebitsGlobal.wiki.actionCompleted.postfix = 'batch deletion is now complete';
+	MorebitsGlobal.wiki.actionCompleted.notice = 'Batch deletion is now complete';
 
 	var form = event.target;
 

@@ -1314,7 +1314,9 @@ MorebitsGlobal.wiki.actionCompleted = function(self) {
 
 // Change per action wanted
 MorebitsGlobal.wiki.actionCompleted.event = function() {
-	new MorebitsGlobal.status(MorebitsGlobal.wiki.actionCompleted.notice, MorebitsGlobal.wiki.actionCompleted.postfix, 'info');
+	if (MorebitsGlobal.wiki.actionCompleted.notice) {
+		MorebitsGlobal.status.actionCompleted(MorebitsGlobal.wiki.actionCompleted.notice);
+	}
 	if (MorebitsGlobal.wiki.actionCompleted.redirect) {
 		// if it isn't a URL, make it one. TODO: This breaks on the articles 'http://', 'ftp://', and similar ones.
 		if (!(/^\w+:\/\//).test(MorebitsGlobal.wiki.actionCompleted.redirect)) {
@@ -1331,8 +1333,7 @@ MorebitsGlobal.wiki.actionCompleted.event = function() {
 
 MorebitsGlobal.wiki.actionCompleted.timeOut = typeof window.wpActionCompletedTimeOut === 'undefined' ? 5000 : window.wpActionCompletedTimeOut;
 MorebitsGlobal.wiki.actionCompleted.redirect = null;
-MorebitsGlobal.wiki.actionCompleted.notice = 'Action';
-MorebitsGlobal.wiki.actionCompleted.postfix = 'completed';
+MorebitsGlobal.wiki.actionCompleted.notice = null;
 
 MorebitsGlobal.wiki.addCheckpoint = function() {
 	++MorebitsGlobal.wiki.nbrOfCheckpointsLeft;
@@ -2709,7 +2710,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 				} else if (errorCode === 'abusefilter-warning') {
 					ctx.statusElement.error([ 'A warning was returned by the edit filter: "', desc, '". If you wish to proceed with the edit, please carry it out again. This warning will not appear a second time.' ]);
 					// We should provide the user with a way to automatically retry the action if they so choose -
-					// I can't see how to do this without creating a UI dependency on Morebits.wiki.page though -- TTO
+					// I can't see how to do this without creating a UI dependency on MorebitsGlobal.wiki.page though -- TTO
 				} else { // shouldn't happen but...
 					ctx.statusElement.error('The edit was disallowed by the edit filter.');
 				}
@@ -3683,6 +3684,20 @@ MorebitsGlobal.status.warn = function(text, status) {
 
 MorebitsGlobal.status.error = function(text, status) {
 	return new MorebitsGlobal.status(text, status, 'error');
+};
+
+/**
+ * For the action complete message at the end, create a status line without
+ * a colon separator.
+ * @param {String} text
+ */
+MorebitsGlobal.status.actionCompleted = function(text) {
+	var node = document.createElement('div');
+	node.appendChild(document.createElement('span')).appendChild(document.createTextNode(text));
+	node.className = 'tw_status_info';
+	if (MorebitsGlobal.status.root) {
+		MorebitsGlobal.status.root.appendChild(node);
+	}
 };
 
 /**

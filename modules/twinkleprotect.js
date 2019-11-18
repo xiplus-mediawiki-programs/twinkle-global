@@ -87,8 +87,6 @@ TwinkleGlobal.protect.callback = function twinkleprotectCallback() {
 	evt.initEvent('change', true, true);
 	result.actiontype[0].dispatchEvent(evt);
 
-	MorebitsGlobal.wiki.actionCompleted.postfix = false;  // avoid Action: completed notice
-
 	// get current protection level asynchronously
 	TwinkleGlobal.protect.fetchProtectionLevel();
 };
@@ -99,7 +97,7 @@ TwinkleGlobal.protect.callback = function twinkleprotectCallback() {
 TwinkleGlobal.protect.currentProtectionLevels = {};
 
 // returns a jQuery Deferred object, usage:
-//   Twinkle.protect.fetchProtectingAdmin(apiObject, pageName, protect/stable).done(function(admin_username) { ...code... });
+//   TwinkleGlobal.protect.fetchProtectingAdmin(apiObject, pageName, protect/stable).done(function(admin_username) { ...code... });
 TwinkleGlobal.protect.fetchProtectingAdmin = function twinkleprotectFetchProtectingAdmin(api, pageName, protType, logIds) {
 	logIds = logIds || [];
 
@@ -347,7 +345,7 @@ TwinkleGlobal.protect.callback.changeAction = function twinkleprotectCallbackCha
 							TwinkleGlobal.protect.doCustomExpiry(e.target);
 						}
 					},
-					// default expiry selection is conditionally set in Twinkle.protect.callback.changePreset
+					// default expiry selection is conditionally set in TwinkleGlobal.protect.callback.changePreset
 					list: [
 						{ label: '1 hour', value: '1 hour' },
 						{ label: '2 hours', value: '2 hours' },
@@ -419,7 +417,7 @@ TwinkleGlobal.protect.callback.changeAction = function twinkleprotectCallbackCha
 							TwinkleGlobal.protect.doCustomExpiry(e.target);
 						}
 					},
-					// default expiry selection is conditionally set in Twinkle.protect.callback.changePreset
+					// default expiry selection is conditionally set in TwinkleGlobal.protect.callback.changePreset
 					list: [
 						{ label: '1 hour', value: '1 hour' },
 						{ label: '2 hours', value: '2 hours' },
@@ -1512,7 +1510,7 @@ TwinkleGlobal.protect.callbacks = {
 		var increase = false;
 		var protInfo = TwinkleGlobal.protect.protectionPresetsInfo[params.category];
 
-		// function to compute protection weights (see comment at Twinkle.protect.protectionWeight)
+		// function to compute protection weights (see comment at TwinkleGlobal.protect.protectionWeight)
 		var computeWeight = function(mainLevel, stabilizeLevel) {
 			var result = TwinkleGlobal.protect.protectionWeight[mainLevel || 'all'];
 			if (stabilizeLevel) {
