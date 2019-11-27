@@ -1,14 +1,10 @@
 /**
- * +-------------------------------------------------------------------------+
- * |                              === 警告 ===                               |
- * |      本工具有一些新穎的修改，雖本人會經過測試，但不能保證不會出錯            |
- * |               強烈建議在使用後複查編輯，特別是那些新功能                    |
- * +-------------------------------------------------------------------------+
+ * Forked from https://zh.wikipedia.org/w/index.php?oldid=45972864
+ * @see [[User:Xiplus/TwinkleGlobal]]
+ * @author [[User:逆襲的天邪鬼]]
+ * @author [[User:Xiplus]]
+ * @author [[User:WhitePhosphorus]]
  */
-
-// 複製並修改自 https://zh.wikipedia.org/w/index.php?oldid=45972864 作者為 User:逆襲的天邪鬼
-
-// 載入自己修改的Twinkle
 
 (function() {
 
@@ -84,32 +80,30 @@ tests.push({ name: 'modules/twinklespeedy.js', test: true });
 function main() {
 	mw.loader.load('https://meta.wikimedia.org/w/index.php?title=User:Xiplus/Twinkle/morebits.css&action=raw&ctype=text/css', 'text/css');
 
-	var i = 0;
 	var finished = 0;
 	var code = [];
 
 	// all
 	message('Loading Twinkle_global_xiplus...');
-	var promises = [];
 	var done = function(x) {
 		return function(data) {
 			finished++;
 			message('Loading Twinkle_global_xiplus... (' + finished + '/' + tests.length + ')');
 			code[x] = data;
+			if (x === tests.length - 1) {
+				localStorage.Twinkle_global_xiplus_version = VERSION;
+				eval(code.join('\n;\n'));
+				message('Twinkle Done');
+				if ($('#twinkleglobal-config-titlebar').length) {
+					$('#twinkleglobal-config-titlebar').append('--Version: Xiplus ' + localStorage.Twinkle_global_xiplus_version);
+					$('#twinkleglobal-config-titlebar').append('<button onclick="localStorage.Twinkle_global_xiplus_version =       \'\';location.reload();">Purge</button>');
+				}
+			} else {
+				load(tests[x + 1]).done(done(x + 1));
+			}
 		};
 	};
-	for (i = 0; i < tests.length; i++) {
-		promises.push(load(tests[i]).done(done(i)));
-	}
-	$.when.apply($, promises).done(function() {
-		localStorage.Twinkle_global_xiplus_version = VERSION;
-		eval(code.join('\n;\n'));
-		message('Twinkle Done');
-		if ($('#twinkleglobal-config-titlebar').length) {
-			$('#twinkleglobal-config-titlebar').append('--Version: Xiplus ' + localStorage.Twinkle_global_xiplus_version);
-			$('#twinkleglobal-config-titlebar').append('<button onclick="localStorage.Twinkle_global_xiplus_version = \'\';location.reload();">Purge</button>');
-		}
-	});
+	load(tests[0]).done(done(0));
 }
 
 mw.loader.using(['mediawiki.user', 'mediawiki.util', 'mediawiki.notify', 'mediawiki.Title', 'jquery.ui', 'jquery.tipsy', 'mediawiki.ForeignApi']).done(function() {
