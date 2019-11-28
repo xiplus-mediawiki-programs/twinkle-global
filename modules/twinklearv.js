@@ -241,7 +241,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				if (form.hidename && form.hidename.checked) {
 					summary = 'Reporting ' + (usernames.length > 1 ? usernames.length + ' accounts' : 'an account');
 				} else {
-					summary = 'Reporting [[Special:Contributions/' + uid + '|' + uid + ']]';
+					summary = 'Reporting [[Special:CentralAuth/' + uid + '|' + uid + ']]';
 					if (usernames.length > 1) {
 						summary += ' and ' + (usernames.length - 1) + ' other account';
 						if (usernames.length > 2) {
