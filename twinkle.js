@@ -429,13 +429,8 @@ TwinkleGlobal.load = function () {
 	var isSpecialPage = mw.config.get('wgNamespaceNumber') === -1 &&
 		specialPageWhitelist.indexOf(mw.config.get('wgCanonicalSpecialPageName')) === -1;
 
-	// Also, Twinkle is incompatible with Internet Explorer versions 8 or lower,
-	// so don't load there either.
-	var isOldIE = $.client.profile().name === 'msie' &&
-		$.client.profile().versionNumber < 9;
-
 	// Prevent users that are not autoconfirmed from loading Twinkle as well.
-	if (isSpecialPage || isOldIE || !TwinkleGlobal.userAuthorized) {
+	if (isSpecialPage || !TwinkleGlobal.userAuthorized) {
 		return;
 	}
 
