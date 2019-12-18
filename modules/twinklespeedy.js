@@ -340,6 +340,10 @@ TwinkleGlobal.speedy.generalList = [
 	{
 		label: 'Test page',
 		value: 'Test page'
+	},
+	{
+		label: 'Not a translation',
+		value: 'Not a translation'
 	}
 ];
 
@@ -349,7 +353,8 @@ TwinkleGlobal.speedy.normalizeHash = {
 	'Vandalism': 'vandalism',
 	'Out of project scope': 'scope',
 	'Nonsense': 'nonsense',
-	'Test page': 'test'
+	'Test page': 'test',
+	'Not a translation': 'translation'
 };
 
 TwinkleGlobal.speedy.callbacks = {
