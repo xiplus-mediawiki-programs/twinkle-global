@@ -162,18 +162,27 @@ TwinkleGlobal.defaultConfig.twinkle = {
 };
 
 // now some skin dependent config.
-if (mw.config.get('skin') === 'vector') {
-	TwinkleGlobal.defaultConfig.twinkle.portletArea = 'right-navigation';
-	TwinkleGlobal.defaultConfig.twinkle.portletId = 'p-twinkle';
-	TwinkleGlobal.defaultConfig.twinkle.portletName = 'TW';
-	TwinkleGlobal.defaultConfig.twinkle.portletType = 'menu';
-	TwinkleGlobal.defaultConfig.twinkle.portletNext = 'p-search';
-} else {
-	TwinkleGlobal.defaultConfig.twinkle.portletArea = null;
-	TwinkleGlobal.defaultConfig.twinkle.portletId = 'p-cactions';
-	TwinkleGlobal.defaultConfig.twinkle.portletName = null;
-	TwinkleGlobal.defaultConfig.twinkle.portletType = null;
-	TwinkleGlobal.defaultConfig.twinkle.portletNext = null;
+switch (mw.config.get('skin')) {
+	case 'vector':
+		TwinkleGlobal.defaultConfig.twinkle.portletArea = 'right-navigation';
+		TwinkleGlobal.defaultConfig.twinkle.portletId = 'p-twinkle';
+		TwinkleGlobal.defaultConfig.twinkle.portletName = 'TW';
+		TwinkleGlobal.defaultConfig.twinkle.portletType = 'menu';
+		TwinkleGlobal.defaultConfig.twinkle.portletNext = 'p-search';
+		break;
+	case 'timeless':
+		TwinkleGlobal.defaultConfig.twinkle.portletArea = '#page-tools .sidebar-inner';
+		TwinkleGlobal.defaultConfig.twinkle.portletId = 'p-twinkle';
+		TwinkleGlobal.defaultConfig.twinkle.portletName = 'Twinkle';
+		TwinkleGlobal.defaultConfig.twinkle.portletType = null;
+		TwinkleGlobal.defaultConfig.twinkle.portletNext = 'p-userpagetools';
+		break;
+	default:
+		TwinkleGlobal.defaultConfig.twinkle.portletArea = null;
+		TwinkleGlobal.defaultConfig.twinkle.portletId = 'p-cactions';
+		TwinkleGlobal.defaultConfig.twinkle.portletName = null;
+		TwinkleGlobal.defaultConfig.twinkle.portletType = null;
+		TwinkleGlobal.defaultConfig.twinkle.portletNext = null;
 }
 
 TwinkleGlobal.defaultConfig.friendly = {
@@ -275,7 +284,7 @@ TwinkleGlobal.getFriendlyPref = function twinkleGetFriendlyPref(name) {
  */
 TwinkleGlobal.addPortlet = function(navigation, id, text, type, nextnodeid) {
 	// sanity checks, and get required DOM nodes
-	var root = document.getElementById(navigation);
+	var root = document.getElementById(navigation) || document.querySelector(navigation);
 	if (!root) {
 		return null;
 	}
@@ -295,33 +304,38 @@ TwinkleGlobal.addPortlet = function(navigation, id, text, type, nextnodeid) {
 
 	// verify/normalize input
 	var skin = mw.config.get('skin');
-	type = skin === 'vector' && type === 'menu' && (navigation === 'left-navigation' || navigation === 'right-navigation') ? 'menu' : '';
-	var outerDivClass;
-	var innerDivClass;
+	if (skin !== 'vector' || (navigation !== 'left-navigation' && navigation !== 'right-navigation')) {
+		type = null; // menu supported only in vector's #left-navigation & #right-navigation
+	}
+	var outerDivClass, innerDivClass;
 	switch (skin) {
 		case 'vector':
+			// XXX: portal doesn't work
 			if (navigation !== 'portal' && navigation !== 'left-navigation' && navigation !== 'right-navigation') {
 				navigation = 'mw-panel';
 			}
 			outerDivClass = navigation === 'mw-panel' ? 'portal' : type === 'menu' ? 'vectorMenu' : 'vectorTabs';
-			innerDivClass = navigation === 'mw-panel' ? 'body' : type === 'menu' ? 'menu' : '';
 			break;
 		case 'modern':
 			if (navigation !== 'mw_portlets' && navigation !== 'mw_contentwrapper') {
 				navigation = 'mw_portlets';
 			}
 			outerDivClass = 'portlet';
-			innerDivClass = 'pBody';
+			break;
+		case 'timeless':
+			outerDivClass = 'mw-portlet';
+			innerDivClass = 'mw-portlet-body';
 			break;
 		default:
 			navigation = 'column-one';
 			outerDivClass = 'portlet';
-			innerDivClass = 'pBody';
 			break;
 	}
 
 	// Build the DOM elements.
 	var outerDiv = document.createElement('div');
+	outerDiv.setAttribute('role', 'navigation');
+	outerDiv.setAttribute('aria-labelledby', id + '-label');
 	outerDiv.className = outerDivClass + ' emptyPortlet';
 	outerDiv.id = id;
 	if (nextnode && nextnode.parentNode === root) {
@@ -330,20 +344,20 @@ TwinkleGlobal.addPortlet = function(navigation, id, text, type, nextnodeid) {
 		root.appendChild(outerDiv);
 	}
 
+	var h5 = document.createElement('h3');
+	h5.id = id + '-label';
+	var ul = document.createElement('ul');
+
 	if (outerDivClass === 'vectorMenu') {
-		// add invisible checkbox to make menu keyboard accessible
+
+		// add invisible checkbox to keep menu open when clicked
 		// similar to the p-cactions ("More") menu
 		var chkbox = document.createElement('input');
 		chkbox.className = 'vectorMenuCheckbox';
 		chkbox.setAttribute('type', 'checkbox');
-		chkbox.setAttribute('aria-labelledby', 'p-twinkle-label');
+		chkbox.setAttribute('aria-labelledby', id + '-label');
 		outerDiv.appendChild(chkbox);
-	}
-	var h5 = document.createElement('h3');
-	if (outerDivClass === 'vectorMenu') {
-		h5.id = 'p-twinkle-label';
-	}
-	if (type === 'menu') {
+
 		var span = document.createElement('span');
 		span.appendChild(document.createTextNode(text));
 		h5.appendChild(span);
@@ -351,31 +365,36 @@ TwinkleGlobal.addPortlet = function(navigation, id, text, type, nextnodeid) {
 		var a = document.createElement('a');
 		a.href = '#';
 
-		$(a).click(function (e) {
+		$(a).click(function(e) {
 			e.preventDefault();
-
 			if (!TwinkleGlobal.userAuthorized) {
 				alert('Sorry, your account is too new to use Twinkle.');
 			}
 		});
 
 		h5.appendChild(a);
+		outerDiv.appendChild(h5);
+
+		ul.className = 'menu';
+		outerDiv.appendChild(ul);
+
 	} else {
+
 		h5.appendChild(document.createTextNode(text));
-	}
-	outerDiv.appendChild(h5);
+		outerDiv.appendChild(h5);
+		if (innerDivClass) {
+			var innerDiv = document.createElement('div');
+			innerDiv.className = innerDivClass;
+			innerDiv.appendChild(ul);
+			outerDiv.appendChild(innerDiv);
+		} else {
+			outerDiv.appendChild(ul);
+		}
 
-	var innerDiv = null;
-	if (type === 'menu') {
-		innerDiv = document.createElement('div');
-		innerDiv.className = innerDivClass;
-		outerDiv.appendChild(innerDiv);
 	}
-
-	var ul = document.createElement('ul');
-	(innerDiv || outerDiv).appendChild(ul);
 
 	return outerDiv;
+
 };
 
 
