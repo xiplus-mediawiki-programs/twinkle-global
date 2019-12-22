@@ -11,7 +11,6 @@
  * Mode of invocation:     Tab ("Wel"), or from links on diff pages
  * Active on:              Any page with relevant user name (userspace,
  *                         contribs, etc.) and diff pages
- * Config directives in:   FriendlyConfig
  */
 
 TwinkleGlobal.welcome = function friendlywelcome() {
@@ -65,7 +64,7 @@ TwinkleGlobal.welcome.normal = function() {
 
 				var oWelcomeNode = welcomeNode.cloneNode(true);
 				oWelcomeNode.firstChild.setAttribute('href', oHref + '&' + MorebitsGlobal.queryString.create({
-					'friendlywelcome': TwinkleGlobal.getFriendlyPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
+					'friendlywelcome': TwinkleGlobal.getPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
 					'vanarticle': MorebitsGlobal.pageNameNorm
 				}));
 				$oList[0].parentNode.parentNode.appendChild(document.createTextNode(' '));
@@ -77,7 +76,7 @@ TwinkleGlobal.welcome.normal = function() {
 
 				var nWelcomeNode = welcomeNode.cloneNode(true);
 				nWelcomeNode.firstChild.setAttribute('href', nHref + '&' + MorebitsGlobal.queryString.create({
-					'friendlywelcome': TwinkleGlobal.getFriendlyPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
+					'friendlywelcome': TwinkleGlobal.getPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
 					'vanarticle': MorebitsGlobal.pageNameNorm
 				}));
 				$nList[0].parentNode.parentNode.appendChild(document.createTextNode(' '));
@@ -97,7 +96,7 @@ TwinkleGlobal.welcome.welcomeUser = function welcomeUser() {
 	$('#catlinks').remove();
 
 	var params = {
-		value: TwinkleGlobal.getFriendlyPref('quickWelcomeTemplate'),
+		value: TwinkleGlobal.getPref('quickWelcomeTemplate'),
 		article: MorebitsGlobal.queryString.exists('vanarticle') ? MorebitsGlobal.queryString.get('vanarticle') : '',
 		mode: 'auto'
 	};
@@ -177,12 +176,12 @@ TwinkleGlobal.welcome.populateWelcomeList = function(e) {
 
 	var container = new MorebitsGlobal.quickForm.element({ type: 'fragment' });
 
-	if ((type === 'standard' || type === 'anonymous') && TwinkleGlobal.getFriendlyPref('customWelcomeList').length) {
+	if ((type === 'standard' || type === 'anonymous') && TwinkleGlobal.getPref('customWelcomeList').length) {
 		container.append({ type: 'header', label: 'Custom welcome templates' });
 		container.append({
 			type: 'radio',
 			name: 'template',
-			list: TwinkleGlobal.getFriendlyPref('customWelcomeList'),
+			list: TwinkleGlobal.getPref('customWelcomeList'),
 			event: TwinkleGlobal.welcome.selectTemplate
 		});
 	}
@@ -711,13 +710,13 @@ TwinkleGlobal.welcome.getTemplateWikitext = function(template, article) {
 	var properties = TwinkleGlobal.welcome.templates[template];
 	if (properties) {
 		return properties.syntax.
-			replace('$USERNAME$', TwinkleGlobal.getFriendlyPref('insertUsername') ? mw.config.get('wgUserName') : '').
+			replace('$USERNAME$', TwinkleGlobal.getPref('insertUsername') ? mw.config.get('wgUserName') : '').
 			replace('$ARTICLE$', article ? article : '').
 			replace(/\$HEADER\$\s*/, '== Welcome ==\n\n').
 			replace('$EXTRA$', '');  // EXTRA is not implemented yet
 	}
 	return '{{subst:' + template + (article ? '|art=' + article : '') + '}}' +
-			(TwinkleGlobal.getFriendlyPref('customWelcomeSignature') ? ' ~~~~' : '');
+			(TwinkleGlobal.getPref('customWelcomeSignature') ? ' ~~~~' : '');
 };
 
 TwinkleGlobal.welcome.callbacks = {
@@ -759,7 +758,7 @@ TwinkleGlobal.welcome.callbacks = {
 
 		var welcomeText = TwinkleGlobal.welcome.getTemplateWikitext(params.value, params.article);
 
-		if (TwinkleGlobal.getFriendlyPref('topWelcomes')) {
+		if (TwinkleGlobal.getPref('topWelcomes')) {
 			text = welcomeText + '\n\n' + text;
 		} else {
 			text += '\n' + welcomeText;
@@ -768,7 +767,7 @@ TwinkleGlobal.welcome.callbacks = {
 		var summaryText = 'Welcome to Wikipedia!';
 		pageobj.setPageText(text);
 		pageobj.setEditSummary(summaryText + TwinkleGlobal.getPref('summaryAd'));
-		pageobj.setWatchlist(TwinkleGlobal.getFriendlyPref('watchWelcomes'));
+		pageobj.setWatchlist(TwinkleGlobal.getPref('watchWelcomes'));
 		pageobj.setCreateOption('recreate');
 		pageobj.save();
 	}

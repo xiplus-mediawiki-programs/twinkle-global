@@ -10,7 +10,6 @@
  ****************************************
  * Mode of invocation:     Tab ("D-batch")
  * Active on:              Existing non-articles, and Special:PrefixIndex
- * Config directives in:   TwinkleConfig
  */
 
 TwinkleGlobal.batchdelete = function twinklebatchdelete() {

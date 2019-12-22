@@ -405,12 +405,13 @@ var callback_evaluate = function(e) {
 		}
 
 	} else if (tbtarget === 'mail') {
-		text = '\n\n==' + TwinkleGlobal.getFriendlyPref('mailHeading') + "==\n{{you've got mail|subject=";
-		text += section + '|ts=~~~~~}}';
+		text +=
+			'==' + TwinkleGlobal.getPref('mailHeading') + '==\n' +
+			"{{You've got mail|subject=" + section + '|ts=~~~~~}}';
 
 		if (message) {
 			text += '\n' + message.trim() + '  ~~~~';
-		} else if (TwinkleGlobal.getFriendlyPref('insertTalkbackSignature')) {
+		} else if (TwinkleGlobal.getPref('insertTalkbackSignature')) {
 			text += '\n~~~~';
 		}
 
@@ -427,7 +428,7 @@ var callback_evaluate = function(e) {
 
 	} else {  // tbtarget one of mytalk, usertalk, other
 		// clean talkback heading: strip section header markers that were erroneously suggested in the documentation
-		text = '\n\n==' + TwinkleGlobal.getFriendlyPref('talkbackHeading').replace(/^\s*=+\s*(.*?)\s*=+$\s*/, '$1') + '==\n{{talkback|';
+		text = '\n\n==' + TwinkleGlobal.getPref('talkbackHeading').replace(/^\s*=+\s*(.*?)\s*=+$\s*/, '$1') + '==\n{{talkback|';
 		text += tbPageName;
 
 		if (section) {
@@ -438,7 +439,7 @@ var callback_evaluate = function(e) {
 
 		if (message) {
 			text += '\n' + message.trim() + ' ~~~~';
-		} else if (TwinkleGlobal.getFriendlyPref('insertTalkbackSignature')) {
+		} else if (TwinkleGlobal.getPref('insertTalkbackSignature')) {
 			text += '\n~~~~';
 		}
 
@@ -452,7 +453,7 @@ var callback_evaluate = function(e) {
 
 	talkpage.setAppendText(text);
 	talkpage.setCreateOption('recreate');
-	talkpage.setMinorEdit(TwinkleGlobal.getFriendlyPref('markTalkbackAsMinor'));
+	talkpage.setMinorEdit(TwinkleGlobal.getPref('markTalkbackAsMinor'));
 	talkpage.setFollowRedirect(true);
 	talkpage.append();
 };

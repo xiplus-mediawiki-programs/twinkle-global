@@ -20,7 +20,7 @@
 
 /* global MorebitsGlobal */
 
-(function (window, document, $, undefined) { // Wrap with anonymous function
+(function (window, document, $) { // Wrap with anonymous function
 
 var TwinkleGlobal = {};
 window.TwinkleGlobal = TwinkleGlobal;  // allow global access
@@ -36,14 +36,14 @@ TwinkleGlobal.addInitCallback = function twinkleAddInitCallback(func) {
 
 TwinkleGlobal.defaultConfig = {};
 /**
- * Twinkle.defaultConfig.twinkle and Twinkle.defaultConfig.friendly
- *
- * This holds the default set of preferences used by Twinkle. (The |friendly| object holds preferences stored in the FriendlyConfig object.)
+ * This holds the default set of preferences used by Twinkle.
  * It is important that all new preferences added here, especially admin-only ones, are also added to
  * |Twinkle.config.sections| in twinkleconfig.js, so they are configurable via the Twinkle preferences panel.
  * For help on the actual preferences, see the comments in twinkleconfig.js.
+ *
+ * Formerly Twinkle.defaultConfig.twinkle and Twinkle.defaultConfig.friendly
  */
-TwinkleGlobal.defaultConfig.twinkle = {
+TwinkleGlobal.defaultConfig = {
 	// General
 	summaryAd: ' (TwinkleGlobal)',
 	deletionSummaryAd: ' (TwinkleGlobal)',
@@ -158,34 +158,10 @@ TwinkleGlobal.defaultConfig.twinkle = {
 	dataApi: mw.config.get('wgDBname') === 'wikidatawiki'
 		? new mw.Api()
 		: new mw.ForeignApi('https://www.wikidata.org/w/api.php'),
-	speedyTemplateItem: 'Q4847311'
-};
+	speedyTemplateItem: 'Q4847311',
 
-// now some skin dependent config.
-switch (mw.config.get('skin')) {
-	case 'vector':
-		TwinkleGlobal.defaultConfig.twinkle.portletArea = 'right-navigation';
-		TwinkleGlobal.defaultConfig.twinkle.portletId = 'p-twinkle';
-		TwinkleGlobal.defaultConfig.twinkle.portletName = 'TW';
-		TwinkleGlobal.defaultConfig.twinkle.portletType = 'menu';
-		TwinkleGlobal.defaultConfig.twinkle.portletNext = 'p-search';
-		break;
-	case 'timeless':
-		TwinkleGlobal.defaultConfig.twinkle.portletArea = '#page-tools .sidebar-inner';
-		TwinkleGlobal.defaultConfig.twinkle.portletId = 'p-twinkle';
-		TwinkleGlobal.defaultConfig.twinkle.portletName = 'Twinkle';
-		TwinkleGlobal.defaultConfig.twinkle.portletType = null;
-		TwinkleGlobal.defaultConfig.twinkle.portletNext = 'p-userpagetools';
-		break;
-	default:
-		TwinkleGlobal.defaultConfig.twinkle.portletArea = null;
-		TwinkleGlobal.defaultConfig.twinkle.portletId = 'p-cactions';
-		TwinkleGlobal.defaultConfig.twinkle.portletName = null;
-		TwinkleGlobal.defaultConfig.twinkle.portletType = null;
-		TwinkleGlobal.defaultConfig.twinkle.portletNext = null;
-}
+	// Formerly defaultConfig.friendly:
 
-TwinkleGlobal.defaultConfig.friendly = {
 	// Tag
 	groupByDefault: true,
 	watchTaggedPages: true,
@@ -220,38 +196,44 @@ TwinkleGlobal.defaultConfig.friendly = {
 	markSharedIPAsMinor: true
 };
 
+// now some skin dependent config.
+switch (mw.config.get('skin')) {
+	case 'vector':
+		TwinkleGlobal.defaultConfig.portletArea = 'right-navigation';
+		TwinkleGlobal.defaultConfig.portletId = 'p-twinkle';
+		TwinkleGlobal.defaultConfig.portletName = 'TW';
+		TwinkleGlobal.defaultConfig.portletType = 'menu';
+		TwinkleGlobal.defaultConfig.portletNext = 'p-search';
+		break;
+	case 'timeless':
+		TwinkleGlobal.defaultConfig.portletArea = '#page-tools .sidebar-inner';
+		TwinkleGlobal.defaultConfig.portletId = 'p-twinkle';
+		TwinkleGlobal.defaultConfig.portletName = 'Twinkle';
+		TwinkleGlobal.defaultConfig.portletType = null;
+		TwinkleGlobal.defaultConfig.portletNext = 'p-userpagetools';
+		break;
+	default:
+		TwinkleGlobal.defaultConfig.portletArea = null;
+		TwinkleGlobal.defaultConfig.portletId = 'p-cactions';
+		TwinkleGlobal.defaultConfig.portletName = null;
+		TwinkleGlobal.defaultConfig.portletType = null;
+		TwinkleGlobal.defaultConfig.portletNext = null;
+}
+
+
 TwinkleGlobal.getPref = function twinkleGetPref(name) {
-	var result;
-	if (typeof TwinkleGlobal.prefs === 'object' && typeof TwinkleGlobal.prefs.twinkle === 'object') {
-		// look in Twinkle.prefs (twinkleoptions.js)
-		result = TwinkleGlobal.prefs.twinkle[name];
-	} else if (typeof window.TwinkleConfig === 'object') {
-		// look in TwinkleConfig
-		result = window.TwinkleConfig[name];
+	if (typeof TwinkleGlobal.prefs === 'object' && TwinkleGlobal.prefs[name]) {
+		return TwinkleGlobal.prefs[name];
 	}
-
-	if (result === undefined) {
-		return TwinkleGlobal.defaultConfig.twinkle[name];
+	// Old preferences format, used before twinkleoptions.js was a thing
+	if (typeof window.TwinkleConfig === 'object' && window.TwinkleConfig[name]) {
+		return window.TwinkleConfig[name];
 	}
-	return result;
+	if (typeof window.FriendlyConfig === 'object' && window.FriendlyConfig[name]) {
+		return window.FriendlyConfig[name];
+	}
+	return TwinkleGlobal.defaultConfig[name];
 };
-
-TwinkleGlobal.getFriendlyPref = function twinkleGetFriendlyPref(name) {
-	var result;
-	if (typeof TwinkleGlobal.prefs === 'object' && typeof TwinkleGlobal.prefs.friendly === 'object') {
-		// look in Twinkle.prefs (twinkleoptions.js)
-		result = TwinkleGlobal.prefs.friendly[name];
-	} else if (typeof window.FriendlyConfig === 'object') {
-		// look in FriendlyConfig
-		result = window.FriendlyConfig[name];
-	}
-
-	if (result === undefined) {
-		return TwinkleGlobal.defaultConfig.friendly[name];
-	}
-	return result;
-};
-
 
 
 /**
@@ -433,6 +415,34 @@ var scriptpathbefore = '//meta.wikimedia.org/w/index.php?title=',
 mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.get('wgUserName')) + '/twinkleoptions.js' + scriptpathafter)
 	.fail(function () {
 		mw.notify('Could not load twinkleoptions.js');
+	})
+	.done(function (optionsText) {
+
+		// Quick pass if user has no options
+		if (optionsText === '') {
+			return;
+		}
+
+		// Twinkle options are basically a JSON object with some comments. Strip those:
+		optionsText = optionsText.replace(/(?:^(?:\/\/[^\n]*\n)*\n*|(?:\/\/[^\n]*(?:\n|$))*$)/g, '');
+
+		// First version of options had some boilerplate code to make it eval-able -- strip that too. This part may become obsolete down the line.
+		if (optionsText.lastIndexOf('window.Twinkle.prefs = ', 0) === 0) {
+			optionsText = optionsText.replace(/(?:^window.Twinkle.prefs = |;\n*$)/g, '');
+		}
+
+		try {
+			var options = JSON.parse(optionsText);
+			if (options) {
+				if (options.twinkle || options.friendly) { // Old preferences format
+					TwinkleGlobal.prefs = $.extend(options.twinkle, options.friendly);
+				} else {
+					TwinkleGlobal.prefs = options;
+				}
+			}
+		} catch (e) {
+			mw.notify('Could not parse twinkleoptions.js');
+		}
 	})
 	.always(function () {
 		$(TwinkleGlobal.load);
