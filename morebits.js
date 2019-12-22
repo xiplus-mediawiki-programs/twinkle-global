@@ -2805,7 +2805,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 			query.movetalk = 'true';
 		}
 		if (ctx.moveSubpages) {
-			query.movesubpages = 'true';  // XXX don't know whether this works for non-admins
+			query.movesubpages = 'true';
 		}
 		if (ctx.moveSuppressRedirect) {
 			query.noredirect = 'true';
