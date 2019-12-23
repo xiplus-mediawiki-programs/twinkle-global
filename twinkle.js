@@ -416,34 +416,6 @@ mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.ge
 	.fail(function () {
 		mw.notify('Could not load twinkleoptions.js');
 	})
-	.done(function (optionsText) {
-
-		// Quick pass if user has no options
-		if (optionsText === '') {
-			return;
-		}
-
-		// Twinkle options are basically a JSON object with some comments. Strip those:
-		optionsText = optionsText.replace(/(?:^(?:\/\/[^\n]*\n)*\n*|(?:\/\/[^\n]*(?:\n|$))*$)/g, '');
-
-		// First version of options had some boilerplate code to make it eval-able -- strip that too. This part may become obsolete down the line.
-		if (optionsText.lastIndexOf('window.Twinkle.prefs = ', 0) === 0) {
-			optionsText = optionsText.replace(/(?:^window.Twinkle.prefs = |;\n*$)/g, '');
-		}
-
-		try {
-			var options = JSON.parse(optionsText);
-			if (options) {
-				if (options.twinkle || options.friendly) { // Old preferences format
-					TwinkleGlobal.prefs = $.extend(options.twinkle, options.friendly);
-				} else {
-					TwinkleGlobal.prefs = options;
-				}
-			}
-		} catch (e) {
-			mw.notify('Could not parse twinkleoptions.js');
-		}
-	})
 	.always(function () {
 		$(TwinkleGlobal.load);
 	});
