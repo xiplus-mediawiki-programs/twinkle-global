@@ -1549,6 +1549,11 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 	// Retain the hidden preferences that may have customised by the user from twinkleoptions.js
 	if (TwinkleGlobal.prefs) {
 		$.each(TwinkleGlobal.prefs, function(tkey, tvalue) {
+			// Remove old foramt preferences
+			if (['twinkle', 'friendly'].indexOf(tkey) !== -1) {
+				return;
+			}
+
 			if (foundPrefs.indexOf(tkey) === -1) {
 				newConfig[tkey] = tvalue;
 			}
