@@ -222,6 +222,10 @@ switch (mw.config.get('skin')) {
 
 
 TwinkleGlobal.getPref = function twinkleGetPref(name) {
+	// Old preferences format
+	if (typeof TwinkleGlobal.prefs === 'object' && typeof TwinkleGlobal.prefs.twinkle === 'object' && TwinkleGlobal.prefs.twinkle[name]) {
+		return TwinkleGlobal.prefs.twinkle[name];
+	}
 	if (typeof TwinkleGlobal.prefs === 'object' && TwinkleGlobal.prefs[name]) {
 		return TwinkleGlobal.prefs[name];
 	}
