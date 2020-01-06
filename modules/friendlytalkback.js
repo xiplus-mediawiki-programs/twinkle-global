@@ -115,7 +115,7 @@ TwinkleGlobal.talkback.callback.optoutStatus = function(apiobj) {
 
 	var $status = $('#twinkle-talkback-optout-message');
 	if ($status.length) {
-		$status.append(TwinkleGlobal.talkback.optout);
+		$status.text(TwinkleGlobal.talkback.optout);
 	}
 };
 
@@ -315,7 +315,7 @@ var callback_change_target = function(e) {
 	}
 
 	if (TwinkleGlobal.talkback.optout) {
-		$('#twinkle-talkback-optout-message').append(TwinkleGlobal.talkback.optout);
+		$('#twinkle-talkback-optout-message').text(TwinkleGlobal.talkback.optout);
 	}
 };
 
