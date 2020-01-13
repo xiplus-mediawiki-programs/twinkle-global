@@ -226,14 +226,15 @@ TwinkleGlobal.getPref = function twinkleGetPref(name) {
 	if (typeof TwinkleGlobal.prefs === 'object' && typeof TwinkleGlobal.prefs.twinkle === 'object' && TwinkleGlobal.prefs.twinkle[name]) {
 		return TwinkleGlobal.prefs.twinkle[name];
 	}
-	if (typeof TwinkleGlobal.prefs === 'object' && TwinkleGlobal.prefs[name]) {
+
+	if (typeof TwinkleGlobal.prefs === 'object' && TwinkleGlobal.prefs[name] !== undefined) {
 		return TwinkleGlobal.prefs[name];
 	}
 	// Old preferences format, used before twinkleoptions.js was a thing
-	if (typeof window.TwinkleConfig === 'object' && window.TwinkleConfig[name]) {
+	if (typeof window.TwinkleConfig === 'object' && window.TwinkleConfig[name] !== undefined) {
 		return window.TwinkleConfig[name];
 	}
-	if (typeof window.FriendlyConfig === 'object' && window.FriendlyConfig[name]) {
+	if (typeof window.FriendlyConfig === 'object' && window.FriendlyConfig[name] !== undefined) {
 		return window.FriendlyConfig[name];
 	}
 	return TwinkleGlobal.defaultConfig[name];
