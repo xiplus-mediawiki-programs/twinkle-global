@@ -3963,7 +3963,7 @@ MorebitsGlobal.batchOperation = function(currentAction) {
 			return link;
 		};
 
-		if (arg instanceof Morebits.wiki.api || arg instanceof Morebits.wiki.page) {
+		if (arg instanceof MorebitsGlobal.wiki.api || arg instanceof MorebitsGlobal.wiki.page) {
 			// update or remove status line
 			var statelem = arg.getStatusElement();
 			if (ctx.options.preserveIndividualStatusLines) {
@@ -3981,7 +3981,7 @@ MorebitsGlobal.batchOperation = function(currentAction) {
 			}
 
 		} else if (typeof arg === 'string' && ctx.options.preserveIndividualStatusLines) {
-			new Morebits.status(arg, ['done (', createPageLink(arg), ')']);
+			new MorebitsGlobal.status(arg, ['done (', createPageLink(arg), ')']);
 		}
 
 		ctx.countFinishedSuccess++;
