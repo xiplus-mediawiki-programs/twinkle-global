@@ -401,6 +401,14 @@ TwinkleGlobal.config.sections = [
 				type: 'integer'
 			},
 
+			{
+				name: 'customCSDReasonList',
+				label: 'Custom speedy reason',
+				type: 'customList',
+				customListValueTitle: 'Reason used in the template',
+				customListLabelTitle: 'Text to show in CSD dialog'
+			},
+
 			// Disable speedy on these wikis.
 			{
 				name: 'speedyDisabledWikis',

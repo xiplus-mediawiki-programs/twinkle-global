@@ -105,6 +105,8 @@ TwinkleGlobal.speedy.initDialog = function twinklespeedyInitDialog(callbackfunc)
 	dialog = TwinkleGlobal.speedy.dialog;
 	dialog.setTitle('Choose criteria for speedy deletion');
 	dialog.setScriptName('Twinkle');
+	dialog.addFooterLink('Add custom reason', TwinkleGlobal.getPref('configPage'));
+	dialog.addFooterLink('Suggest useful reasons', TwinkleGlobal.getPref('bugReportLink'));
 
 	var form = new MorebitsGlobal.quickForm(callbackfunc, TwinkleGlobal.getPref('speedySelectionStyle') === 'radioClick' ? 'change' : null);
 
@@ -202,7 +204,11 @@ TwinkleGlobal.speedy.callback.modeChanged = function twinklespeedyCallbackModeCh
 
 	var radioOrCheckbox = TwinkleGlobal.speedy.mode.isMultiple(mode) ? 'checkbox' : 'radio';
 
-	var generalCriteria = TwinkleGlobal.speedy.generalList;
+	var generalCriteria = TwinkleGlobal.speedy.generalList.concat(TwinkleGlobal.getPref('customCSDReasonList'));
+
+	$.each(TwinkleGlobal.getPref('customCSDReasonList'), function (_, item) {
+		TwinkleGlobal.speedy.normalizeHash[item.value] = item.value;
+	});
 
 	// custom rationale lives under general criteria when tagging
 	generalCriteria = TwinkleGlobal.speedy.customRationale.concat(generalCriteria);
@@ -220,11 +226,6 @@ TwinkleGlobal.speedy.callback.modeChanged = function twinklespeedyCallbackModeCh
 			label: $.parseHTML('<span>Note: Fail to retrieve speedy deletion template name. {{<a href="' + mw.util.getUrl('Template:Delete') + '" target="_blank">Delete</a>}} will be used as speedy deletion template. Add template name <a href="' + mw.util.getUrl('d:' + TwinkleGlobal.getPref('speedyTemplateItem')) + '" target="_blank">on Wikidata</a> or report bug <a href="' + TwinkleGlobal.getPref('bugReportLink') + '" target="_blank">here</a></span>')
 		});
 	}
-
-	work_area.append({
-		type: 'div',
-		label: $.parseHTML('<span>Suggest new useful reasons <a href="' + TwinkleGlobal.getPref('bugReportLink') + '" target="_blank">here</a>.</span>')
-	});
 
 	var old_area = MorebitsGlobal.quickForm.getElements(form, 'work_area')[0];
 	form.replaceChild(work_area.render(), old_area);

@@ -92,6 +92,7 @@ TwinkleGlobal.defaultConfig = {
 
 	// CSD
 	speedySelectionStyle: 'buttonClick',
+	customCSDReasonList: [],
 	markSpeedyPagesAsPatrolled: false,
 
 	// these next two should probably be identical by default
