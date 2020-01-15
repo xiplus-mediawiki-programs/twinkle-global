@@ -4351,7 +4351,7 @@ MorebitsGlobal.simpleWindow.prototype = {
 			$footerlinks.append(bullet);
 		}
 		var url;
-		if (wikiPage.match(/^https?:\/\//)) {
+		if (wikiPage.match(/^(https?:)?\/\//)) {
 			url = wikiPage;
 		} else {
 			url = mw.util.getUrl(wikiPage);
