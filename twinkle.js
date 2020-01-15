@@ -159,6 +159,7 @@ TwinkleGlobal.defaultConfig = {
 		? new mw.Api()
 		: new mw.ForeignApi('https://www.wikidata.org/w/api.php'),
 	speedyTemplateItem: 'Q4847311',
+	bugReportLink: 'https://meta.wikimedia.org/wiki/User_talk:Xiplus/Twinkle',
 
 	// Formerly defaultConfig.friendly:
 

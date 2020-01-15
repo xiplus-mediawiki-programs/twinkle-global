@@ -212,18 +212,18 @@ TwinkleGlobal.speedy.callback.modeChanged = function twinklespeedyCallbackModeCh
 	if (TwinkleGlobal.speedy.speedyTemplate) {
 		work_area.append({
 			type: 'div',
-			label: $.parseHTML('<span>Note: {{<a href="' + mw.util.getUrl('Template:' + TwinkleGlobal.speedy.speedyTemplate) + '" target="_blank">' + TwinkleGlobal.speedy.speedyTemplate + '</a>}} will be used as speedy deletion template on this wiki. Wrong? Fix it <a href="' + mw.util.getUrl('d:' + TwinkleGlobal.getPref('speedyTemplateItem')) + '" target="_blank">on Wikidata</a> or report bug <a href="https://meta.wikimedia.org/wiki/User_talk:Xiplus" target="_blank">here</a>.</span>')
+			label: $.parseHTML('<span>Note: {{<a href="' + mw.util.getUrl('Template:' + TwinkleGlobal.speedy.speedyTemplate) + '" target="_blank">' + TwinkleGlobal.speedy.speedyTemplate + '</a>}} will be used as speedy deletion template on this wiki. Wrong? Fix it <a href="' + mw.util.getUrl('d:' + TwinkleGlobal.getPref('speedyTemplateItem')) + '" target="_blank">on Wikidata</a> or report bug <a href="' + TwinkleGlobal.getPref('bugReportLink') + '" target="_blank">here</a>.</span>')
 		});
 	} else {
 		work_area.append({
 			type: 'div',
-			label: $.parseHTML('<span>Note: Fail to retrieve speedy deletion template name. {{<a href="' + mw.util.getUrl('Template:Delete') + '" target="_blank">Delete</a>}} will be used as speedy deletion template. Add template name <a href="' + mw.util.getUrl('d:' + TwinkleGlobal.getPref('speedyTemplateItem')) + '" target="_blank">on Wikidata</a> or report bug <a href="https://meta.wikimedia.org/wiki/User_talk:Xiplus" target="_blank">here</a></span>')
+			label: $.parseHTML('<span>Note: Fail to retrieve speedy deletion template name. {{<a href="' + mw.util.getUrl('Template:Delete') + '" target="_blank">Delete</a>}} will be used as speedy deletion template. Add template name <a href="' + mw.util.getUrl('d:' + TwinkleGlobal.getPref('speedyTemplateItem')) + '" target="_blank">on Wikidata</a> or report bug <a href="' + TwinkleGlobal.getPref('bugReportLink') + '" target="_blank">here</a></span>')
 		});
 	}
 
 	work_area.append({
 		type: 'div',
-		label: $.parseHTML('<span>Suggest new useful reasons <a href="https://meta.wikimedia.org/wiki/User_talk:Xiplus" target="_blank">here</a>.</span>')
+		label: $.parseHTML('<span>Suggest new useful reasons <a href="' + TwinkleGlobal.getPref('bugReportLink') + '" target="_blank">here</a>.</span>')
 	});
 
 	var old_area = MorebitsGlobal.quickForm.getElements(form, 'work_area')[0];
