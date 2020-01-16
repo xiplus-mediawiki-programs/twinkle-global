@@ -354,7 +354,7 @@ TwinkleGlobal.speedy.normalizeHash = {
 	'Out of project scope': 'scope',
 	'Nonsense': 'nonsense',
 	'Test page': 'test',
-	'Empty page': 'empty',
+	'Empty page': 'empty'
 };
 
 TwinkleGlobal.speedy.callbacks = {
