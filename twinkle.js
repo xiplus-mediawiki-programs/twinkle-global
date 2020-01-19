@@ -472,7 +472,7 @@ TwinkleGlobal.load = function () {
 	TwinkleGlobal.diff();
 	// TwinkleGlobal.unlink();
 	TwinkleGlobal.config.init();
-	TwinkleGlobal.fluff.init();
+	TwinkleGlobal.fluff();
 	if (MorebitsGlobal.userIsInGroup('sysop')) {
 		// TwinkleGlobal.deprod();
 		// TwinkleGlobal.batchdelete();

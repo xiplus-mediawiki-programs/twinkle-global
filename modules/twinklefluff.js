@@ -16,34 +16,74 @@
  Twinklefluff revert and antivandalism utility
  */
 
-TwinkleGlobal.fluff = {
-	spanTag: function(color, content) {
-		var span = document.createElement('span');
-		span.style.color = color;
-		span.appendChild(document.createTextNode(content));
-		return span;
-	},
+TwinkleGlobal.fluff = function twinklefluff() {
+	if (TwinkleGlobal.userAuthorized) {
+		// A list of usernames, usually only bots, that vandalism revert is jumped over; that is,
+		// if vandalism revert was chosen on such username, then its target is on the revision before.
+		// This is for handling quick bots that makes edits seconds after the original edit is made.
+		// This only affects vandalism rollback; for good faith rollback, it will stop, indicating a bot
+		// has no faith, and for normal rollback, it will rollback that edit.
+		TwinkleGlobal.fluff.whiteList = [
+			'AnomieBOT',
+			'SineBot'
+		];
 
-	buildLink: function(color, text) {
-		var link = document.createElement('a');
-		link.appendChild(TwinkleGlobal.fluff.spanTag('Black', '['));
-		link.appendChild(TwinkleGlobal.fluff.spanTag(color, text));
-		link.appendChild(TwinkleGlobal.fluff.spanTag('Black', ']'));
-		return link;
-	},
-
-	auto: function() {
-		if (mw.config.get('wgRevisionId') !== mw.config.get('wgCurRevisionId')) {
-			// not latest revision
-			alert("Can't rollback, page has changed in the meantime.");
-			return;
+		if (MorebitsGlobal.queryString.exists('twinklerevert')) {
+			// Return if the user can't edit the page in question
+			if (!mw.config.get('wgIsProbablyEditable')) {
+				alert("Unable to edit the page, it's probably protected.");
+			} else {
+				TwinkleGlobal.fluff.auto();
+			}
+		} else if (mw.config.get('wgCanonicalSpecialPageName') === 'Contributions') {
+			TwinkleGlobal.fluff.addLinks.contributions();
+		} else if (mw.config.get('wgIsProbablyEditable')) {
+			// Only proceed if the user can actually edit the page
+			// in question (ignored for contributions, see #632).
+			// wgIsProbablyEditable should take care of
+			// namespace/contentModel restrictions as well as
+			// explicit protections; it won't take care of
+			// cascading or TitleBlacklist restrictions
+			if (mw.config.get('wgDiffNewId') || mw.config.get('wgDiffOldId')) { // wgDiffOldId included for clarity in if else loop [[phab:T214985]]
+				mw.hook('wikipage.diff').add(function () { // Reload alongside the revision slider
+					TwinkleGlobal.fluff.addLinks.diff();
+				});
+			} else if (mw.config.get('wgAction') === 'view' && mw.config.get('wgCurRevisionId') !== mw.config.get('wgRevisionId')) {
+				TwinkleGlobal.fluff.addLinks.oldid();
+			}
 		}
+	}
+};
 
-		var vandal = $('#mw-diff-ntitle2').find('a.mw-userlink').text();
 
-		TwinkleGlobal.fluff.revert(MorebitsGlobal.queryString.get('twinklerevert'), vandal, true);
-	},
+TwinkleGlobal.fluff.spanTag = function twinklefluffspanTag(color, content) {
+	var span = document.createElement('span');
+	span.style.color = color;
+	span.appendChild(document.createTextNode(content));
+	return span;
+};
 
+TwinkleGlobal.fluff.buildLink = function twinklefluffbuildLink(color, text) {
+	var link = document.createElement('a');
+	link.appendChild(TwinkleGlobal.fluff.spanTag('Black', '['));
+	link.appendChild(TwinkleGlobal.fluff.spanTag(color, text));
+	link.appendChild(TwinkleGlobal.fluff.spanTag('Black', ']'));
+	return link;
+};
+
+TwinkleGlobal.fluff.auto = function twinklefluffauto() {
+	if (mw.config.get('wgRevisionId') !== mw.config.get('wgCurRevisionId')) {
+		// not latest revision
+		alert("Can't rollback, page has changed in the meantime.");
+		return;
+	}
+
+	var vandal = $('#mw-diff-ntitle2').find('a.mw-userlink').text();
+
+	TwinkleGlobal.fluff.revert(MorebitsGlobal.queryString.get('twinklerevert'), vandal, true);
+};
+
+TwinkleGlobal.fluff.addLinks = {
 	contributions: function() {
 		// $('sp-contributions-footer-anon-range') relies on the fmbox
 		// id in [[MediaWiki:Sp-contributions-footer-anon-range]] and
@@ -171,6 +211,7 @@ TwinkleGlobal.fluff = {
 		otitle.insertBefore(revertToRevision, otitle.firstChild);
 	}
 };
+
 
 TwinkleGlobal.fluff.revert = function revertPage(type, vandal, autoRevert, rev, page) {
 	if (mw.util.isIPv6Address(vandal)) {
@@ -545,53 +586,6 @@ TwinkleGlobal.fluff.formatSummary = function(builtInString, userName, userString
 	}
 
 	return result;
-};
-
-TwinkleGlobal.fluff.init = function twinklefluffinit() {
-	var disabledWikis = $.map(TwinkleGlobal.getPref('fluffDisabledWikis'), function(el) {
-		return el.value.trim();
-	});
-
-	if (disabledWikis.indexOf(mw.config.get('wgDBname')) !== -1) {
-		return;
-	}
-
-	if (TwinkleGlobal.userAuthorized) {
-		// A list of usernames, usually only bots, that vandalism revert is jumped over; that is,
-		// if vandalism revert was chosen on such username, then its target is on the revision before.
-		// This is for handling quick bots that makes edits seconds after the original edit is made.
-		// This only affects vandalism rollback; for good faith rollback, it will stop, indicating a bot
-		// has no faith, and for normal rollback, it will rollback that edit.
-		TwinkleGlobal.fluff.whiteList = [
-			'AnomieBOT',
-			'SineBot'
-		];
-
-		if (MorebitsGlobal.queryString.exists('twinklerevert')) {
-			// Return if the user can't edit the page in question
-			if (!mw.config.get('wgIsProbablyEditable')) {
-				alert("Unable to edit the page, it's probably protected.");
-			} else {
-				TwinkleGlobal.fluff.auto();
-			}
-		} else if (mw.config.get('wgCanonicalSpecialPageName') === 'Contributions') {
-			TwinkleGlobal.fluff.contributions();
-		} else if (mw.config.get('wgIsProbablyEditable')) {
-			// Only proceed if the user can actually edit the page
-			// in question (ignored for contributions, see #632).
-			// wgIsProbablyEditable should take care of
-			// namespace/contentModel restrictions as well as
-			// explicit protections; it won't take care of
-			// cascading or TitleBlacklist restrictions
-			if (mw.config.get('wgDiffNewId') || mw.config.get('wgDiffOldId')) { // wgDiffOldId included for clarity in if else loop [[phab:T214985]]
-				mw.hook('wikipage.diff').add(function () { // Reload alongside the revision slider
-					TwinkleGlobal.fluff.diff();
-				});
-			} else if (mw.config.get('wgAction') === 'view' && mw.config.get('wgCurRevisionId') !== mw.config.get('wgRevisionId')) {
-				TwinkleGlobal.fluff.oldid();
-			}
-		}
-	}
 };
 })(jQuery);
 
