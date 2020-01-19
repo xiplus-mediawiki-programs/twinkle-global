@@ -421,6 +421,8 @@ mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.ge
 		mw.notify('Could not load ' + TwinkleGlobal.defaultConfig.optionsPage + '.js');
 	})
 	.always(function () {
+		// v2 established after unification of Twinkle/Friendly objects
+		TwinkleGlobal.prefs.optionsVersion = TwinkleGlobal.prefs.optionsVersion || 1;
 		$(TwinkleGlobal.load);
 	});
 
