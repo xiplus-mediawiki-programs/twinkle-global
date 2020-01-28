@@ -25,11 +25,11 @@ TwinkleGlobal.arv = function twinklearv() {
 		return;
 	}
 
-	var title = mw.util.isIPAddress(username) ? 'Report IP to administrators' : 'Report user to administrators';
+	var title = mw.util.isIPAddress(username) ? 'Report IP to stewards' : 'Report user to stewards';
 
 	TwinkleGlobal.addPortletLink(function() {
 		TwinkleGlobal.arv.callback(username);
-	}, 'ARV', 'twg-arv', title);
+	}, 'GARV', 'twg-arv', title);
 };
 
 TwinkleGlobal.arv.callback = function (uid) {
