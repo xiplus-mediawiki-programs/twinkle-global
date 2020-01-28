@@ -160,7 +160,7 @@ TwinkleGlobal.config.sections = [
 	},
 
 	{
-		title: 'ARV',
+		title: 'GARV',
 		preferences: [
 			/* {
 				name: 'spiWatchReport',
@@ -174,13 +174,13 @@ TwinkleGlobal.config.sections = [
 				label: 'Custom SRG report reason',
 				type: 'customList',
 				customListValueTitle: 'Reason used in the report',
-				customListLabelTitle: 'Text to show in ARV dialog'
+				customListLabelTitle: 'Text to show in GARV dialog'
 			},
 
 			// Disable arv on these wikis.
 			{
 				name: 'arvDisabledWikis',
-				label: 'Disable ARV function on these wikis',
+				label: 'Disable GARV function on these wikis',
 				helptip: 'Use wiki\'s database name.',
 				type: 'customList',
 				customListValueTitle: 'Database name',

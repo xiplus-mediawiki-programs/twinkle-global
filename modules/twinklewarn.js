@@ -1226,12 +1226,12 @@ TwinkleGlobal.warn.callback.change_subcategory = function twinklewarnCallbackCha
 	var $redWarning;
 	if (value === 'uw-username') {
 		$redWarning = $("<div style='color: red;' id='twg-warn-red-notice'>{{uw-username}} should <b>not</b> be used for <b>blatant</b> username policy violations. " +
-			"Blatant violations should be reported directly to UAA (via Twinkle's ARV tab). " +
+			"Blatant violations should be reported directly to UAA (via Twinkle's GARV tab). " +
 			'{{uw-username}} should only be used in edge cases in order to engage in discussion with the user.</div>');
 		$redWarning.insertAfter(MorebitsGlobal.quickForm.getElementLabelObject(e.target.form.reasonGroup));
 	} else if (value === 'uw-coi-username') {
 		$redWarning = $("<div style='color: red;' id='twg-warn-red-notice'>{{uw-coi-username}} should <b>not</b> be used for <b>blatant</b> username policy violations. " +
-			"Blatant violations should be reported directly to UAA (via Twinkle's ARV tab). " +
+			"Blatant violations should be reported directly to UAA (via Twinkle's GARV tab). " +
 			'{{uw-coi-username}} should only be used in edge cases in order to engage in discussion with the user.</div>');
 		$redWarning.insertAfter(MorebitsGlobal.quickForm.getElementLabelObject(e.target.form.reasonGroup));
 	}

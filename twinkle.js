@@ -51,7 +51,7 @@ TwinkleGlobal.defaultConfig = {
 	userTalkPageMode: 'tab',
 	dialogLargeFont: false,
 
-	// ARV
+	// GARV
 	spiWatchReport: 'yes',
 	customSRGReasonList: [],
 	arvDisabledWikis: [],

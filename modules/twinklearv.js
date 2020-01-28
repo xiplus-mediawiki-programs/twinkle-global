@@ -8,7 +8,7 @@
  ****************************************
  *** twinklearv.js: ARV module
  ****************************************
- * Mode of invocation:     Tab ("ARV")
+ * Mode of invocation:     Tab ("GARV")
  * Active on:              Any page with relevant user name (userspace, contribs, etc.)
  */
 
