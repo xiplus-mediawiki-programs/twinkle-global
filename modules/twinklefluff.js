@@ -17,6 +17,14 @@
  */
 
 TwinkleGlobal.fluff = function twinklefluff() {
+	var disabledWikis = $.map(TwinkleGlobal.getPref('fluffDisabledWikis'), function(el) {
+		return el.value.trim();
+	});
+
+	if (disabledWikis.indexOf(mw.config.get('wgDBname')) !== -1) {
+		return;
+	}
+
 	if (TwinkleGlobal.userAuthorized) {
 		// A list of usernames, usually only bots, that vandalism revert is jumped over; that is,
 		// if vandalism revert was chosen on such username, then its target is on the revision before.
