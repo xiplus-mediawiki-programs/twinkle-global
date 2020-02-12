@@ -51,7 +51,6 @@ TwinkleGlobal.defaultConfig = {
 	userTalkPageMode: 'tab',
 	dialogLargeFont: false,
 	showPrefLink: true,
-	
 
 	// GARV
 	spiWatchReport: 'yes',
