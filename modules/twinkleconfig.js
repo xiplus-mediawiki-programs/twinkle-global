@@ -21,10 +21,7 @@
 
 TwinkleGlobal.config = {};
 
-TwinkleGlobal.config.commonEnums = {
-	watchlist: { yes: 'Add to watchlist', no: "Don't add to watchlist", 'default': 'Follow your site preferences' },
-	talkPageMode: { window: 'In a window, replacing other user talks', tab: 'In a new tab', blank: 'In a totally new window' }
-};
+TwinkleGlobal.config.watchlistEnums = { yes: 'Add to watchlist', no: "Don't add to watchlist", 'default': 'Follow your site preferences' };
 
 TwinkleGlobal.config.commonSets = {
 	csdCriteria: {
@@ -147,7 +144,7 @@ TwinkleGlobal.config.sections = [
 				name: 'userTalkPageMode',
 				label: 'When opening a user talk page, open it',
 				type: 'enum',
-				enumValues: TwinkleGlobal.config.commonEnums.talkPageMode
+				enumValues: { window: 'In a window, replacing other user talks', tab: 'In a new tab', blank: 'In a totally new window' }
 			}, */
 
 			// TwinkleConfig.dialogLargeFont (boolean)
@@ -171,7 +168,7 @@ TwinkleGlobal.config.sections = [
 				name: 'spiWatchReport',
 				label: 'Add sockpuppet report pages to watchlist',
 				type: 'enum',
-				enumValues: TwinkleGlobal.config.commonEnums.watchlist
+				enumValues: Twinkle.config.watchlistEnums
 			} */
 
 			{
@@ -226,7 +223,7 @@ TwinkleGlobal.config.sections = [
 				name: 'deliWatchPage',
 				label: 'Add image page to watchlist when tagging',
 				type: 'enum',
-				enumValues: TwinkleGlobal.config.commonEnums.watchlist
+				enumValues: Twinkle.config.watchlistEnums
 			},
 
 			// TwinkleConfig.deliWatchUser (string)
@@ -235,7 +232,7 @@ TwinkleGlobal.config.sections = [
 				name: 'deliWatchUser',
 				label: 'Add user talk page of initial uploader to watchlist when notifying',
 				type: 'enum',
-				enumValues: TwinkleGlobal.config.commonEnums.watchlist
+				enumValues: Twinkle.config.watchlistEnums
 			}
 		]
 	}, */
@@ -652,7 +649,7 @@ TwinkleGlobal.config.sections = [
 				name: 'xfdWatchPage',
 				label: 'Add the nominated page to watchlist',
 				type: 'enum',
-				enumValues: TwinkleGlobal.config.commonEnums.watchlist
+				enumValues: Twinkle.config.watchlistEnums
 			},
 
 			// TwinkleConfig.xfdWatchDiscussion (string)
@@ -664,7 +661,7 @@ TwinkleGlobal.config.sections = [
 				label: 'Add the deletion discussion page to watchlist',
 				helptip: 'This refers to the discussion subpage (for AfD and MfD) or the daily log page (for TfD, CfD, RfD and FfD)',
 				type: 'enum',
-				enumValues: TwinkleGlobal.config.commonEnums.watchlist
+				enumValues: Twinkle.config.watchlistEnums
 			},
 
 			// TwinkleConfig.xfdWatchList (string)
@@ -676,7 +673,7 @@ TwinkleGlobal.config.sections = [
 				label: 'Add the daily log/list page to the watchlist (where applicable)',
 				helptip: 'This only applies for AfD and MfD, where the discussions are transcluded onto a daily log page (for AfD) or the main MfD page (for MfD).',
 				type: 'enum',
-				enumValues: TwinkleGlobal.config.commonEnums.watchlist
+				enumValues: Twinkle.config.watchlistEnums
 			},
 
 			// TwinkleConfig.xfdWatchUser (string)
@@ -686,7 +683,7 @@ TwinkleGlobal.config.sections = [
 				name: 'xfdWatchUser',
 				label: 'Add user talk page of initial contributor to watchlist (when notifying)',
 				type: 'enum',
-				enumValues: TwinkleGlobal.config.commonEnums.watchlist
+				enumValues: Twinkle.config.watchlistEnums
 			},
 
 			// TwinkleConfig.xfdWatchRelated (string)
@@ -697,7 +694,7 @@ TwinkleGlobal.config.sections = [
 				label: "Add the redirect's target page to watchlist (when notifying)",
 				helptip: 'This only applies for RfD, when leaving a notification on the talk page of the target of the redirect',
 				type: 'enum',
-				enumValues: TwinkleGlobal.config.commonEnums.watchlist
+				enumValues: Twinkle.config.watchlistEnums
 			},
 
 			{
