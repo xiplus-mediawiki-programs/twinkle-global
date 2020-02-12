@@ -10,7 +10,7 @@
  ****************************************
  * Mode of invocation:     Tab ("Warn")
  * Active on:              Any page with relevant user name (userspace, contribs,
- *                         etc.), as well as diffs and the rollback success page
+ *                         etc.), as well as the rollback success page
  */
 
 TwinkleGlobal.warn = function twinklewarn() {
@@ -38,23 +38,6 @@ TwinkleGlobal.warn = function twinklewarn() {
 				$vandalTalkLink.attr('href', href + '&' + extraParam);
 			}
 		}
-	} else if (mw.config.get('wgDiffNewId') || mw.config.get('wgDiffOldId')) {
-		// Autofill user talk links on diffs with vanarticle for easy
-		// warning, but don't autowarn
-		var warnFromTalk = function(talkLink) {
-			if (talkLink.length) {
-				var extraParams = 'vanarticle=' + mw.util.rawurlencode(MorebitsGlobal.pageNameNorm) + '&' + 'noautowarn=true';
-				var href = talkLink.attr('href');
-				if (href.indexOf('?') === -1) {
-					talkLink.attr('href', href + '?' + extraParams);
-				} else {
-					talkLink.attr('href', href + '&' + extraParams);
-				}
-			}
-		};
-
-		warnFromTalk($('#mw-diff-otitle2 .mw-usertoollinks a').first());
-		warnFromTalk($('#mw-diff-ntitle2 .mw-usertoollinks a').first());
 	}
 };
 
