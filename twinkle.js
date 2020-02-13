@@ -50,6 +50,7 @@ TwinkleGlobal.defaultConfig = {
 	protectionSummaryAd: ' (TwinkleGlobal)',
 	userTalkPageMode: 'tab',
 	dialogLargeFont: false,
+	showPrefLink: true,
 
 	// GARV
 	spiWatchReport: 'yes',
@@ -480,7 +481,9 @@ TwinkleGlobal.load = function () {
 		// TwinkleGlobal.batchundelete();
 	}
 
-	TwinkleGlobal.addPortletLink(TwinkleGlobal.getPref('configPage'), 'Pref', 'twg-config', 'Set Twinkle preferences');
+	if (TwinkleGlobal.getPref('showPrefLink')) {
+		TwinkleGlobal.addPortletLink(TwinkleGlobal.getPref('configPage'), 'Pref', 'twg-config', 'Set Twinkle preferences');
+	}
 
 	// Run the initialization callbacks for any custom modules
 	TwinkleGlobal.initCallbacks.forEach(function (func) {

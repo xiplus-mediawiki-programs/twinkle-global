@@ -155,6 +155,11 @@ TwinkleGlobal.config.sections = [
 				name: 'dialogLargeFont',
 				label: 'Use larger text in Twinkle dialogs',
 				type: 'boolean'
+			},
+			{
+				name: 'showPrefLink',
+				label: 'Include a link to the preference page in the dropdown menu',
+				type: 'boolean'
 			}
 		]
 	},
