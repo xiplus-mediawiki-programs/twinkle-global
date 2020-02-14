@@ -162,6 +162,7 @@ TwinkleGlobal.defaultConfig = {
 		: new mw.ForeignApi('https://www.wikidata.org/w/api.php'),
 	speedyTemplateItem: 'Q4847311',
 	bugReportLink: 'https://meta.wikimedia.org/wiki/User_talk:Xiplus/TwinkleGlobal',
+	optionsPage: 'twinkleoptions',
 
 	// Formerly defaultConfig.friendly:
 
@@ -420,9 +421,9 @@ var scriptpathbefore = '//meta.wikimedia.org/w/index.php?title=',
 	scriptpathafter = '&action=raw&ctype=text/javascript&happy=yes';
 
 // Retrieve the user's Twinkle preferences
-mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.get('wgUserName')) + '/twinkleoptions.js' + scriptpathafter)
+mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.get('wgUserName')) + '/' + TwinkleGlobal.defaultConfig.optionsPage + '.js' + scriptpathafter)
 	.fail(function () {
-		mw.notify('Could not load twinkleoptions.js');
+		mw.notify('Could not load ' + TwinkleGlobal.defaultConfig.optionsPage + '.js');
 	})
 	.always(function () {
 		$(TwinkleGlobal.load);

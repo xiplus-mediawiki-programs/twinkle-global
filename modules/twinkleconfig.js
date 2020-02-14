@@ -1140,7 +1140,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 			scriptPageName = mw.config.get('wgPageName').slice(mw.config.get('wgPageName').lastIndexOf('/') + 1,
 				mw.config.get('wgPageName').lastIndexOf('.js'));
 
-		if (scriptPageName === 'twinkleoptions') {
+		if (scriptPageName === TwinkleGlobal.defaultConfig.optionsPage) {
 			// place "why not try the preference panel" notice
 			box.style.fontWeight = 'bold';
 			box.style.width = '80%';
@@ -1446,7 +1446,7 @@ TwinkleGlobal.config.save = function twinkleconfigSave(e) {
 
 	MorebitsGlobal.wiki.actionCompleted.notice = 'Save';
 
-	var userjs = mw.config.get('wgFormattedNamespaces')[mw.config.get('wgNamespaceIds').user] + ':' + mw.config.get('wgUserName') + '/twinkleoptions.js';
+	var userjs = mw.config.get('wgFormattedNamespaces')[mw.config.get('wgNamespaceIds').user] + ':' + mw.config.get('wgUserName') + '/' + TwinkleGlobal.defaultConfig.optionsPage + '.js';
 	var wikipedia_page = new MorebitsGlobal.wiki.page(userjs, 'Saving preferences to ' + userjs);
 	wikipedia_page.setCallbackParameters(e.target);
 	wikipedia_page.load(TwinkleGlobal.config.writePrefs);
@@ -1574,7 +1574,7 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 	}
 
 	var text =
-		'// twinkleoptions.js: personal Twinkle preferences file\n' +
+		'// ' + TwinkleGlobal.defaultConfig.optionsPage + '.js: personal Twinkle preferences file\n' +
 		'//\n' +
 		'// NOTE: The easiest way to change your Twinkle preferences is by using the\n' +
 		'// Twinkle preferences panel, at [[' + MorebitsGlobal.pageNameNorm + ']].\n' +
@@ -1591,7 +1591,7 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 		';\n' +
 		'\n' +
 		'// </no' + 'wiki>\n' +
-		'// End of twinkleoptions.js\n';
+		'// End of ' + TwinkleGlobal.defaultConfig.optionsPage + '.js\n';
 
 	pageobj.setPageText(text);
 	pageobj.setEditSummary('Saving Twinkle preferences: automatic edit from [[:' + MorebitsGlobal.pageNameNorm + ']]' + TwinkleGlobal.getPref('summaryAd'));
