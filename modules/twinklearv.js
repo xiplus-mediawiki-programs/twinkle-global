@@ -159,6 +159,10 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					{
 						label: 'Abusive username',
 						value: 'Abusive username'
+					},
+					{
+						label: 'Spam / spambot',
+						value: 'Spam / spambot'
 					}
 				].concat(TwinkleGlobal.getPref('customSRGReasonList'))
 			});
