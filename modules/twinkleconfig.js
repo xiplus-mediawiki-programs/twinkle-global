@@ -1368,7 +1368,7 @@ TwinkleGlobal.config.listDialog.save = function twinkleconfigListDialogSave(butt
 // reset/restore defaults
 
 TwinkleGlobal.config.resetPrefLink = function twinkleconfigResetPrefLink(e) {
-	var wantedpref = e.target.id.substring(21); // "twinkleglobal-config-reset-" prefix is stripped
+	var wantedpref = e.target.id.substring(27); // "twinkleglobal-config-reset-" prefix is stripped
 
 	// search tactics
 	$(TwinkleGlobal.config.sections).each(function(sectionkey, section) {
