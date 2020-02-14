@@ -436,7 +436,7 @@ TwinkleGlobal.load = function () {
 	// Don't activate on special pages other than those on the whitelist so that
 	// they load faster, especially the watchlist.
 	var specialPageWhitelist = [ 'Block', 'Contributions' ]; // wgRelevantUserName defined for non-sysops on Special:Block
-	if (Morebits.userIsInGroup('sysop')) {
+	if (MorebitsGlobal.userIsInGroup('sysop')) {
 		specialPageWhitelist = specialPageWhitelist.concat([ 'DeletedContributions', 'Prefixindex' ]);
 	}
 	var isSpecialPage = mw.config.get('wgNamespaceNumber') === -1 &&
