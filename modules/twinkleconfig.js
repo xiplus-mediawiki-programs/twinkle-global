@@ -143,7 +143,7 @@ TwinkleGlobal.config.sections = [
 
 			{
 				name: 'srgCollapseNumber',
-				label: 'Put user list in collapse template if the number of users is more than:',
+				label: 'Put user list in collapse template if the number of users is more than',
 				type: 'integer'
 			},
 
