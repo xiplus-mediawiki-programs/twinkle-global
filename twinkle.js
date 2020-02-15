@@ -55,6 +55,7 @@ TwinkleGlobal.defaultConfig = {
 	// GARV
 	spiWatchReport: 'yes',
 	customSRGReasonList: [],
+	srgCollapseNumber: 10,
 	arvDisabledWikis: [],
 
 	// Block

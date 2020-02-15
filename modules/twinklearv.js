@@ -262,12 +262,18 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 					}
 					header += '}}\n';
 				} else {
+					if (usernames.length > TwinkleGlobal.getPref('srgCollapseNumber')) {
+						header += '{{Collapse top|User list}}\n';
+					}
 					header += '*{{MultiLock|';
 					header += usernames.join('|');
 					if (form.hidename && form.hidename.checked) {
 						header += '|hidename=1';
 					}
 					header += '}}\n';
+					if (usernames.length > TwinkleGlobal.getPref('srgCollapseNumber')) {
+						header += '{{Collapse bottom}}\n';
+					}
 				}
 			}
 

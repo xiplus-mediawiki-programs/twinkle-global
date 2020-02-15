@@ -141,6 +141,12 @@ TwinkleGlobal.config.sections = [
 				customListLabelTitle: 'Text to show in GARV dialog'
 			},
 
+			{
+				name: 'srgCollapseNumber',
+				label: 'Put user list in collapse template if the number of users is more than:',
+				type: 'integer'
+			},
+
 			// Disable arv on these wikis.
 			{
 				name: 'arvDisabledWikis',
