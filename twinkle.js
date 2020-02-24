@@ -22,11 +22,6 @@
 
 (function (window, document, $) { // Wrap with anonymous function
 
-// Check if account is experienced enough to use Twinkle
-if (!MorebitsGlobal.userIsInGroup('autoconfirmed') && !MorebitsGlobal.userIsInGroup('confirmed')) {
-	return;
-}
-
 var TwinkleGlobal = {};
 window.TwinkleGlobal = TwinkleGlobal;  // allow global access
 
