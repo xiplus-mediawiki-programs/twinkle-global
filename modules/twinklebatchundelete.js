@@ -19,7 +19,7 @@ TwinkleGlobal.batchundelete = function twinklebatchundelete() {
 		!mw.config.get('wgArticleId')) {
 		return;
 	}
-	if (MorebitsGlobal.userIsInGroup('sysop')) {
+	if (MorebitsGlobal.userIsSysop) {
 		TwinkleGlobal.addPortletLink(TwinkleGlobal.batchundelete.callback, 'Und-batch', 'twg-batch-undel', "Undelete 'em all");
 	}
 };

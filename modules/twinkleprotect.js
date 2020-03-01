@@ -19,13 +19,13 @@ TwinkleGlobal.protect = function twinkleprotect() {
 		return;
 	}
 
-	TwinkleGlobal.addPortletLink(TwinkleGlobal.protect.callback, MorebitsGlobal.userIsInGroup('sysop') ? 'PP' : 'RPP', 'twg-rpp',
-		MorebitsGlobal.userIsInGroup('sysop') ? 'Protect page' : 'Request page protection');
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.protect.callback, MorebitsGlobal.userIsSysop ? 'PP' : 'RPP', 'twg-rpp',
+		MorebitsGlobal.userIsSysop ? 'Protect page' : 'Request page protection');
 };
 
 TwinkleGlobal.protect.callback = function twinkleprotectCallback() {
 	var Window = new MorebitsGlobal.simpleWindow(620, 530);
-	Window.setTitle(MorebitsGlobal.userIsInGroup('sysop') ? 'Apply, request or tag page protection' : 'Request or tag page protection');
+	Window.setTitle(MorebitsGlobal.userIsSysop ? 'Apply, request or tag page protection' : 'Request or tag page protection');
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Protection templates', 'Template:Protection templates');
 	Window.addFooterLink('Protection policy', 'WP:PROT');
@@ -36,7 +36,7 @@ TwinkleGlobal.protect.callback = function twinkleprotectCallback() {
 		type: 'field',
 		label: 'Type of action'
 	});
-	if (MorebitsGlobal.userIsInGroup('sysop')) {
+	if (MorebitsGlobal.userIsSysop) {
 		actionfield.append({
 			type: 'radio',
 			name: 'actiontype',
@@ -59,8 +59,8 @@ TwinkleGlobal.protect.callback = function twinkleprotectCallback() {
 			{
 				label: 'Request page protection',
 				value: 'request',
-				tooltip: 'If you want to request protection via WP:RPP' + (MorebitsGlobal.userIsInGroup('sysop') ? ' instead of doing the protection by yourself.' : '.'),
-				checked: !MorebitsGlobal.userIsInGroup('sysop')
+				tooltip: 'If you want to request protection via WP:RPP' + (MorebitsGlobal.userIsSysop ? ' instead of doing the protection by yourself.' : '.'),
+				checked: !MorebitsGlobal.userIsSysop
 			},
 			{
 				label: 'Tag page with protection template',

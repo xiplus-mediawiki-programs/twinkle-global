@@ -48,6 +48,8 @@ window.MorebitsGlobal = MorebitsGlobal;  // allow global access
 MorebitsGlobal.userIsInGroup = function (group) {
 	return mw.config.get('wgUserGroups').indexOf(group) !== -1;
 };
+// Used a lot
+MorebitsGlobal.userIsSysop = MorebitsGlobal.userIsInGroup('sysop');
 
 
 
@@ -231,7 +233,7 @@ MorebitsGlobal.quickForm.element.prototype.compute = function QuickFormElementCo
 	var childContainder = null;
 	var label;
 	var id = (in_id ? in_id + '_' : '') + 'node_' + this.id;
-	if (data.adminonly && !MorebitsGlobal.userIsInGroup('sysop')) {
+	if (data.adminonly && !MorebitsGlobal.userIsSysop) {
 		// hell hack alpha
 		data.type = 'hidden';
 	}
@@ -1789,7 +1791,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 		if (typeof ctx.pageSection === 'number') {
 			ctx.loadQuery.rvsection = ctx.pageSection;
 		}
-		if (MorebitsGlobal.userIsInGroup('sysop')) {
+		if (MorebitsGlobal.userIsSysop) {
 			ctx.loadQuery.inprop = 'protection';
 		}
 
@@ -2326,7 +2328,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 		if (ctx.followRedirect) {
 			query.redirects = '';  // follow all redirects
 		}
-		if (MorebitsGlobal.userIsInGroup('sysop')) {
+		if (MorebitsGlobal.userIsSysop) {
 			query.inprop = 'protection';
 		}
 
@@ -2346,7 +2348,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 		ctx.onDeleteFailure = onFailure || emptyFunction;
 
 		// if a non-admin tries to do this, don't bother
-		if (!MorebitsGlobal.userIsInGroup('sysop')) {
+		if (!MorebitsGlobal.userIsSysop) {
 			ctx.statusElement.error('Cannot delete page: only admins can do that');
 			ctx.onDeleteFailure(this);
 			return;
@@ -2387,7 +2389,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 		ctx.onUndeleteFailure = onFailure || emptyFunction;
 
 		// if a non-admin tries to do this, don't bother
-		if (!MorebitsGlobal.userIsInGroup('sysop')) {
+		if (!MorebitsGlobal.userIsSysop) {
 			ctx.statusElement.error('Cannot undelete page: only admins can do that');
 			ctx.onUndeleteFailure(this);
 			return;
@@ -2425,7 +2427,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 		ctx.onProtectFailure = onFailure || emptyFunction;
 
 		// if a non-admin tries to do this, don't bother
-		if (!MorebitsGlobal.userIsInGroup('sysop')) {
+		if (!MorebitsGlobal.userIsSysop) {
 			ctx.statusElement.error('Cannot protect page: only admins can do that');
 			ctx.onProtectFailure(this);
 			return;
@@ -2472,7 +2474,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 		ctx.onStabilizeFailure = onFailure || emptyFunction;
 
 		// if a non-admin tries to do this, don't bother
-		if (!MorebitsGlobal.userIsInGroup('sysop')) {
+		if (!MorebitsGlobal.userIsSysop) {
 			ctx.statusElement.error('Cannot apply FlaggedRevs settings: only admins can do that');
 			ctx.onStabilizeFailure(this);
 			return;
@@ -2527,7 +2529,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 		}
 
 		// do we need to fetch the edit protection expiry?
-		if (MorebitsGlobal.userIsInGroup('sysop') && !ctx.suppressProtectWarning) {
+		if (MorebitsGlobal.userIsSysop && !ctx.suppressProtectWarning) {
 			// poor man's normalisation
 			if (MorebitsGlobal.string.toUpperCaseFirstChar(mw.config.get('wgPageName')).replace(/ /g, '_').trim() !==
 				MorebitsGlobal.string.toUpperCaseFirstChar(ctx.pageName).replace(/ /g, '_').trim()) {
@@ -2564,7 +2566,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 		}
 
 		// extract protection info, to alert admins when they are about to edit a protected page
-		if (MorebitsGlobal.userIsInGroup('sysop')) {
+		if (MorebitsGlobal.userIsSysop) {
 			var editprot = $(xml).find('pr[type="edit"]');
 			if (editprot.length > 0 && editprot.attr('level') === 'sysop') {
 				ctx.fullyProtected = editprot.attr('expiry');
@@ -2850,7 +2852,7 @@ MorebitsGlobal.wiki.page = function(pageName, currentAction) {
 		}
 
 		// extract protection info
-		if (MorebitsGlobal.userIsInGroup('sysop')) {
+		if (MorebitsGlobal.userIsSysop) {
 			var editprot = $(xml).find('pr[type="edit"]');
 			if (editprot.length > 0 && editprot.attr('level') === 'sysop' && !ctx.suppressProtectWarning &&
 				!confirm('You are about to move the fully protected page "' + ctx.pageName +

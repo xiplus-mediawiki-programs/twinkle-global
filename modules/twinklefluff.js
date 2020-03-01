@@ -513,7 +513,7 @@ TwinkleGlobal.fluff.callbacks = {
 
 		// figure out whether we need to/can review the edit
 		var $flagged = $(xmlDoc).find('flagged');
-		if ((MorebitsGlobal.userIsInGroup('reviewer') || MorebitsGlobal.userIsInGroup('sysop')) &&
+		if ((MorebitsGlobal.userIsInGroup('reviewer') || MorebitsGlobal.userIsSysop) &&
 				$flagged.length &&
 				$flagged.attr('stable_revid') >= self.params.goodid &&
 				$flagged.attr('pending_since')) {

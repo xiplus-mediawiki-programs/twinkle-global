@@ -511,7 +511,7 @@ TwinkleGlobal.speedy.callbacks = {
 					"This is a log of all [[WP:CSD|speedy deletion]] nominations made by this user using [[WP:TW|Twinkle]]'s CSD module.\n\n" +
 					'If you no longer wish to keep this log, you can turn it off using the [[Wikipedia:Twinkle/Preferences|preferences panel]], and ' +
 					'nominate this page for speedy deletion under [[WP:CSD#U1|CSD U1]].';
-				if (MorebitsGlobal.userIsInGroup('sysop')) {
+				if (MorebitsGlobal.userIsSysop) {
 					appendText += '\n\nThis log does not track outright speedy deletions made using Twinkle.';
 				}
 			}

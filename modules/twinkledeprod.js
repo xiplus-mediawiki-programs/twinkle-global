@@ -15,7 +15,7 @@
 TwinkleGlobal.deprod = function() {
 	if (
 		mw.config.get('wgNamespaceNumber') !== 14 ||
-		!MorebitsGlobal.userIsInGroup('sysop') ||
+		!MorebitsGlobal.userIsSysop ||
 		!(/proposed_deletion/i).test(mw.config.get('wgPageName'))
 	) {
 		return;

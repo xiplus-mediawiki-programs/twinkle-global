@@ -467,7 +467,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 		contentform.appendChild(container);
 
 		$(TwinkleGlobal.config.sections).each(function(sectionkey, section) {
-			if (section.hidden || (section.adminOnly && !MorebitsGlobal.userIsInGroup('sysop'))) {
+			if (section.hidden || (section.adminOnly && !MorebitsGlobal.userIsSysop)) {
 				return true;  // i.e. "continue" in this context
 			}
 
@@ -496,7 +496,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 
 			// add each of the preferences to the form
 			$(section.preferences).each(function(prefkey, pref) {
-				if (pref.adminOnly && !MorebitsGlobal.userIsInGroup('sysop')) {
+				if (pref.adminOnly && !MorebitsGlobal.userIsSysop) {
 					return true;  // i.e. "continue" in this context
 				}
 
@@ -964,7 +964,7 @@ TwinkleGlobal.config.resetPrefLink = function twinkleconfigResetPrefLink(e) {
 
 	// search tactics
 	$(TwinkleGlobal.config.sections).each(function(sectionkey, section) {
-		if (section.hidden || (section.adminOnly && !MorebitsGlobal.userIsInGroup('sysop'))) {
+		if (section.hidden || (section.adminOnly && !MorebitsGlobal.userIsSysop)) {
 			return true;  // continue: skip impossibilities
 		}
 
@@ -1020,11 +1020,11 @@ TwinkleGlobal.config.resetPref = function twinkleconfigResetPref(pref) {
 TwinkleGlobal.config.resetAllPrefs = function twinkleconfigResetAllPrefs() {
 	// no confirmation message - the user can just refresh/close the page to abort
 	$(TwinkleGlobal.config.sections).each(function(sectionkey, section) {
-		if (section.hidden || (section.adminOnly && !MorebitsGlobal.userIsInGroup('sysop'))) {
+		if (section.hidden || (section.adminOnly && !MorebitsGlobal.userIsSysop)) {
 			return true;  // continue: skip impossibilities
 		}
 		$(section.preferences).each(function(prefkey, pref) {
-			if (!pref.adminOnly || MorebitsGlobal.userIsInGroup('sysop')) {
+			if (!pref.adminOnly || MorebitsGlobal.userIsSysop) {
 				TwinkleGlobal.config.resetPref(pref);
 			}
 		});
@@ -1085,7 +1085,7 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 	};
 
 	$(TwinkleGlobal.config.sections).each(function(sectionkey, section) {
-		if (section.adminOnly && !MorebitsGlobal.userIsInGroup('sysop')) {
+		if (section.adminOnly && !MorebitsGlobal.userIsSysop) {
 			return;  // i.e. "continue" in this context
 		}
 
@@ -1094,7 +1094,7 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 			var userValue;  // = undefined
 
 			// only read form values for those prefs that have them
-			if (!section.hidden && (!pref.adminOnly || MorebitsGlobal.userIsInGroup('sysop'))) {
+			if (!section.hidden && (!pref.adminOnly || MorebitsGlobal.userIsSysop)) {
 				switch (pref.type) {
 
 					case 'boolean':  // read from the checkbox

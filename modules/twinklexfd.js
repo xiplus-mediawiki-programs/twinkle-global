@@ -1409,7 +1409,7 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 				'apprefix': 'Articles for deletion/' + MorebitsGlobal.pageNameNorm,
 				'apnamespace': 4,
 				'apfilterredir': 'nonredirects',
-				'aplimit': MorebitsGlobal.userIsInGroup('sysop') ? 5000 : 500
+				'aplimit': MorebitsGlobal.userIsSysop ? 5000 : 500
 			};
 			wikipedia_api = new MorebitsGlobal.wiki.api('Tagging article with deletion tag', query, TwinkleGlobal.xfd.callbacks.afd.main);
 			wikipedia_api.params = { usertalk: usertalk, reason: reason, noinclude: noinclude,
@@ -1512,7 +1512,7 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 				'apprefix': 'Miscellany for deletion/' + MorebitsGlobal.pageNameNorm,
 				'apnamespace': 4,
 				'apfilterredir': 'nonredirects',
-				'aplimit': MorebitsGlobal.userIsInGroup('sysop') ? 5000 : 500
+				'aplimit': MorebitsGlobal.userIsSysop ? 5000 : 500
 			};
 			wikipedia_api = new MorebitsGlobal.wiki.api('Looking for prior nominations of this page', query, TwinkleGlobal.xfd.callbacks.mfd.main);
 			wikipedia_api.params = { usertalk: usertalk, notifyuserspace: notifyuserspace, reason: reason, noinclude: noinclude, xfdcat: xfdcat };

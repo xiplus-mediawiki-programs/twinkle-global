@@ -14,7 +14,7 @@
 
 TwinkleGlobal.unlink = function twinkleunlink() {
 	if (mw.config.get('wgNamespaceNumber') < 0 || mw.config.get('wgPageName') === 'Wikipedia:Sandbox' ||
-		(!MorebitsGlobal.userIsInGroup('extendedconfirmed') && !MorebitsGlobal.userIsInGroup('sysop'))) {
+		(!MorebitsGlobal.userIsInGroup('extendedconfirmed') && !MorebitsGlobal.userIsSysop)) {
 		return;
 	}
 	TwinkleGlobal.addPortletLink(TwinkleGlobal.unlink.callback, 'Unlink', 'twg-unlink', 'Unlink backlinks');
