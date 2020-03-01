@@ -26,6 +26,10 @@ TwinkleGlobal.block.callback = function twinkleblockCallback() {
 		return;
 	}
 
+	TwinkleGlobal.block.currentBlockInfo = undefined;
+	TwinkleGlobal.block.field_block_options = {};
+	TwinkleGlobal.block.field_template_options = {};
+
 	var Window = new MorebitsGlobal.simpleWindow(650, 530);
 	// need to be verbose about who we're blocking
 	Window.setTitle('Block or issue block template to ' + mw.config.get('wgRelevantUserName'));
@@ -33,10 +37,6 @@ TwinkleGlobal.block.callback = function twinkleblockCallback() {
 	Window.addFooterLink('Block templates', 'Template:Uw-block/doc/Block_templates');
 	Window.addFooterLink('Block policy', 'WP:BLOCK');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#block');
-
-	TwinkleGlobal.block.currentBlockInfo = undefined;
-	TwinkleGlobal.block.field_block_options = {};
-	TwinkleGlobal.block.field_template_options = {};
 
 	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.block.callback.evaluate);
 	var actionfield = form.append({
@@ -77,6 +77,9 @@ TwinkleGlobal.block.callback = function twinkleblockCallback() {
 	TwinkleGlobal.block.fetchUserInfo(function() {
 		// clean up preset data (defaults, etc.), done exactly once, must be before Twinkle.block.callback.change_action is called
 		TwinkleGlobal.block.transformBlockPresets();
+		if (TwinkleGlobal.block.currentBlockInfo) {
+			Window.addFooterLink('Unblock this user', 'Special:Unblock/' + mw.config.get('wgRelevantUserName'), true);
+		}
 
 		// init the controls after user and block info have been fetched
 		var evt = document.createEvent('Event');
