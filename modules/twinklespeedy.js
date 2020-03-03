@@ -38,9 +38,19 @@ TwinkleGlobal.speedy = function twinklespeedy() {
 };
 
 TwinkleGlobal.speedy.speedyTemplate = null;
+TwinkleGlobal.speedy.speedyTemplateDefault = {
+	'jawiki': 'Delete'
+};
 
 // This function is run when the CSD tab/header link is clicked
 TwinkleGlobal.speedy.callback = function twinklespeedyCallback() {
+	var DBname = mw.config.get('wgDBname');
+	if (DBname in TwinkleGlobal.speedy.speedyTemplateDefault) {
+		TwinkleGlobal.speedy.speedyTemplate = TwinkleGlobal.speedy.speedyTemplateDefault[DBname];
+		TwinkleGlobal.speedy.initDialog(TwinkleGlobal.speedy.callback.evaluateUser);
+		return;
+	}
+
 	var dataapi = TwinkleGlobal.getPref('dataApi');
 	dataapi.get({
 		'action': 'wbgetentities',
