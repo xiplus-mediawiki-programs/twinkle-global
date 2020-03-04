@@ -308,7 +308,8 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				var text = revision.content;
 				if (new RegExp('{{\\s*([Ll]uxotool|[Ll]ock[Hh]ide|[Ll][Hh]|[Mm]ulti[Ll]ock).*?\\|\\s*(\\d+\\s*=\\s*)?' + RegExp.escape(uid, true) + '\\s*(\\||}})').test(text)) {
 					statusIndicator.error('Report already present, will not add a new one');
-					MorebitsGlobal.status.printUserText(header + reason, 'The comments you typed are provided below, in case you wish to manually post them under the existing report for this user at SRG:');
+					var $srgLink = '<a target="_blank" href="/wiki/m:SRG">m:SRG</a>';
+					MorebitsGlobal.status.printUserText(header + reason, 'The comments you typed are provided below, in case you wish to manually post them under the existing report for this user at ' + $srgLink + ':');
 					return $.Deferred().reject('dup');
 				}
 				if (mw.util.isIPAddress(uid)) {
