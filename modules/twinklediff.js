@@ -16,6 +16,14 @@ TwinkleGlobal.diff = function twinklediff() {
 	if (mw.config.get('wgNamespaceNumber') < 0 || !mw.config.get('wgArticleId')) {
 		return;
 	}
+
+	var disabledWikis = $.map(TwinkleGlobal.getPref('diffDisabledWikis'), function(el) {
+		return el.value.trim();
+	});
+	if (disabledWikis.indexOf(mw.config.get('wgDBname')) !== -1) {
+		return;
+	}
+
 	TwinkleGlobal.addPortletLink(mw.util.getUrl(mw.config.get('wgPageName'), {diff: 'cur', oldid: 'prev'}), 'Last', 'tw-lastdiff', 'Show most recent diff');
 
 	// Show additional tabs only on diff pages
