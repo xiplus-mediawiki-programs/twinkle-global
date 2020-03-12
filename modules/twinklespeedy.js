@@ -494,7 +494,7 @@ TwinkleGlobal.speedy.callbacks = {
 					new MorebitsGlobal.wiki.api('Adding Module to watchlist', watch_query).post();
 				}
 			}
-			pageobj.save(Twinkle.speedy.callbacks.user.tagComplete);
+			pageobj.save(TwinkleGlobal.speedy.callbacks.user.tagComplete);
 		},
 
 		tagComplete: function() {
