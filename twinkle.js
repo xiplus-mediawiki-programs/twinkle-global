@@ -146,8 +146,8 @@ TwinkleGlobal.defaultConfig = {
 
 	// Hidden preferences
 	revertMaxRevisions: 50,
-	batchdeleteChunks: 50,
 	batchMax: 5000,
+	batchdeleteChunks: 50,
 	batchProtectChunks: 50,
 	batchundeleteChunks: 50,
 	proddeleteChunks: 50,

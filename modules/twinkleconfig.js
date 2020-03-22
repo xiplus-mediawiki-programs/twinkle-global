@@ -319,7 +319,7 @@ TwinkleGlobal.config.sections = [
 		title: 'Hidden',
 		hidden: true,
 		preferences: [
-		// twinkle.header.js: portlet setup
+			// twinkle.js: portlet setup
 			{
 				name: 'portletArea',
 				type: 'string'
@@ -345,45 +345,35 @@ TwinkleGlobal.config.sections = [
 				name: 'revertMaxRevisions',
 				type: 'integer'
 			},
-			// twinklebatchdelete.js: How many pages should be processed at a time
-			{
-				name: 'batchdeleteChunks',
-				type: 'integer'
-			},
-			// twinklebatchdelete.js: How many pages left in the process of being completed should allow a new batch to be initialized
-			{
-				name: 'batchDeleteMinCutOff',
-				type: 'integer'
-			},
 			// twinklebatchdelete.js: How many pages should be processed maximum
 			{
 				name: 'batchMax',
-				type: 'integer'
+				type: 'integer',
+				adminOnly: true
+			},
+			// twinklebatchdelete.js: How many pages should be processed at a time
+			{
+				name: 'batchdeleteChunks',
+				type: 'integer',
+				adminOnly: true
 			},
 			// twinklebatchprotect.js: How many pages should be processed at a time
 			{
 				name: 'batchProtectChunks',
-				type: 'integer'
-			},
-			// twinklebatchprotect.js: How many pages left in the process of being completed should allow a new batch to be initialized
-			{
-				name: 'batchProtectMinCutOff',
-				type: 'integer'
+				type: 'integer',
+				adminOnly: true
 			},
 			// twinklebatchundelete.js: How many pages should be processed at a time
 			{
 				name: 'batchundeleteChunks',
-				type: 'integer'
-			},
-			// twinklebatchundelete.js: How many pages left in the process of being completed should allow a new batch to be initialized
-			{
-				name: 'batchUndeleteMinCutOff',
-				type: 'integer'
+				type: 'integer',
+				adminOnly: true
 			},
 			// twinkledeprod.js: How many pages should be processed at a time
 			{
 				name: 'proddeleteChunks',
-				type: 'integer'
+				type: 'integer',
+				adminOnly: true
 			}
 		]
 	}
@@ -1036,8 +1026,6 @@ TwinkleGlobal.config.resetAllPrefs = function twinkleconfigResetAllPrefs() {
 TwinkleGlobal.config.save = function twinkleconfigSave(e) {
 	MorebitsGlobal.status.init(document.getElementById('twinkleglobal-config-content'));
 
-	MorebitsGlobal.wiki.actionCompleted.notice = 'Save';
-
 	var userjs = mw.config.get('wgFormattedNamespaces')[mw.config.get('wgNamespaceIds').user] + ':' + mw.config.get('wgUserName') + '/' + TwinkleGlobal.defaultConfig.optionsPage + '.js';
 	var wikipedia_page = new MorebitsGlobal.wiki.page(userjs, 'Saving preferences to ' + userjs);
 	wikipedia_page.setCallbackParameters(e.target);
@@ -1049,14 +1037,9 @@ TwinkleGlobal.config.save = function twinkleconfigSave(e) {
 TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 	var form = pageobj.getCallbackParameters();
 
-	// this is the object which gets serialized into JSON
+	// this is the object which gets serialized into JSON; only
+	// preferences that this script knows about are kept
 	var newConfig = {optionsVersion: 2};
-
-	// keeping track of all preferences that we encounter
-	// any others that are set in the user's current config are kept
-	// this way, preferences that this script doesn't know about are not lost
-	// (it does mean obsolete prefs will never go away, but... ah well...)
-	var foundPrefs = ['optionsVersion'];
 
 	// a comparison function is needed later on
 	// it is just enough for our purposes (i.e. comparing strings, numbers, booleans,
@@ -1094,52 +1077,57 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 			var userValue;  // = undefined
 
 			// only read form values for those prefs that have them
-			if (!section.hidden && (!pref.adminOnly || MorebitsGlobal.userIsSysop)) {
-				switch (pref.type) {
+			if (!pref.adminOnly || MorebitsGlobal.userIsSysop) {
+				if (!section.hidden) {
+					switch (pref.type) {
+						case 'boolean':  // read from the checkbox
+							userValue = form[pref.name].checked;
+							break;
 
-					case 'boolean':  // read from the checkbox
-						userValue = form[pref.name].checked;
-						break;
+						case 'string':  // read from the input box or combo box
+						case 'enum':
+							userValue = form[pref.name].value;
+							break;
 
-					case 'string':  // read from the input box or combo box
-					case 'enum':
-						userValue = form[pref.name].value;
-						break;
+						case 'integer':  // read from the input box
+							userValue = parseInt(form[pref.name].value, 10);
+							if (isNaN(userValue)) {
+								MorebitsGlobal.status.warn('Saving', 'The value you specified for ' + pref.name + ' (' + pref.value + ') was invalid.  The save will continue, but the invalid data value will be skipped.');
+								userValue = null;
+							}
+							break;
 
-					case 'integer':  // read from the input box
-						userValue = parseInt(form[pref.name].value, 10);
-						if (isNaN(userValue)) {
-							MorebitsGlobal.status.warn('Saving', 'The value you specified for ' + pref.name + ' (' + pref.value + ') was invalid.  The save will continue, but the invalid data value will be skipped.');
-							userValue = null;
-						}
-						break;
-
-					case 'set':  // read from the set of check boxes
-						userValue = [];
-						if (pref.setDisplayOrder) {
+						case 'set':  // read from the set of check boxes
+							userValue = [];
+							if (pref.setDisplayOrder) {
 							// read only those keys specified in the display order
-							$.each(pref.setDisplayOrder, function(itemkey, item) {
-								if (form[pref.name + '_' + item].checked) {
-									userValue.push(item);
-								}
-							});
-						} else {
+								$.each(pref.setDisplayOrder, function(itemkey, item) {
+									if (form[pref.name + '_' + item].checked) {
+										userValue.push(item);
+									}
+								});
+							} else {
 							// read all the keys in the list of values
-							$.each(pref.setValues, function(itemkey) {
-								if (form[pref.name + '_' + itemkey].checked) {
-									userValue.push(itemkey);
-								}
-							});
-						}
-						break;
+								$.each(pref.setValues, function(itemkey) {
+									if (form[pref.name + '_' + itemkey].checked) {
+										userValue.push(itemkey);
+									}
+								});
+							}
+							break;
 
-					case 'customList':  // read from the jQuery data stored on the button object
-						userValue = $(form[pref.name]).data('value');
-						break;
+						case 'customList':  // read from the jQuery data stored on the button object
+							userValue = $(form[pref.name]).data('value');
+							break;
 
-					default:
-						alert('twinkleconfig: unknown data type for preference ' + pref.name);
-						break;
+						default:
+							alert('twinkleconfig: unknown data type for preference ' + pref.name);
+							break;
+					}
+				} else if (TwinkleGlobal.prefs[pref.name]) {
+					// Retain the hidden preferences that may have customised by the user from twinkleoptions.js
+					// undefined if not set
+					userValue = TwinkleGlobal.prefs[pref.name];
 				}
 			}
 
@@ -1147,23 +1135,8 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 			if (userValue !== undefined && !compare(userValue, TwinkleGlobal.defaultConfig[pref.name])) {
 				newConfig[pref.name] = userValue;
 			}
-			foundPrefs.push(pref.name);
 		});
 	});
-
-	// Retain the hidden preferences that may have customised by the user from twinkleoptions.js
-	if (TwinkleGlobal.prefs) {
-		$.each(TwinkleGlobal.prefs, function(tkey, tvalue) {
-			// Remove old foramt preferences
-			if (['twinkle', 'friendly'].indexOf(tkey) !== -1) {
-				return;
-			}
-
-			if (foundPrefs.indexOf(tkey) === -1) {
-				newConfig[tkey] = tvalue;
-			}
-		});
-	}
 
 	var text =
 		'// ' + TwinkleGlobal.defaultConfig.optionsPage + '.js: personal Twinkle preferences file\n' +
