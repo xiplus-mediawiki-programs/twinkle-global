@@ -3600,7 +3600,7 @@ MorebitsGlobal.status.prototype = {
 
 	/** Complete the html, for the second part of the status message */
 	render: function() {
-		this.node.className = 'tw_status_' + this.type;
+		this.node.className = 'morebits_status_' + this.type;
 		while (this.target.hasChildNodes()) {
 			this.target.removeChild(this.target.firstChild);
 		}
@@ -3641,7 +3641,7 @@ MorebitsGlobal.status.error = function(text, status) {
 MorebitsGlobal.status.actionCompleted = function(text) {
 	var node = document.createElement('div');
 	node.appendChild(document.createElement('span')).appendChild(document.createTextNode(text));
-	node.className = 'tw_status_info';
+	node.className = 'morebits_status_info';
 	if (MorebitsGlobal.status.root) {
 		MorebitsGlobal.status.root.appendChild(node);
 	}
