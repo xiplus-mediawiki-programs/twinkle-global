@@ -224,11 +224,6 @@ switch (mw.config.get('skin')) {
 
 
 TwinkleGlobal.getPref = function twinkleGetPref(name) {
-	// Old preferences format
-	if (typeof TwinkleGlobal.prefs === 'object' && typeof TwinkleGlobal.prefs.twinkle === 'object' && TwinkleGlobal.prefs.twinkle[name]) {
-		return TwinkleGlobal.prefs.twinkle[name];
-	}
-
 	if (typeof TwinkleGlobal.prefs === 'object' && TwinkleGlobal.prefs[name] !== undefined) {
 		return TwinkleGlobal.prefs[name];
 	}
@@ -421,6 +416,9 @@ mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.ge
 		mw.notify('Could not load ' + TwinkleGlobal.defaultConfig.optionsPage + '.js');
 	})
 	.always(function () {
+		if (TwinkleGlobal.prefs.twinkle || TwinkleGlobal.prefs.friendly) { // Old preferences format
+			TwinkleGlobal.prefs = $.extend(TwinkleGlobal.prefs, TwinkleGlobal.prefs.twinkle, TwinkleGlobal.prefs.friendly);
+		}
 		// v2 established after unification of Twinkle/Friendly objects
 		TwinkleGlobal.prefs.optionsVersion = TwinkleGlobal.prefs.optionsVersion || 1;
 		$(TwinkleGlobal.load);
