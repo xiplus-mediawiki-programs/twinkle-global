@@ -249,7 +249,9 @@ TwinkleGlobal.fluff.revert = function revertPage(type, vandal, autoRevert, rev, 
 		'titles': pagename,
 		'rvlimit': 50, // max possible
 		'rvprop': [ 'ids', 'timestamp', 'user', 'comment' ],
-		'intoken': 'edit'
+		'curtimestamp': '',
+		'meta': 'tokens',
+		'type': 'csrf'
 	};
 	var wikipedia_api = new MorebitsGlobal.wiki.api('Grabbing data of earlier revisions', query, TwinkleGlobal.fluff.callbacks.main);
 	wikipedia_api.params = params;
@@ -267,8 +269,10 @@ TwinkleGlobal.fluff.revertToRevision = function revertToRevision(oldrev) {
 		'rvlimit': 1,
 		'rvstartid': oldrev,
 		'rvprop': [ 'ids', 'timestamp', 'user', 'comment' ],
-		'intoken': 'edit',
-		'format': 'xml'
+		'format': 'xml',
+		'curtimestamp': '',
+		'meta': 'tokens',
+		'type': 'csrf'
 	};
 	var wikipedia_api = new MorebitsGlobal.wiki.api('Grabbing data of the earlier revision', query, TwinkleGlobal.fluff.callbacks.toRevision.main);
 	wikipedia_api.params = { rev: oldrev };
@@ -286,8 +290,8 @@ TwinkleGlobal.fluff.callbacks = {
 
 			var lastrevid = parseInt($(xmlDoc).find('page').attr('lastrevid'), 10);
 			var touched = $(xmlDoc).find('page').attr('touched');
-			var starttimestamp = $(xmlDoc).find('page').attr('starttimestamp');
-			var edittoken = $(xmlDoc).find('page').attr('edittoken');
+			var loadtimestamp = $(xmlDoc).find('api').attr('curtimestamp');
+			var csrftoken = $(xmlDoc).find('tokens').attr('csrftoken');
 			var revertToRevID = $(xmlDoc).find('rev').attr('revid');
 			var revertToUser = $(xmlDoc).find('rev').attr('user');
 
@@ -307,11 +311,11 @@ TwinkleGlobal.fluff.callbacks = {
 				'action': 'edit',
 				'title': mw.config.get('wgPageName'),
 				'summary': summary,
-				'token': edittoken,
+				'token': csrftoken,
 				'undo': lastrevid,
 				'undoafter': revertToRevID,
 				'basetimestamp': touched,
-				'starttimestamp': starttimestamp,
+				'starttimestamp': loadtimestamp,
 				'watchlist': TwinkleGlobal.getPref('watchRevertedPages').indexOf('torev') !== -1 ? 'watch' : undefined,
 				'minor': TwinkleGlobal.getPref('markRevertedPagesAsMinor').indexOf('torev') !== -1 ? true : undefined
 			};
@@ -330,8 +334,8 @@ TwinkleGlobal.fluff.callbacks = {
 
 		var lastrevid = parseInt($(xmlDoc).find('page').attr('lastrevid'), 10);
 		var touched = $(xmlDoc).find('page').attr('touched');
-		var starttimestamp = $(xmlDoc).find('page').attr('starttimestamp');
-		var edittoken = $(xmlDoc).find('page').attr('edittoken');
+		var loadtimestamp = $(xmlDoc).find('api').attr('curtimestamp');
+		var csrftoken = $(xmlDoc).find('tokens').attr('csrftoken');
 		var lastuser = $(xmlDoc).find('rev').attr('user');
 
 		var revs = $(xmlDoc).find('rev');
@@ -518,18 +522,18 @@ TwinkleGlobal.fluff.callbacks = {
 				$flagged.attr('stable_revid') >= self.params.goodid &&
 				$flagged.attr('pending_since')) {
 			self.params.reviewRevert = true;
-			self.params.edittoken = edittoken;
+			self.params.csrftoken = csrftoken;
 		}
 
 		query = {
 			'action': 'edit',
 			'title': self.params.pagename,
 			'summary': summary,
-			'token': edittoken,
+			'token': csrftoken,
 			'undo': lastrevid,
 			'undoafter': self.params.goodid,
 			'basetimestamp': touched,
-			'starttimestamp': starttimestamp,
+			'starttimestamp': loadtimestamp,
 			'watchlist': TwinkleGlobal.getPref('watchRevertedPages').indexOf(self.params.type) !== -1 ? 'watch' : undefined,
 			'minor': TwinkleGlobal.getPref('markRevertedPagesAsMinor').indexOf(self.params.type) !== -1 ? true : undefined
 		};
@@ -559,7 +563,7 @@ TwinkleGlobal.fluff.callbacks = {
 				var query = {
 					'action': 'review',
 					'revid': $edit.attr('newrevid'),
-					'token': apiobj.params.edittoken,
+					'token': apiobj.params.csrftoken,
 					'comment': TwinkleGlobal.getPref('summaryAd').trim()
 				};
 				var wikipedia_api = new MorebitsGlobal.wiki.api('Automatically accepting your changes', query);

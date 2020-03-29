@@ -3,7 +3,9 @@
 
 (function($) {
 
-var api = new mw.Api(), relevantUserName;
+var relevantUserName;
+var menuFormattedNamespaces = $.extend({}, mw.config.get('wgFormattedNamespaces'));
+menuFormattedNamespaces[0] = '(Article)';
 
 /*
  ****************************************
@@ -75,7 +77,7 @@ TwinkleGlobal.block.callback = function twinkleblockCallback() {
 	result.root = result;
 
 	TwinkleGlobal.block.fetchUserInfo(function() {
-		// clean up preset data (defaults, etc.), done exactly once, must be before Twinkle.block.callback.change_action is called
+		// clean up preset data (defaults, etc.), done exactly once, must be before TwinkleGlobal.block.callback.change_action is called
 		TwinkleGlobal.block.transformBlockPresets();
 		if (TwinkleGlobal.block.currentBlockInfo) {
 			Window.addFooterLink('Unblock this user', 'Special:Unblock/' + mw.config.get('wgRelevantUserName'), true);
@@ -89,7 +91,7 @@ TwinkleGlobal.block.callback = function twinkleblockCallback() {
 };
 
 TwinkleGlobal.block.fetchUserInfo = function twinkleblockFetchUserInfo(fn) {
-
+	var api = new mw.Api();
 	api.get({
 		format: 'json',
 		action: 'query',
@@ -394,7 +396,7 @@ TwinkleGlobal.block.callback.change_action = function twinkleblockCallbackChange
 };
 
 /*
- * Keep alphabetized by key name, Twinkle.block.blockGroups establishes
+ * Keep alphabetized by key name, TwinkleGlobal.block.blockGroups establishes
  *    the order they will appear in the interface
  *
  * Block preset format, all keys accept only 'true' (omit for false) except where noted:
@@ -1149,19 +1151,14 @@ TwinkleGlobal.block.callback.evaluate = function twinkleblockCallbackEvaluate(e)
 		blockoptions.allowusertalk = blockoptions.disabletalk ? undefined : true;
 
 		// execute block
-		api.getToken('block').then(function(token) {
-			statusElement.status('Processing...');
-			blockoptions.token = token;
-			var mbApi = new MorebitsGlobal.wiki.api('Executing block', blockoptions, function() {
-				statusElement.info('Completed');
-				if (toWarn) {
-					TwinkleGlobal.block.callback.issue_template(templateoptions);
-				}
-			});
-			mbApi.post();
-		}, function() {
-			statusElement.error('Unable to fetch block token');
+		blockoptions.token = mw.user.tokens.get('csrfToken');
+		var mbApi = new MorebitsGlobal.wiki.api('Executing block', blockoptions, function() {
+			statusElement.info('Completed');
+			if (toWarn) {
+				TwinkleGlobal.block.callback.issue_template(templateoptions);
+			}
 		});
+		mbApi.post();
 	} else if (toWarn) {
 		MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
 
