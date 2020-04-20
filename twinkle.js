@@ -418,16 +418,17 @@ mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.ge
 	.done(function () {
 		// Quick pass if user has no options
 		if (TwinkleGlobal.prefs === undefined) {
+			TwinkleGlobal.prefs = {};
 			return;
 		}
 
 		if (TwinkleGlobal.prefs.twinkle || TwinkleGlobal.prefs.friendly) { // Old preferences format
 			TwinkleGlobal.prefs = $.extend(TwinkleGlobal.prefs, TwinkleGlobal.prefs.twinkle, TwinkleGlobal.prefs.friendly);
 		}
-		// v2 established after unification of Twinkle/Friendly objects
-		TwinkleGlobal.prefs.optionsVersion = TwinkleGlobal.prefs.optionsVersion || 1;
 	})
 	.always(function () {
+		// v2 established after unification of Twinkle/Friendly objects
+		TwinkleGlobal.prefs.optionsVersion = TwinkleGlobal.prefs.optionsVersion || 1;
 		$(TwinkleGlobal.load);
 	});
 
