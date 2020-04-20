@@ -415,12 +415,19 @@ mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.ge
 	.fail(function () {
 		mw.notify('Could not load ' + TwinkleGlobal.defaultConfig.optionsPage + '.js');
 	})
-	.always(function () {
+	.done(function () {
+		// Quick pass if user has no options
+		if (TwinkleGlobal.prefs === undefined) {
+			return;
+		}
+
 		if (TwinkleGlobal.prefs.twinkle || TwinkleGlobal.prefs.friendly) { // Old preferences format
 			TwinkleGlobal.prefs = $.extend(TwinkleGlobal.prefs, TwinkleGlobal.prefs.twinkle, TwinkleGlobal.prefs.friendly);
 		}
 		// v2 established after unification of Twinkle/Friendly objects
 		TwinkleGlobal.prefs.optionsVersion = TwinkleGlobal.prefs.optionsVersion || 1;
+	})
+	.always(function () {
 		$(TwinkleGlobal.load);
 	});
 
