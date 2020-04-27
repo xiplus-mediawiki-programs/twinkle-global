@@ -419,7 +419,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			var target = form.target.value;
 			var langcode = form.langcode.value;
 			var project = form.project.value;
-			if (project === '') {
+			if (project === 'empty') {
 				alert('You must specifc a project');
 				return;
 			}
