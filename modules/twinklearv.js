@@ -523,7 +523,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			statusIndicator = new MorebitsGlobal.status('Reporting to Steward requests/Checkuser', 'Fetching page...');
 
 			metaapi = TwinkleGlobal.getPref('metaApi');
-			metaapi.edit('User:Hamish/SRCU', function(revision) {
+			metaapi.edit('Steward requests/Checkuser', function(revision) {
 				var text = revision.content;
 				var allUsers = [];
 				allUsers.forEach(function (v, i) {
