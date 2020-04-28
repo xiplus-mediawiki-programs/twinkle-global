@@ -200,26 +200,24 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 				wFamily = '';
 				langcode = '';
 			}
-			localCheckuser.forEach(function (v) {
-				if (v === db) {
-					if (confirm('The checkuser on this wiki should be locally handled, are you sure you want to request stewards\' help?')) {
-						wFamily = '';
-						langcode = '';
-					} else {
-						work_area = new MorebitsGlobal.quickForm.element({
-							type: 'field',
-							label: 'Request for checkuser',
-							name: 'work_area'
-						});
-						work_area = work_area.render();
-						old_area.parentNode.replaceChild(work_area, old_area);
-						var statusIndicator = new MorebitsGlobal.status('Reporting to Steward requests/Checkuser');
-						MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-						MorebitsGlobal.status.init(root);
-						statusIndicator.error('User Abort');
-					}
+			if (localCheckuser.indexOf(db) !== -1) {
+				if (confirm('The checkuser on this wiki should be locally handled, are you sure you want to request stewards\' help?')) {
+					wFamily = '';
+					langcode = '';
+				} else {
+					work_area = new MorebitsGlobal.quickForm.element({
+						type: 'field',
+						label: 'Request for checkuser',
+						name: 'work_area'
+					});
+					work_area = work_area.render();
+					old_area.parentNode.replaceChild(work_area, old_area);
+					var statusIndicator = new MorebitsGlobal.status('Reporting to Steward requests/Checkuser');
+					MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
+					MorebitsGlobal.status.init(root);
+					statusIndicator.error('User Abort');
 				}
-			});
+			}
 			var headerText;
 			var noThirdParam;
 			if (wName === 'incubator') {
