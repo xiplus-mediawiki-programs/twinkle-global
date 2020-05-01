@@ -32,6 +32,47 @@ TwinkleGlobal.arv = function twinklearv() {
 	}, 'GARV', 'twg-arv', title);
 };
 
+// Return: header, language, project
+TwinkleGlobal.arv.getProject = function () {
+	switch (mw.config.get('wgWikiFamily')) {
+		case 'wikimedia':
+			switch (mw.config.get('wgWikiName')) {
+				case 'commons':
+					return ['commons', 'commons', ''];
+				case 'meta':
+					return ['meta', 'meta', ''];
+				case 'species':
+					return ['species', 'species', ''];
+				case 'incubator':
+					return ['incubator', 'incubator', ''];
+				default:
+					return [mw.config.get('wgWikiName') + '@wikimedia', mw.config.get('wgWikiName'), 'wikimedia'];
+			}
+		case 'mediawiki':
+			return ['mediawiki.org', 'mw', ''];
+		case 'wikidata':
+			return ['wikidata', 'd', ''];
+		case 'wikipedia':
+			return [mw.config.get('wgWikiName') + '.wikipedia', mw.config.get('wgWikiName'), 'w'];
+		case 'wikibooks':
+			return [mw.config.get('wgWikiName') + '.wikibooks', mw.config.get('wgWikiName'), 'b'];
+		case 'wikiquote':
+			return [mw.config.get('wgWikiName') + '.wikiquote', mw.config.get('wgWikiName'), 'q'];
+		case 'wiktionary':
+			return [mw.config.get('wgWikiName') + '.wiktionary', mw.config.get('wgWikiName'), 'wikt'];
+		case 'wikinews':
+			return [mw.config.get('wgWikiName') + '.wikinews', mw.config.get('wgWikiName'), 'n'];
+		case 'wikisource':
+			return [mw.config.get('wgWikiName') + '.wikisource', mw.config.get('wgWikiName'), 's'];
+		case 'wikiversity':
+			return [mw.config.get('wgWikiName') + '.wikiversity', mw.config.get('wgWikiName'), 'v'];
+		case 'wikivoyage':
+			return [mw.config.get('wgWikiName') + '.wikivoyage', mw.config.get('wgWikiName'), 'voy'];
+		default:
+			return [mw.config.get('wgWikiName') + '.' + mw.config.get('wgWikiFamily'), mw.config.get('wgWikiName'), mw.config.get('wgWikiFamily')];
+	}
+};
+
 TwinkleGlobal.arv.callback = function (uid) {
 	var Window = new MorebitsGlobal.simpleWindow(600, 500);
 	Window.setTitle('Advance Reporting and Vetting'); // Backronym
@@ -43,7 +84,7 @@ TwinkleGlobal.arv.callback = function (uid) {
 	} else {
 		Window.addFooterLink('Global locks', 'm:Global locks');
 	}
-	var IP = mw.util.isIPAddress(uid);
+	var isIP = mw.util.isIPAddress(uid);
 	// form initialise
 	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.arv.callback.evaluate);
 	var categories = form.append({
@@ -54,10 +95,10 @@ TwinkleGlobal.arv.callback = function (uid) {
 	});
 	categories.append({
 		type: 'option',
-		label: IP ? 'Global block (m:SRG)' : 'Global lock (m:SRG)',
+		label: isIP ? 'Global block (m:SRG)' : 'Global lock (m:SRG)',
 		value: 'global'
 	});
-	if (!IP) {
+	if (!isIP) {
 		categories.append({
 			type: 'option',
 			label: 'Checkuser (m:SRCU)',
@@ -184,103 +225,54 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 			break;
 
 		case 'srcu':
-			var wFamily = mw.config.get('wgWikiFamily');
-			var wName = mw.config.get('wgWikiName');
-			var langcode = wName;
+			work_area = new MorebitsGlobal.quickForm.element({
+				type: 'field',
+				label: 'Request for checkuser',
+				name: 'work_area'
+			});
+
+			// Beta feature
+			work_area.append({
+				type: 'div',
+				label: 'This is a beta feature. Remember to review your edits after clicking "Submit query".',
+				style: 'color: orange; font-weight: bold;'
+			});
+
 			var localCheckuser = [
-				/* Wikimedia DELETED meta, allow freely using tool at SRCU page */ 'commonswiki', 'specieswiki', 'wikidatawiki',
+				/* Wikimedia */ 'metawiki', 'commonswiki', 'specieswiki', 'wikidatawiki',
 				/* Wikipedia L1 */ 'arwiki', 'bnwiki', 'cawiki', 'cswiki', 'dawiki', 'dewiki', 'enwiki', 'eswiki',
 				/* Wikipedia L2 */ 'fawiki', 'fiwiki', 'frwiki', 'hewiki', 'hrwiki', 'huwiki', 'idwiki', 'itwiki',
 				/* Wikipedia L3 */ 'jawiki', 'kowiki', 'mlwiki', 'nlwiki', 'plwiki', 'ptwiki', 'ruwiki', 'simplewiki',
 				/* Wikipedia L4 */ 'slwiki', 'srwiki', 'svwiki', 'thwiki', 'trwiki', 'ukwiki', 'viwiki',
 				/* Others */ 'enwikibooks', 'enwiktionary'
 			];
-			var db = mw.config.get('wgDBname');
-			if (db === 'metawiki') {
-				wFamily = '';
-				langcode = '';
+			if (localCheckuser.indexOf(mw.config.get('wgDBname')) !== -1) {
+				work_area.append({
+					type: 'div',
+					label: 'The checkuser on this wiki should be locally handled, are you sure you want to request stewards\' help?',
+					style: 'color: red; font-weight: bold;'
+				});
 			}
-			if (localCheckuser.indexOf(db) !== -1) {
-				if (confirm('The checkuser on this wiki should be locally handled, are you sure you want to request stewards\' help?')) {
-					wFamily = '';
-					langcode = '';
-				} else {
-					work_area = new MorebitsGlobal.quickForm.element({
-						type: 'field',
-						label: 'Request for checkuser',
-						name: 'work_area'
-					});
-					work_area = work_area.render();
-					old_area.parentNode.replaceChild(work_area, old_area);
-					var statusIndicator = new MorebitsGlobal.status('Reporting to Steward requests/Checkuser');
-					MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-					MorebitsGlobal.status.init(root);
-					statusIndicator.error('User Abort');
-				}
-			}
-			var headerText;
-			var noThirdParam;
-			if (wName === 'incubator') {
-				headerText = username + '@incubator.wikimedia.org';
-				langcode = '';
-				noThirdParam = true;
-			} else if (wFamily === 'mediawiki') {
-				headerText = username + '@mediawiki.org';
-				noThirdParam = true;
-				langcode = '';
-			} else {
-				headerText = username + '@' + langcode + '.' + wFamily;
-			}
-			work_area = new MorebitsGlobal.quickForm.element({
-				type: 'field',
-				label: 'Request for checkuser',
-				name: 'work_area'
-			});
+
 			// header mixed preview
 			work_area.append({
 				type: 'input',
 				name: 'header',
-				label: 'Header: (Modify the data below to change this)',
-				readonly: true,
-				value: headerText,
-				size: 80
-			});
-			work_area.append({
-				type: 'input',
-				name: 'target',
-				label: 'Target: ',
-				value: username,
-				size: 30,
-				event: TwinkleGlobal.arv.callback.changeBasicInfo,
-				tooltip: 'Modify if you want to claim your target as someone (e.g. an LTA)'
-			});
-			work_area.append({
-				type: 'select',
-				name: 'project',
-				label: 'Project: ',
-				event: TwinkleGlobal.arv.callback.changeBasicInfo,
-				list: [
-					{ label: '', value: 'empty', selected: wFamily === ''},
-					{ label: 'wikipedia', value: 'w', selected: wFamily === 'wikipedia'},
-					{ label: 'wikibooks', value: 'b', selected: wFamily === 'wikibooks'},
-					{ label: 'wikiquote', value: 'q', selected: wFamily === 'wikiquote' },
-					{ label: 'wiktionary', value: 'wikt', selected: wFamily === 'wiktionary' },
-					{ label: 'wikinews', value: 'n', selected: wFamily === 'wikinews' },
-					{ label: 'wikisource', value: 's', selected: wFamily === 'wikisource' },
-					{ label: 'wikiversity', value: 'v', selected: wFamily === 'wikiversity' },
-					{ label: 'wikivoyage', value: 'voy', selected: wFamily === 'wikivoyage' },
-					{ label: 'mediawiki.org', value: 'mw', selected: wFamily === 'mediawiki' },
-					{ label: 'incubator', value: 'incubator', selected: wName === 'incubator' }
-				]
+				label: 'Header: ',
+				value: username + '@' + TwinkleGlobal.arv.getProject()[0],
+				size: 70
 			});
 			work_area.append({
 				type: 'input',
 				name: 'langcode',
-				label: 'Language Code: ',
-				value: langcode,
-				disabled: noThirdParam,
-				event: TwinkleGlobal.arv.callback.changeBasicInfo,
-				size: 20
+				label: 'Language code: ',
+				value: TwinkleGlobal.arv.getProject()[1]
+			});
+			work_area.append({
+				type: 'input',
+				name: 'project',
+				label: 'Project shortcut: ',
+				value: TwinkleGlobal.arv.getProject()[2]
 			});
 			work_area.append(
 				{
@@ -288,18 +280,16 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					name: 'sockpuppet',
 					label: 'Users to compare',
 					sublabel: 'Username :',
-					tooltip: 'Usernames of suspected sockpuppet WITHOUT "User:"',
+					tooltip: 'Usernames of suspected sockpuppets. Without the User:-prefix.',
 					min: 2,
 					max: 10
 				});
 			work_area.append({
-				type: 'header',
-				label: 'Local confirmation or policy'
-			});
-			work_area.append({
 				type: 'input',
 				name: 'discussion',
-				label: 'Link WITH brackets: '
+				label: 'Discussion: ',
+				tooltip: 'Local confirmation or policy',
+				size: 65
 			});
 			work_area.append({
 				type: 'textarea',
@@ -340,97 +330,25 @@ TwinkleGlobal.arv.callback.changeHidename = function(e) {
 	}
 };
 
-TwinkleGlobal.arv.callback.changeBasicInfo = function(e) {
-	var form = e.target.form;
-	var target = e.target.form.target.value;
-	var langcodeValue = e.target.form.langcode.value;
-	var projectValue = e.target.form.project.value;
-	var isThirdParam = true;
-	var project;
-	switch (projectValue) {
-		case '':
-			project = '';
-			break;
-		case 'w':
-			project = 'wikipedia';
-			break;
-		case 'b':
-			project = 'wikibooks';
-			break;
-		case 'q':
-			project = 'wikiquote';
-			break;
-		case 'wikt':
-			project = 'wiktionary';
-			break;
-		case 'n':
-			project = 'wikinews';
-			break;
-		case 's':
-			project = 'wikisource';
-			break;
-		case 'v':
-			project = 'wikiversity';
-			break;
-		case 'voy':
-			project = 'wikivoyage';
-			break;
-		case 'mw':
-			project = 'mediawiki.org';
-			isThirdParam = false;
-			break;
-		case 'incubator':
-			project = 'incubator.wikimedia.org';
-			isThirdParam = false;
-			break;
-		default:
-			project = '';
-			break;
-	}
-	if (!isThirdParam) {
-		form.header.value = target + '@' + project;
-	} else {
-		form.header.value = target + '@' + langcodeValue + '.' + project;
-	}
-	if (projectValue === 'mw' || projectValue === 'incubator') {
-		e.target.form.langcode.value = '';
-		e.target.form.langcode.disabled = true;
-	} else {
-		e.target.form.langcode.disabled = false;
-	}
-};
-
 TwinkleGlobal.arv.callback.evaluate = function(e) {
-
 	var form = e.target;
 	var header, summary, reason, statusIndicator, metaapi;
 	var uid = form.uid.value;
 	switch (form.category.value) {
-		// Report user for vandalism
 		case 'srcu':
 			var trust = form.disclaimer.checked;
 			if (!trust) {
 				alert('You should check the box after reading the text or you can not request');
 				return;
 			}
-			reason = form.reason.value;
-			var target = form.target.value;
-			var langcode = form.langcode.value;
-			var project = form.project.value;
-			if (project === 'empty') {
-				alert('You must specifc a project');
-				return;
-			}
-			if (langcode === '' && project !== 'mw' && project !== 'd' && project !== 'incubator') {
-				alert('You must specific a language code');
-				return;
-			}
+			var headerVal = form.header.value.trim();
+			reason = form.reason.value.trim();
 			var sockpuppets = $.map($('input:text[name=sockpuppet]', form), function (o) {
 				return $(o).val() || null;
 			});
 
 			if (sockpuppets.length <= 1) {
-				alert('You must specify at least one user to compare');
+				alert('You must specify at least two usernames to compare');
 				return;
 			}
 			if (reason === '') {
@@ -438,82 +356,21 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				return;
 			}
 			// build section title
-			header = '=== ';
-			header += target;
-			header += '@';
-			// build template
-			var template = '\n{{CU request\n' +
+			header = '=== ' + headerVal + ' ===\n';
+			header += '{{CU request\n' +
 				' |status          = \n' +
-				' |language code   = ';
-			var isThirdParam = true;
-			switch (project) {
-				case 'mw':
-					header += 'mediawiki.org ===';
-					template += project;
-					isThirdParam = false;
-					break;
-				case 'incubator':
-					header += 'incubator.wikimedia.org ===';
-					template += project;
-					isThirdParam = false;
-					break;
-				case 'w':
-					header += langcode + '.wikipedia ===';
-					break;
-				case 'b':
-					header += langcode + '.wikibooks ===';
-					break;
-				case 'q':
-					header += langcode + '.wikiquote ===';
-					break;
-				case 'wikt':
-					header += langcode + '.wiktionary ===';
-					break;
-				case 'n':
-					header += langcode + '.wikinews ===';
-					break;
-				case 's':
-					header += langcode + '.wikisource ===';
-					break;
-				case 'v':
-					header += langcode + '.wikiversity ===';
-					break;
-				case 'voy':
-				/* falls through */
-				default:
-					header += langcode + '.wikivoyage ===';
-					break;
-			}
-			if (isThirdParam) {
-				template += langcode + '\n' +
-					' |project shortcut = ' + project;
-			}
+				' |language code   = ' + form.langcode.value + '\n' +
+				' |project shortcut = ' + form.project.value + '\n';
 
-			// section title built
+			sockpuppets.forEach(function(v, i) {
+				header += ' |user name' + (i + 1) + '      = ' + v + '\n';
+			});
 
-			template += '\n' + sockpuppets.map(function(v, i) {
-				return ' |user name' + (i + 1) + '      = ' + v;
-			}).join('\n');
-
-			if (form.discussion) {
-				template += '\n' +
-					' |discussion      = ' + form.discussion.value;
-			} else {
-				template += '\n' +
-					' |discussion      = ';
-			}
-
-			template += '\n' +
+			header += ' |discussion      = ' + form.discussion.value + '\n' +
 				' |reason          = ' + reason + ' --~~~~\n' +
 				'}}';
-			// template built
 
-			if (uid === target) {
-				summary = 'Requesting checkuser on [[Special:CentralAuth/' + uid + '|' + uid + ']]' + ' related accounts';
-			} else {
-				summary = 'Requesting checkuser on ' + target + ' with accounts like [[Special:CentralAuth/' + uid + '|' + uid + ']]';
-			}
-			// edit summary built
+			summary = 'Requesting checkuser for ' + headerVal;
 
 			MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
 			MorebitsGlobal.status.init(form);
@@ -523,24 +380,19 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			metaapi = TwinkleGlobal.getPref('metaApi');
 			metaapi.edit('Steward requests/Checkuser', function(revision) {
 				var text = revision.content;
-				var allUsers = [];
-				allUsers.forEach(function (v, i) {
-					return allUsers[i] = v;
-				});
 
-				text = text.replace(/(== See also == <!-- DO NOT EDIT UNDER THIS LINE -->)/, header + template + '\n\n$1');
+				text = text.replace(/(== See also == <!-- DO NOT EDIT UNDER THIS LINE -->)/, header + '\n\n$1');
 				return {
 					text: text,
 					summary: summary + TwinkleGlobal.getPref('summaryAd'),
 					assert: 'user'
 				};
 			}).then(function() {
-				statusIndicator.info('Done');
+				statusIndicator.info('Done. Remember to review your edits.');
 			}, function(e) {
 				statusIndicator.error(e);
 			});
 			break;
-
 
 		case 'global':
 		/* falls through */
