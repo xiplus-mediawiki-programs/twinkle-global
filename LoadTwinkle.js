@@ -106,7 +106,7 @@ function main() {
 	load(tests[0]).done(done(0));
 }
 
-mw.loader.using(['mediawiki.user', 'mediawiki.util', 'mediawiki.notify', 'mediawiki.Title', 'jquery.ui', 'jquery.tipsy', 'mediawiki.ForeignApi']).done(function() {
+mw.loader.using(['mediawiki.user', 'mediawiki.util', 'mediawiki.Title', 'jquery.ui', 'jquery.tipsy', 'mediawiki.ForeignApi']).done(function() {
 	main();
 });
 
