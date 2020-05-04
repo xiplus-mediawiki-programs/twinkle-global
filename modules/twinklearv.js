@@ -34,9 +34,9 @@ TwinkleGlobal.arv = function twinklearv() {
 
 // Return: header, language, project
 TwinkleGlobal.arv.getProject = function () {
-	switch (mw.config.get('wgWikiFamily')) {
+	switch (MorebitsGlobal.wikiFamily) {
 		case 'wikimedia':
-			switch (mw.config.get('wgWikiName')) {
+			switch (MorebitsGlobal.wikiLang) {
 				case 'commons':
 					return ['commons', 'commons', ''];
 				case 'meta':
@@ -46,30 +46,30 @@ TwinkleGlobal.arv.getProject = function () {
 				case 'incubator':
 					return ['incubator', 'incubator', ''];
 				default:
-					return [mw.config.get('wgWikiName') + '@wikimedia', mw.config.get('wgWikiName'), 'wikimedia'];
+					return [MorebitsGlobal.wikiLang + '@wikimedia', MorebitsGlobal.wikiLang, 'wikimedia'];
 			}
 		case 'mediawiki':
 			return ['mediawiki.org', 'mw', ''];
 		case 'wikidata':
 			return ['wikidata', 'd', ''];
 		case 'wikipedia':
-			return [mw.config.get('wgWikiName') + '.wikipedia', mw.config.get('wgWikiName'), 'w'];
+			return [MorebitsGlobal.wikiLang + '.wikipedia', MorebitsGlobal.wikiLang, 'w'];
 		case 'wikibooks':
-			return [mw.config.get('wgWikiName') + '.wikibooks', mw.config.get('wgWikiName'), 'b'];
+			return [MorebitsGlobal.wikiLang + '.wikibooks', MorebitsGlobal.wikiLang, 'b'];
 		case 'wikiquote':
-			return [mw.config.get('wgWikiName') + '.wikiquote', mw.config.get('wgWikiName'), 'q'];
+			return [MorebitsGlobal.wikiLang + '.wikiquote', MorebitsGlobal.wikiLang, 'q'];
 		case 'wiktionary':
-			return [mw.config.get('wgWikiName') + '.wiktionary', mw.config.get('wgWikiName'), 'wikt'];
+			return [MorebitsGlobal.wikiLang + '.wiktionary', MorebitsGlobal.wikiLang, 'wikt'];
 		case 'wikinews':
-			return [mw.config.get('wgWikiName') + '.wikinews', mw.config.get('wgWikiName'), 'n'];
+			return [MorebitsGlobal.wikiLang + '.wikinews', MorebitsGlobal.wikiLang, 'n'];
 		case 'wikisource':
-			return [mw.config.get('wgWikiName') + '.wikisource', mw.config.get('wgWikiName'), 's'];
+			return [MorebitsGlobal.wikiLang + '.wikisource', MorebitsGlobal.wikiLang, 's'];
 		case 'wikiversity':
-			return [mw.config.get('wgWikiName') + '.wikiversity', mw.config.get('wgWikiName'), 'v'];
+			return [MorebitsGlobal.wikiLang + '.wikiversity', MorebitsGlobal.wikiLang, 'v'];
 		case 'wikivoyage':
-			return [mw.config.get('wgWikiName') + '.wikivoyage', mw.config.get('wgWikiName'), 'voy'];
+			return [MorebitsGlobal.wikiLang + '.wikivoyage', MorebitsGlobal.wikiLang, 'voy'];
 		default:
-			return [mw.config.get('wgWikiName') + '.' + mw.config.get('wgWikiFamily'), mw.config.get('wgWikiName'), mw.config.get('wgWikiFamily')];
+			return [MorebitsGlobal.wikiLang + '.' + MorebitsGlobal.wikiFamily, MorebitsGlobal.wikiLang, MorebitsGlobal.wikiFamily];
 	}
 };
 

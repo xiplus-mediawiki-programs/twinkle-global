@@ -1156,19 +1156,29 @@ MorebitsGlobal.array = {
 
 
 /**
+ * **************** MorebitsGlobal.wikiLang ****************
+ * **************** MorebitsGlobal.wikiFamily ****************
+ * Stores wikiLang and wikiFamily from URL.
+ */
+var temp = mw.config.get('wgServer').replace(/^(https?)?\/\//, '').split('.');
+MorebitsGlobal.wikiLang = temp[0];
+MorebitsGlobal.wikiFamily = temp[1];
+
+
+/**
  * **************** MorebitsGlobal.interwikiPrefix ****************
  * Stores interwiki prefix.
  */
 MorebitsGlobal.interwikiPrefix = '';
-switch (mw.config.get('wgWikiFamily')) {
+switch (MorebitsGlobal.wikiFamily) {
 	case 'wikimedia':
-		MorebitsGlobal.interwikiPrefix = mw.config.get('wgWikiName');
+		MorebitsGlobal.interwikiPrefix = MorebitsGlobal.wikiLang;
 		break;
 	case 'mediawiki':
 		MorebitsGlobal.interwikiPrefix = 'mw';
 		break;
 	case 'wikidata':
-		switch (mw.config.get('wgWikiName')) {
+		switch (MorebitsGlobal.wikiLang) {
 			case 'test':
 				MorebitsGlobal.interwikiPrefix = 'testwikidata';
 				break;
@@ -1181,7 +1191,7 @@ switch (mw.config.get('wgWikiFamily')) {
 		}
 		break;
 	case 'wikipedia':
-		switch (mw.config.get('wgWikiName')) {
+		switch (MorebitsGlobal.wikiLang) {
 			case 'test':
 				MorebitsGlobal.interwikiPrefix = 'testwiki';
 				break;
@@ -1189,12 +1199,12 @@ switch (mw.config.get('wgWikiFamily')) {
 				MorebitsGlobal.interwikiPrefix = 'test2wiki';
 				break;
 			default:
-				MorebitsGlobal.interwikiPrefix = mw.config.get('wgWikiFamily') + ':' + mw.config.get('wgWikiName');
+				MorebitsGlobal.interwikiPrefix = MorebitsGlobal.wikiFamily + ':' + MorebitsGlobal.wikiLang;
 				break;
 		}
 		break;
 	default:
-		MorebitsGlobal.interwikiPrefix = mw.config.get('wgWikiFamily') + ':' + mw.config.get('wgWikiName');
+		MorebitsGlobal.interwikiPrefix = MorebitsGlobal.wikiFamily + ':' + MorebitsGlobal.wikiLang;
 		break;
 }
 
