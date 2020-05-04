@@ -484,7 +484,13 @@ TwinkleGlobal.speedy.callbacks = {
 				metaapi.edit('Global sysops/Requests', function(revision) {
 					var text = revision.content.trim();
 
-					text += '\n* Please delete [[:' + MorebitsGlobal.interwikiPrefix + ':' + MorebitsGlobal.pageNameNorm + ']]: ' + reason + ' --~~~~';
+					text += '\n* Please delete ';
+					if (MorebitsGlobal.interwikiPrefix !== null) {
+						text += '[[:' + MorebitsGlobal.interwikiPrefix + ':' + MorebitsGlobal.pageNameNorm + ']]';
+					} else {
+						text += 'https:' + mw.config.get('wgServer') + mw.util.getUrl();
+					}
+					text += ': ' + reason + ' --~~~~';
 
 					return {
 						text: text,

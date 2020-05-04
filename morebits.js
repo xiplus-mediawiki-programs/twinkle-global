@@ -1169,10 +1169,25 @@ MorebitsGlobal.wikiFamily = temp[1];
  * **************** MorebitsGlobal.interwikiPrefix ****************
  * Stores interwiki prefix.
  */
-MorebitsGlobal.interwikiPrefix = '';
+MorebitsGlobal.interwikiPrefix = null;
 switch (MorebitsGlobal.wikiFamily) {
 	case 'wikimedia':
-		MorebitsGlobal.interwikiPrefix = MorebitsGlobal.wikiLang;
+		switch (MorebitsGlobal.wikiLang) {
+			case 'commons':
+				MorebitsGlobal.interwikiPrefix = 'commons';
+				break;
+			case 'meta':
+				MorebitsGlobal.interwikiPrefix = 'meta';
+				break;
+			case 'species':
+				MorebitsGlobal.interwikiPrefix = 'species';
+				break;
+			case 'incubator':
+				MorebitsGlobal.interwikiPrefix = 'incubator';
+				break;
+			default:
+				break;
+		}
 		break;
 	case 'mediawiki':
 		MorebitsGlobal.interwikiPrefix = 'mw';
@@ -1186,7 +1201,6 @@ switch (MorebitsGlobal.wikiFamily) {
 				MorebitsGlobal.interwikiPrefix = 'd';
 				break;
 			default:
-				MorebitsGlobal.interwikiPrefix = 'UNKNOWN_PREFIX';
 				break;
 		}
 		break;
@@ -1199,12 +1213,32 @@ switch (MorebitsGlobal.wikiFamily) {
 				MorebitsGlobal.interwikiPrefix = 'test2wiki';
 				break;
 			default:
-				MorebitsGlobal.interwikiPrefix = MorebitsGlobal.wikiFamily + ':' + MorebitsGlobal.wikiLang;
+				MorebitsGlobal.interwikiPrefix = 'w:' + MorebitsGlobal.wikiLang;
 				break;
 		}
 		break;
+	case 'wiktionary':
+		MorebitsGlobal.interwikiPrefix = 'wikt';
+		break;
+	case 'wikiquote':
+		MorebitsGlobal.interwikiPrefix = 'q';
+		break;
+	case 'wikibooks':
+		MorebitsGlobal.interwikiPrefix = 'b';
+		break;
+	case 'wikinews':
+		MorebitsGlobal.interwikiPrefix = 'n';
+		break;
+	case 'wikisource':
+		MorebitsGlobal.interwikiPrefix = 's';
+		break;
+	case 'wikiversity':
+		MorebitsGlobal.interwikiPrefix = 'v';
+		break;
+	case 'wikivoyage':
+		MorebitsGlobal.interwikiPrefix = 'voy';
+		break;
 	default:
-		MorebitsGlobal.interwikiPrefix = MorebitsGlobal.wikiFamily + ':' + MorebitsGlobal.wikiLang;
 		break;
 }
 
