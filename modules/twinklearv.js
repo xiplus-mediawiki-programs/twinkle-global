@@ -46,7 +46,7 @@ TwinkleGlobal.arv.getProject = function () {
 				case 'incubator':
 					return ['incubator', 'incubator', ''];
 				default:
-					return [MorebitsGlobal.wikiLang + '@wikimedia', MorebitsGlobal.wikiLang, 'wikimedia'];
+					return [MorebitsGlobal.wikiLang + '.wikimedia', MorebitsGlobal.wikiLang, 'wikimedia'];
 			}
 		case 'mediawiki':
 			return ['mediawiki.org', 'mw', ''];
