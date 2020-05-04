@@ -41,6 +41,24 @@ TwinkleGlobal.speedy.speedyTemplate = null;
 TwinkleGlobal.speedy.speedyTemplateDefault = {
 	'jawiki': 'Delete'
 };
+TwinkleGlobal.speedy.nonGSWikis = [
+	'alswiki', 'anwiki', 'arwiki', 'barwiki', 'betawikiversity', 'bgwiki', 'bnwiki', 'bswiki',
+	'cawiki', 'commonswiki', 'cswiki', 'cswikinews', 'cswikisource', 'cswiktionary', 'cywiki',
+	'dawiki', 'dewiki', 'dewikibooks', 'dewikinews', 'dewikisource', 'dewiktionary',
+	'elwiki', 'enwiki', 'enwikinews', 'enwikiquote', 'enwikisource', 'enwikivoyage', 'enwiktionary',
+	'eowiki', 'eswiki', 'eswikinews', 'eswiktionary', 'etwiki', 'euwiki',
+	'fawiki', 'fiwiki', 'fiwiktionary', 'frwiki', 'frwikibooks', 'frwikinews', 'frwikisource',
+	'frwikiversity', 'frwiktionary', 'glwiki', 'hewiki', 'hewikisource', 'hrwiki', 'huwiki',
+	'idwiki', 'incubatorwiki', 'iswiki', 'itwiki', 'jawiki', 'kawiki', 'kowiki',
+	'lawiki', 'lmowiki', 'loginwiki', 'ltwiki', 'lvwiki', 'metawiki', 'mkwiki', 'mlwiki', 'mrwiki', 'mswiki',
+	'nlwiki', 'nlwikibooks', 'nlwikimedia', 'nlwiktionary', 'nnwiki', 'nowiki',
+	'plwiki', 'plwikimedia', 'plwikiquote', 'plwikisource', 'plwiktionary', 'ptwiki',
+	'rowiki', 'ruwiki',
+	'sewikimedia', 'simplewiki', 'skwiki', 'slwiki', 'sourceswiki', 'specieswiki', 'srwiki',
+	'svwiki', 'svwiktionary',
+	'tawiki', 'testwiki', 'tewiki', 'thwiki', 'tlwiki', 'trwiki', 'ukwiki', 'urwiki', 'viwiki', 'wikidatawiki',
+	'zh_yuewiki', 'zhwiki'
+];
 
 // This function is run when the CSD tab/header link is clicked
 TwinkleGlobal.speedy.callback = function twinklespeedyCallback() {
@@ -152,6 +170,19 @@ TwinkleGlobal.speedy.initDialog = function twinklespeedyInitDialog(callbackfunc)
 			}
 		]
 	});
+
+	if (TwinkleGlobal.speedy.nonGSWikis.indexOf(mw.config.get('wgDBname')) === -1) {
+		tagOptions.append({
+			type: 'checkbox',
+			list: [
+				{
+					label: 'Request at m:Global sysops/Requests (BETA feature: Remember to review your edits after clicking "Submit Query")',
+					value: 'gsr',
+					name: 'gsr'
+				}
+			]
+		});
+	}
 
 	form.append({
 		type: 'div',
@@ -369,25 +400,24 @@ TwinkleGlobal.speedy.normalizeHash = {
 
 TwinkleGlobal.speedy.callbacks = {
 	getTemplateCodeAndParams: function(params) {
-		var code, norm, parameters;
+		var reason = '', norm, parameters;
 
-		code = '{{' + TwinkleGlobal.speedy.getSpeedyTemplate() + '|1=';
 		$.each(params.values, function(index, value) {
 			norm = TwinkleGlobal.speedy.normalizeHash[value];
 			if (norm !== 'db') {
-				code += value + ', ';
+				reason += value + ', ';
 			}
 			parameters = params.templateParams[index] || [];
 			for (var i in parameters) {
 				if (typeof parameters[i] === 'string') {
-					code += parameters[i] + ', ';
+					reason += parameters[i] + ', ';
 				}
 			}
 		});
-		code = code.substr(0, code.length - 2); // remove trailing comma
-		code += '}}';
+		reason = reason.substr(0, reason.length - 2); // remove trailing comma
+		var code = '{{' + TwinkleGlobal.speedy.getSpeedyTemplate() + '|1=' + reason + '}}';
 
-		return [code];
+		return [code, reason];
 	},
 
 	parseWikitext: function(wikitext, callback) {
@@ -436,14 +466,36 @@ TwinkleGlobal.speedy.callbacks = {
 			}
 
 			// given the params, builds the template and also adds the user talk page parameters to the params that were passed in
-			// returns => [<string> wikitext]
+			// returns => [<string> wikitext, <string> reason]
 			var buildData = TwinkleGlobal.speedy.callbacks.getTemplateCodeAndParams(params),
-				code = buildData[0];
+				code = buildData[0],
+				reason = buildData[1];
 
 			var thispage = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
 			// patrol the page, if reached from Special:NewPages
 			if (TwinkleGlobal.getPref('markSpeedyPagesAsPatrolled')) {
 				thispage.patrol();
+			}
+
+			if (params.gsr) {
+				var statusIndicator = new MorebitsGlobal.status('Adding request at Global sysops/Requests', 'Fetching page...');
+
+				var metaapi = TwinkleGlobal.getPref('metaApi');
+				metaapi.edit('Global sysops/Requests', function(revision) {
+					var text = revision.content.trim();
+
+					text += '\n* Please delete [[:' + MorebitsGlobal.interwikiPrefix + ':' + MorebitsGlobal.pageNameNorm + ']]: ' + reason + ' --~~~~';
+
+					return {
+						text: text,
+						summary: 'Requesting deletion' + TwinkleGlobal.getPref('summaryAd'),
+						assert: 'user'
+					};
+				}).then(function() {
+					statusIndicator.info('Done');
+				}, function(e) {
+					statusIndicator.error(e);
+				});
 			}
 
 			// Wrap SD template in noinclude tags if we are in template space.
@@ -557,12 +609,14 @@ TwinkleGlobal.speedy.callback.evaluateUser = function twinklespeedyCallbackEvalu
 	});
 
 	var blank = form.blank.checked;
+	var gsr = form.gsr ? form.gsr.checked : false;
 
 	var params = {
 		values: values,
 		normalizeds: normalizeds,
 		templateParams: TwinkleGlobal.speedy.getParameters(form, values),
-		blank: blank
+		blank: blank,
+		gsr: gsr
 	};
 	if (!params.templateParams) {
 		return;
