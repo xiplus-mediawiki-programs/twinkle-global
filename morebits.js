@@ -1156,6 +1156,50 @@ MorebitsGlobal.array = {
 
 
 /**
+ * **************** MorebitsGlobal.interwikiPrefix ****************
+ * Stores interwiki prefix.
+ */
+MorebitsGlobal.interwikiPrefix = '';
+switch (mw.config.get('wgWikiFamily')) {
+	case 'wikimedia':
+		MorebitsGlobal.interwikiPrefix = mw.config.get('wgWikiName');
+		break;
+	case 'mediawiki':
+		MorebitsGlobal.interwikiPrefix = 'mw';
+		break;
+	case 'wikidata':
+		switch (mw.config.get('wgWikiName')) {
+			case 'test':
+				MorebitsGlobal.interwikiPrefix = 'testwikidata';
+				break;
+			case 'www':
+				MorebitsGlobal.interwikiPrefix = 'd';
+				break;
+			default:
+				MorebitsGlobal.interwikiPrefix = 'UNKNOWN_PREFIX';
+				break;
+		}
+		break;
+	case 'wikipedia':
+		switch (mw.config.get('wgWikiName')) {
+			case 'test':
+				MorebitsGlobal.interwikiPrefix = 'testwiki';
+				break;
+			case 'test2':
+				MorebitsGlobal.interwikiPrefix = 'test2wiki';
+				break;
+			default:
+				MorebitsGlobal.interwikiPrefix = mw.config.get('wgWikiFamily') + ':' + mw.config.get('wgWikiName');
+				break;
+		}
+		break;
+	default:
+		MorebitsGlobal.interwikiPrefix = mw.config.get('wgWikiFamily') + ':' + mw.config.get('wgWikiName');
+		break;
+}
+
+
+/**
  * **************** MorebitsGlobal.pageNameNorm ****************
  * Stores a normalized version of the wgPageName variable (underscores converted to spaces).
  * For queen/king/whatever and country!
