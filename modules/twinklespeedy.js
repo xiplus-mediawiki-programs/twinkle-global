@@ -372,7 +372,6 @@ TwinkleGlobal.speedy.callbacks = {
 		var code, norm, parameters;
 
 		code = '{{' + TwinkleGlobal.speedy.getSpeedyTemplate() + '|1=';
-		params.utparams = {};
 		$.each(params.values, function(index, value) {
 			norm = TwinkleGlobal.speedy.normalizeHash[value];
 			if (norm !== 'db') {
@@ -384,12 +383,11 @@ TwinkleGlobal.speedy.callbacks = {
 					code += parameters[i] + ', ';
 				}
 			}
-			$.extend(params.utparams, TwinkleGlobal.speedy.getUserTalkParameters(norm, parameters));
 		});
 		code = code.substr(0, code.length - 2); // remove trailing comma
 		code += '}}';
 
-		return [code, params.utparams];
+		return [code];
 	},
 
 	parseWikitext: function(wikitext, callback) {
@@ -438,10 +436,9 @@ TwinkleGlobal.speedy.callbacks = {
 			}
 
 			// given the params, builds the template and also adds the user talk page parameters to the params that were passed in
-			// returns => [<string> wikitext, <object> utparams]
+			// returns => [<string> wikitext]
 			var buildData = TwinkleGlobal.speedy.callbacks.getTemplateCodeAndParams(params),
 				code = buildData[0];
-			params.utparams = buildData[1];
 
 			var thispage = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
 			// patrol the page, if reached from Special:NewPages
@@ -494,141 +491,7 @@ TwinkleGlobal.speedy.callbacks = {
 					new MorebitsGlobal.wiki.api('Adding Module to watchlist', watch_query).post();
 				}
 			}
-			pageobj.save(TwinkleGlobal.speedy.callbacks.user.tagComplete);
-		},
-
-		tagComplete: function() {
-		},
-
-		// note: this code is also invoked from twinkleimage
-		// the params used are:
-		//   for CSD: params.values, params.normalizeds  (note: normalizeds is an array)
-		//   for DI: params.fromDI = true, params.templatename, params.normalized  (note: normalized is a string)
-		addToLog: function(params, initialContrib) {
-			var wikipedia_page = new MorebitsGlobal.wiki.page('User:' + mw.config.get('wgUserName') + '/' + TwinkleGlobal.getPref('speedyLogPageName'), 'Adding entry to userspace log');
-			params.logInitialContrib = initialContrib;
-			wikipedia_page.setCallbackParameters(params);
-			wikipedia_page.load(TwinkleGlobal.speedy.callbacks.user.saveLog);
-		},
-
-		saveLog: function(pageobj) {
-			var text = pageobj.getPageText();
-			var params = pageobj.getCallbackParameters();
-
-			var appendText = '';
-
-			// add blurb if log page doesn't exist
-			if (!pageobj.exists()) {
-				appendText +=
-					"This is a log of all [[WP:CSD|speedy deletion]] nominations made by this user using [[WP:TW|Twinkle]]'s CSD module.\n\n" +
-					'If you no longer wish to keep this log, you can turn it off using the [[Wikipedia:Twinkle/Preferences|preferences panel]], and ' +
-					'nominate this page for speedy deletion under [[WP:CSD#U1|CSD U1]].';
-				if (MorebitsGlobal.userIsSysop) {
-					appendText += '\n\nThis log does not track outright speedy deletions made using Twinkle.';
-				}
-			}
-
-			// create monthly header
-			var date = new Date(pageobj.getLoadTime());
-			var headerRe = new RegExp('^==+\\s*' + date.getUTCMonthName() + '\\s+' + date.getUTCFullYear() + '\\s*==+', 'm');
-			if (!headerRe.exec(text)) {
-				appendText += '\n\n=== ' + date.getUTCMonthName() + ' ' + date.getUTCFullYear() + ' ===';
-			}
-
-			var formatParamLog = function(normalize, csdparam, input) {
-				if ((normalize === 'G4' && csdparam === 'xfd') || (normalize === 'G6' && csdparam === 'page') || (normalize === 'G6' && csdparam === 'fullvotepage') || (normalize === 'G6' && csdparam === 'sourcepage')
-					|| (normalize === 'A2' && csdparam === 'source') || (normalize === 'A10' && csdparam === 'article') || (normalize === 'F5' && csdparam === 'replacement')) {
-					input = '[[:' + input + ']]';
-				} else if (normalize === 'G5' && csdparam === 'user') {
-					input = '[[:User:' + input + ']]';
-				} else if (normalize === 'G12' && csdparam.lastIndexOf('url', 0) === 0 && input.lastIndexOf('http', 0) === 0) {
-					input = '[' + input + ' ' + input + ']';
-				} else if (normalize === 'F1' && csdparam === 'filename') {
-					input = '[[:File:' + input + ']]';
-				} else if (normalize === 'T3' && csdparam === 'template') {
-					input = '[[:Template:' + input + ']]';
-				} else if (normalize === 'F8' && csdparam === 'filename') {
-					input = '[[commons:' + input + ']]';
-				} else if (normalize === 'P1' && csdparam === 'criterion') {
-					input = '[[WP:CSD#' + input + ']]';
-				}
-				return ' {' + normalize + ' ' + csdparam + ': ' + input + '}';
-			};
-
-			var extraInfo = '';
-
-			// If a logged file is deleted but exists on commons, the wikilink will be blue, so provide a link to the log
-			var fileLogLink = mw.config.get('wgNamespaceNumber') === 6 ? ' ([{{fullurl:Special:Log|page=' + mw.util.wikiUrlencode(mw.config.get('wgPageName')) + '}} log])' : '';
-
-			var editsummary = 'Logging speedy deletion nomination';
-			appendText += '\n# [[:' + MorebitsGlobal.pageNameNorm;
-
-			if (params.fromDI) {
-				appendText += ']]' + fileLogLink + ': DI [[WP:CSD#' + params.normalized.toUpperCase() + '|CSD ' + params.normalized.toUpperCase() + ']] ({{tl|di-' + params.templatename + '}})';
-				// The params data structure when coming from DI is quite different,
-				// so this hardcodes the only interesting items worth logging
-				['reason', 'replacement', 'source'].forEach(function(item) {
-					if (params[item]) {
-						extraInfo += formatParamLog(params.normalized.toUpperCase(), item, params[item]);
-						return false;
-					}
-				});
-				editsummary += ' of [[:' + MorebitsGlobal.pageNameNorm + ']].';
-			} else {
-				if (params.normalizeds.indexOf('g10') === -1) {  // no article name in log for G10 taggings
-					appendText += ']]' + fileLogLink + ': ';
-					editsummary += ' of [[:' + MorebitsGlobal.pageNameNorm + ']].';
-				} else {
-					appendText += '|This]] attack page' + fileLogLink + ': ';
-					editsummary += ' of an attack page.';
-				}
-				if (params.normalizeds.length > 1) {
-					appendText += 'multiple criteria (';
-					$.each(params.normalizeds, function(index, norm) {
-						appendText += '[[WP:CSD#' + norm.toUpperCase() + '|' + norm.toUpperCase() + ']], ';
-					});
-					appendText = appendText.substr(0, appendText.length - 2);  // remove trailing comma
-					appendText += ')';
-				} else if (params.normalizeds[0] === 'db') {
-					appendText += '{{tl|db-reason}}';
-				} else {
-					appendText += '[[WP:CSD#' + params.normalizeds[0].toUpperCase() + '|CSD ' + params.normalizeds[0].toUpperCase() + ']] ({{tl|db-' + params.values[0] + '}})';
-				}
-
-				// If params is "empty" it will still be full of empty arrays, but ask anyway
-				if (params.templateParams) {
-					// Treat custom rationale individually
-					if (params.normalizeds[0] && params.normalizeds[0] === 'db') {
-						extraInfo += formatParamLog('Custom', 'rationale', params.templateParams[0]['1']);
-					} else {
-						params.templateParams.forEach(function(item, index) {
-							var keys = Object.keys(item);
-							if (keys[0] !== undefined && keys[0].length > 0) {
-								// Second loop required since some items (G12, F9) may have multiple keys
-								keys.forEach(function(key, keyIndex) {
-									if (keys[keyIndex] === 'blanked' || keys[keyIndex] === 'ts') {
-										return true; // Not worth logging
-									}
-									extraInfo += formatParamLog(params.normalizeds[index].toUpperCase(), keys[keyIndex], item[key]);
-								});
-							}
-						});
-					}
-				}
-			}
-
-			if (extraInfo) {
-				appendText += '; additional information:' + extraInfo;
-			}
-			if (params.logInitialContrib) {
-				appendText += '; notified {{user|1=' + params.logInitialContrib + '}}';
-			}
-			appendText += ' ~~~~~\n';
-
-			pageobj.setAppendText(appendText);
-			pageobj.setEditSummary(editsummary + TwinkleGlobal.getPref('summaryAd'));
-			pageobj.setCreateOption('recreate');
-			pageobj.append();
+			pageobj.save();
 		}
 	}
 };
@@ -657,27 +520,6 @@ TwinkleGlobal.speedy.getParameters = function twinklespeedyGetParameters(form, v
 		parameters.push(currentParams);
 	});
 	return parameters;
-};
-
-// function for processing talk page notification template parameters
-TwinkleGlobal.speedy.getUserTalkParameters = function twinklespeedyGetUserTalkParameters(normalized, parameters) {
-	var utparams = [];
-	switch (normalized) {
-		case 'db':
-			utparams['2'] = parameters['1'];
-			break;
-		case 'g12':
-			utparams.key1 = 'url';
-			utparams.value1 = utparams.url = parameters.url;
-			break;
-		case 'a10':
-			utparams.key1 = 'article';
-			utparams.value1 = utparams.article = parameters.article;
-			break;
-		default:
-			break;
-	}
-	return utparams;
 };
 
 TwinkleGlobal.speedy.getSpeedyTemplate = function twinklespeedyGetSpeedyTemplate() {
