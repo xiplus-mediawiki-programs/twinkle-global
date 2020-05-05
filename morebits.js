@@ -1218,25 +1218,25 @@ switch (MorebitsGlobal.wikiFamily) {
 		}
 		break;
 	case 'wiktionary':
-		MorebitsGlobal.interwikiPrefix = 'wikt';
+		MorebitsGlobal.interwikiPrefix = 'wikt:' + MorebitsGlobal.wikiLang;
 		break;
 	case 'wikiquote':
-		MorebitsGlobal.interwikiPrefix = 'q';
+		MorebitsGlobal.interwikiPrefix = 'q:' + MorebitsGlobal.wikiLang;
 		break;
 	case 'wikibooks':
-		MorebitsGlobal.interwikiPrefix = 'b';
+		MorebitsGlobal.interwikiPrefix = 'b:' + MorebitsGlobal.wikiLang;
 		break;
 	case 'wikinews':
-		MorebitsGlobal.interwikiPrefix = 'n';
+		MorebitsGlobal.interwikiPrefix = 'n:' + MorebitsGlobal.wikiLang;
 		break;
 	case 'wikisource':
-		MorebitsGlobal.interwikiPrefix = 's';
+		MorebitsGlobal.interwikiPrefix = 's:' + MorebitsGlobal.wikiLang;
 		break;
 	case 'wikiversity':
-		MorebitsGlobal.interwikiPrefix = 'v';
+		MorebitsGlobal.interwikiPrefix = 'v:' + MorebitsGlobal.wikiLang;
 		break;
 	case 'wikivoyage':
-		MorebitsGlobal.interwikiPrefix = 'voy';
+		MorebitsGlobal.interwikiPrefix = 'voy:' + MorebitsGlobal.wikiLang;
 		break;
 	default:
 		break;
