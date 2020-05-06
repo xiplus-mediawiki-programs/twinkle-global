@@ -456,15 +456,6 @@ TwinkleGlobal.speedy.callbacks = {
 			var text = pageobj.getPageText();
 			var params = pageobj.getCallbackParameters();
 
-			statelem.status('Checking for tags on the page...');
-
-			// check for existing deletion tags
-			var tag = /(?:\{\{\s*(db|delete|db-.*?|speedy(delete)?|speedy deletion-.*?)(?:\s*\||\s*\}\}))/i.exec(text);
-			// This won't make use of the db-multiple template but it probably should
-			if (tag && !confirm('The page already has the CSD-related template {{' + tag[1] + '}} on it.  Do you want to add another CSD template?')) {
-				return;
-			}
-
 			// given the params, builds the template and also adds the user talk page parameters to the params that were passed in
 			// returns => [<string> wikitext, <string> reason]
 			var buildData = TwinkleGlobal.speedy.callbacks.getTemplateCodeAndParams(params),
@@ -503,6 +494,18 @@ TwinkleGlobal.speedy.callbacks = {
 					statusIndicator.error(e);
 				});
 			}
+
+			statelem.status('Checking for tags on the page...');
+
+			// check for existing deletion tags
+			var delete_re_string = MorebitsGlobal.pageNameRegex(RegExp.escape(TwinkleGlobal.speedy.speedyTemplate, true));
+			var delete_re = new RegExp('{{\\s*(delete|' + delete_re_string + ')\\s*(\\|(?:{{[^{}]*}}|[^{}])*)?}}\\s*', 'i');
+			var textNoSd = text.replace(delete_re, '');
+			if (text !== textNoSd && !confirm('The page already has the CSD-related template on it. Do you want to remove this one and add yours template?')) {
+				statelem.error('Aborted marking by user.');
+				return;
+			}
+			text = textNoSd;
 
 			// Wrap SD template in noinclude tags if we are in template space.
 			// Won't work with userboxes in userspace, or any other transcluded page outside template space
