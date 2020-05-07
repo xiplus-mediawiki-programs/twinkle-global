@@ -13,11 +13,6 @@ var PREFIX = 'User:Xiplus/Twinkle/';
 var rebuildcache = localStorage.Twinkle_global_xiplus_version !== VERSION;
 var tests = [];
 var api;
-if (mw.config.get('wgServer') === '//meta.wikimedia.org') {
-	api = new mw.Api();
-} else {
-	api = new mw.ForeignApi('https://meta.wikimedia.org/w/api.php');
-}
 
 var ajax = function(title) {
 	return api.get({
@@ -78,6 +73,12 @@ tests.push({ name: 'modules/twinklespeedy.js', test: true });
 
 
 function main() {
+	if (mw.config.get('wgServer') === '//meta.wikimedia.org') {
+		api = new mw.Api();
+	} else {
+		api = new mw.ForeignApi('https://meta.wikimedia.org/w/api.php');
+	}
+
 	mw.loader.load('https://meta.wikimedia.org/w/index.php?title=User:Xiplus/Twinkle/morebits.css&action=raw&ctype=text/css', 'text/css');
 
 	var finished = 0;
@@ -106,7 +107,7 @@ function main() {
 	load(tests[0]).done(done(0));
 }
 
-mw.loader.using(['mediawiki.user', 'mediawiki.util', 'mediawiki.Title', 'jquery.ui', 'jquery.tipsy', 'mediawiki.ForeignApi']).done(function() {
+mw.loader.using(['mediawiki.user', 'mediawiki.util', 'mediawiki.Title', 'jquery.ui', 'jquery.tipsy', 'mediawiki.api', 'mediawiki.ForeignApi']).done(function() {
 	main();
 });
 
