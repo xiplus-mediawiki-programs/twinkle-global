@@ -498,7 +498,7 @@ TwinkleGlobal.speedy.callbacks = {
 			statelem.status('Checking for tags on the page...');
 
 			// check for existing deletion tags
-			var delete_re_string = MorebitsGlobal.pageNameRegex(RegExp.escape(TwinkleGlobal.speedy.speedyTemplate, true));
+			var delete_re_string = MorebitsGlobal.pageNameRegex(RegExp.escape(TwinkleGlobal.speedy.getSpeedyTemplate(), true));
 			var delete_re = new RegExp('{{\\s*(delete|' + delete_re_string + ')\\s*(\\|(?:{{[^{}]*}}|[^{}])*)?}}\\s*', 'i');
 			var textNoSd = text.replace(delete_re, '');
 			if (text !== textNoSd && !confirm('The page already has the CSD-related template on it. Do you want to remove this one and add yours template?')) {
