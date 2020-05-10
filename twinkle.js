@@ -413,7 +413,7 @@ var scriptpathbefore = '//meta.wikimedia.org/w/index.php?title=',
 // Retrieve the user's Twinkle preferences
 mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.get('wgUserName')) + '/' + TwinkleGlobal.defaultConfig.optionsPage + '.js' + scriptpathafter)
 	.fail(function () {
-		mw.notify('Could not load ' + TwinkleGlobal.defaultConfig.optionsPage + '.js');
+		mw.notify('Could not load your Twinkle preferences', {type: 'error'});
 	})
 	.done(function () {
 		// Quick pass if user has no options
