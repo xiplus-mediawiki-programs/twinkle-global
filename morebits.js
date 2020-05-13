@@ -1369,6 +1369,32 @@ MorebitsGlobal.wiki.isPageRedirect = function wikipediaIsPageRedirect() {
 };
 
 
+/**
+ * Determines whether the current wiki is a global-sysop wiki
+ * @returns {boolean}
+ */
+MorebitsGlobal.wiki.nonGSWikis = [
+	'alswiki', 'anwiki', 'arwiki', 'barwiki', 'betawikiversity', 'bgwiki', 'bnwiki', 'bswiki',
+	'cawiki', 'commonswiki', 'cswiki', 'cswikinews', 'cswikisource', 'cswiktionary', 'cywiki',
+	'dawiki', 'dewiki', 'dewikibooks', 'dewikinews', 'dewikisource', 'dewiktionary',
+	'elwiki', 'enwiki', 'enwikinews', 'enwikiquote', 'enwikisource', 'enwikivoyage', 'enwiktionary',
+	'eowiki', 'eswiki', 'eswikinews', 'eswiktionary', 'etwiki', 'euwiki',
+	'fawiki', 'fiwiki', 'fiwiktionary', 'frwiki', 'frwikibooks', 'frwikinews', 'frwikisource',
+	'frwikiversity', 'frwiktionary', 'glwiki', 'hewiki', 'hewikisource', 'hrwiki', 'huwiki',
+	'idwiki', 'incubatorwiki', 'iswiki', 'itwiki', 'jawiki', 'kawiki', 'kowiki',
+	'lawiki', 'lmowiki', 'loginwiki', 'ltwiki', 'lvwiki', 'metawiki', 'mkwiki', 'mlwiki', 'mrwiki', 'mswiki',
+	'nlwiki', 'nlwikibooks', 'nlwikimedia', 'nlwiktionary', 'nnwiki', 'nowiki',
+	'plwiki', 'plwikimedia', 'plwikiquote', 'plwikisource', 'plwiktionary', 'ptwiki',
+	'rowiki', 'ruwiki',
+	'sewikimedia', 'simplewiki', 'skwiki', 'slwiki', 'sourceswiki', 'specieswiki', 'srwiki',
+	'svwiki', 'svwiktionary',
+	'tawiki', 'testwiki', 'tewiki', 'thwiki', 'tlwiki', 'trwiki', 'ukwiki', 'urwiki', 'viwiki', 'wikidatawiki',
+	'zh_yuewiki', 'zhwiki'
+];
+MorebitsGlobal.wiki.isGSWiki = function() {
+	return MorebitsGlobal.wiki.nonGSWikis.indexOf(mw.config.get('wgDBname')) === -1;
+};
+
 
 /**
  * **************** MorebitsGlobal.wiki.actionCompleted ****************

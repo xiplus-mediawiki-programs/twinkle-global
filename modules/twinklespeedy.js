@@ -41,24 +41,6 @@ TwinkleGlobal.speedy.speedyTemplate = null;
 TwinkleGlobal.speedy.speedyTemplateDefault = {
 	'jawiki': 'Delete'
 };
-TwinkleGlobal.speedy.nonGSWikis = [
-	'alswiki', 'anwiki', 'arwiki', 'barwiki', 'betawikiversity', 'bgwiki', 'bnwiki', 'bswiki',
-	'cawiki', 'commonswiki', 'cswiki', 'cswikinews', 'cswikisource', 'cswiktionary', 'cywiki',
-	'dawiki', 'dewiki', 'dewikibooks', 'dewikinews', 'dewikisource', 'dewiktionary',
-	'elwiki', 'enwiki', 'enwikinews', 'enwikiquote', 'enwikisource', 'enwikivoyage', 'enwiktionary',
-	'eowiki', 'eswiki', 'eswikinews', 'eswiktionary', 'etwiki', 'euwiki',
-	'fawiki', 'fiwiki', 'fiwiktionary', 'frwiki', 'frwikibooks', 'frwikinews', 'frwikisource',
-	'frwikiversity', 'frwiktionary', 'glwiki', 'hewiki', 'hewikisource', 'hrwiki', 'huwiki',
-	'idwiki', 'incubatorwiki', 'iswiki', 'itwiki', 'jawiki', 'kawiki', 'kowiki',
-	'lawiki', 'lmowiki', 'loginwiki', 'ltwiki', 'lvwiki', 'metawiki', 'mkwiki', 'mlwiki', 'mrwiki', 'mswiki',
-	'nlwiki', 'nlwikibooks', 'nlwikimedia', 'nlwiktionary', 'nnwiki', 'nowiki',
-	'plwiki', 'plwikimedia', 'plwikiquote', 'plwikisource', 'plwiktionary', 'ptwiki',
-	'rowiki', 'ruwiki',
-	'sewikimedia', 'simplewiki', 'skwiki', 'slwiki', 'sourceswiki', 'specieswiki', 'srwiki',
-	'svwiki', 'svwiktionary',
-	'tawiki', 'testwiki', 'tewiki', 'thwiki', 'tlwiki', 'trwiki', 'ukwiki', 'urwiki', 'viwiki', 'wikidatawiki',
-	'zh_yuewiki', 'zhwiki'
-];
 
 // This function is run when the CSD tab/header link is clicked
 TwinkleGlobal.speedy.callback = function twinklespeedyCallback() {
@@ -171,7 +153,7 @@ TwinkleGlobal.speedy.initDialog = function twinklespeedyInitDialog(callbackfunc)
 		]
 	});
 
-	if (TwinkleGlobal.speedy.nonGSWikis.indexOf(mw.config.get('wgDBname')) === -1) {
+	if (MorebitsGlobal.wiki.isGSWiki()) {
 		tagOptions.append({
 			type: 'checkbox',
 			list: [
