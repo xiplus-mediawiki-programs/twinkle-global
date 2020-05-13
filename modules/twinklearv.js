@@ -387,7 +387,13 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				return;
 			}
 
-			reason = '* Please block {{LockHide|1=' + uid + '|2=' + MorebitsGlobal.interwikiPrefix + ':}}: ';
+			reason = '* Please block ';
+			if (MorebitsGlobal.interwikiPrefix !== null) {
+				reason += '{{LockHide|1=' + uid + '|2=' + MorebitsGlobal.interwikiPrefix + ':}}';
+			} else {
+				reason += 'https:' + mw.config.get('wgServer') + mw.util.getUrl('Special:Contributions/' + uid);
+			}
+			reason += ': ';
 
 			types = types.map(function(v) {
 				switch (v) {
