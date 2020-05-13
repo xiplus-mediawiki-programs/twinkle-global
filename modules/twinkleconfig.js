@@ -147,6 +147,14 @@ TwinkleGlobal.config.sections = [
 				type: 'integer'
 			},
 
+			{
+				name: 'customGARVGSRReasonList',
+				label: 'Custom GS/R report reason',
+				type: 'customList',
+				customListValueTitle: 'Reason used in the report',
+				customListLabelTitle: 'Text to show in GARV dialog'
+			},
+
 			// Disable arv on these wikis.
 			{
 				name: 'arvDisabledWikis',

@@ -98,6 +98,13 @@ TwinkleGlobal.arv.callback = function (uid) {
 		label: isIP ? 'Global block (m:SRG)' : 'Global lock (m:SRG)',
 		value: 'global'
 	});
+	if (MorebitsGlobal.wiki.isGSWiki()) {
+		categories.append({
+			type: 'option',
+			label: 'Global sysops/Requests (m:GS/R)',
+			value: 'gsr'
+		});
+	}
 	if (!isIP) {
 		categories.append({
 			type: 'option',
@@ -224,6 +231,38 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 			old_area.parentNode.replaceChild(work_area, old_area);
 			break;
 
+		case 'gsr':
+			work_area = new MorebitsGlobal.quickForm.element({
+				type: 'field',
+				label: 'Report user to Global sysops/Requests',
+				name: 'work_area'
+			});
+			work_area.append({
+				type: 'header',
+				label: 'Comment: '
+			});
+			work_area.append({
+				type: 'checkbox',
+				name: 'gsrtype',
+				list: [
+					{
+						label: 'Vandalism',
+						value: 'Vandalism'
+					},
+					{
+						label: 'Spam / spambot',
+						value: 'Spam / spambot'
+					}
+				].concat(TwinkleGlobal.getPref('customGARVGSRReasonList'))
+			});
+			work_area.append({
+				type: 'textarea',
+				name: 'reason'
+			});
+			work_area = work_area.render();
+			old_area.parentNode.replaceChild(work_area, old_area);
+			break;
+
 		case 'srcu':
 			work_area = new MorebitsGlobal.quickForm.element({
 				type: 'field',
@@ -332,9 +371,67 @@ TwinkleGlobal.arv.callback.changeHidename = function(e) {
 
 TwinkleGlobal.arv.callback.evaluate = function(e) {
 	var form = e.target;
-	var header, summary, reason, statusIndicator, metaapi;
+	var header, summary, reason, comment, types, statusIndicator, metaapi;
 	var uid = form.uid.value;
 	switch (form.category.value) {
+		case 'gsr':
+			reason = '';
+			comment = '';
+			if (form.reason) {
+				comment = form.reason.value;
+			}
+
+			types = form.getChecked('gsrtype');
+			if (!types.length && comment === '') {
+				alert('You must specify some reason');
+				return;
+			}
+
+			reason = '* Please block {{LockHide|1=' + uid + '|2=' + MorebitsGlobal.interwikiPrefix + ':}}: ';
+
+			types = types.map(function(v) {
+				switch (v) {
+					default:
+						return v;
+				}
+			}).join('. ');
+
+			if (types) {
+				reason += types;
+			}
+			if (comment !== '') {
+				comment = comment.replace(/\r?\n/g, '\n:');  // indent newlines
+				reason += (types ? '. ' : '') + comment;
+			}
+			reason = reason.trim();
+			if (reason.search(/[.?!;]$/) === -1) {
+				reason += '.';
+			}
+			reason += ' --~~~~';
+
+			MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
+			MorebitsGlobal.status.init(form);
+
+			statusIndicator = new MorebitsGlobal.status('Reporting to Global sysops/Requests', 'Fetching page...');
+
+			metaapi = TwinkleGlobal.getPref('metaApi');
+			metaapi.edit('Global sysops/Requests', function(revision) {
+				var text = revision.content.trim();
+
+				text += '\n' + reason;
+
+				return {
+					text: text,
+					summary: 'Reporting user' + TwinkleGlobal.getPref('summaryAd'),
+					assert: 'user'
+				};
+			}).then(function() {
+				statusIndicator.info('Done');
+			}, function(e) {
+				statusIndicator.error(e);
+			});
+			break;
+
 		case 'srcu':
 			var trust = form.disclaimer.checked;
 			if (!trust) {
@@ -398,12 +495,11 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 		/* falls through */
 		default:
 			reason = '';
-			var comment = '';
+			comment = '';
 			if (form.reason) {
 				comment = form.reason.value;
 			}
 
-			var types;
 			types = form.getChecked('globaltype');
 			if (!types.length && comment === '') {
 				alert('You must specify some reason');
