@@ -344,7 +344,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 				type: 'checkbox',
 				list: [
 					{
-						label: 'I confirm this request is beneficial for the community and I will take full responsibility for this quest.',
+						label: 'I confirm this request is beneficial for the community and I will take full responsibility for this request.',
 						name: 'disclaimer',
 						value: 'disclaimer'
 					}
