@@ -8,7 +8,7 @@
 
 (function() {
 
-var VERSION = '{{subst:#time:YmdHis}}';
+var VERSION = '{{subst:#time:Y-m-d H:i:s}}';
 var PREFIX = 'User:Xiplus/Twinkle/';
 var rebuildcache = localStorage.Twinkle_global_xiplus_version !== VERSION;
 var tests = [];
