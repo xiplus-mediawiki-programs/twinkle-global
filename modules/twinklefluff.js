@@ -36,24 +36,7 @@ TwinkleGlobal.fluff = function twinklefluff() {
 		'SineBot'
 	];
 
-	if (mw.util.getParamValue('twinklerevert')) {
-		// Return if the user can't edit the page in question
-		if (!mw.config.get('wgIsProbablyEditable')) {
-			alert("Unable to edit the page, it's probably protected.");
-		} else {
-			TwinkleGlobal.fluff.auto();
-		}
-	} else if (mw.config.get('wgCanonicalSpecialPageName') === 'Contributions') {
-		TwinkleGlobal.fluff.addLinks.contributions();
-	} else if (mw.config.get('wgCanonicalSpecialPageName') === 'Recentchanges' || mw.config.get('wgCanonicalSpecialPageName') === 'Recentchangeslinked') {
-		// Reload with recent changes updates
-		// structuredChangeFilters.ui.initialized is just on load
-		mw.hook('wikipage.content').add(function(item) {
-			if (item.is('div')) {
-				TwinkleGlobal.fluff.addLinks.recentchanges();
-			}
-		});
-	} else if (mw.config.get('wgIsProbablyEditable')) {
+	if (mw.config.get('wgIsProbablyEditable')) {
 		// Only proceed if the user can actually edit the page
 		// in question (ignored for contributions, see #632).
 		// wgIsProbablyEditable should take care of
@@ -69,54 +52,126 @@ TwinkleGlobal.fluff = function twinklefluff() {
 		} else if (mw.config.get('wgAction') === 'history') {
 			TwinkleGlobal.fluff.addLinks.history();
 		}
+	} else if (mw.config.get('wgNamespaceNumber') === -1) {
+		TwinkleGlobal.fluff.skipTalk = !TwinkleGlobal.getPref('openTalkPageOnAutoRevert');
+		TwinkleGlobal.fluff.rollbackInPlace = TwinkleGlobal.getPref('rollbackInPlace');
+
+		if (mw.config.get('wgCanonicalSpecialPageName') === 'Contributions') {
+			TwinkleGlobal.fluff.addLinks.contributions();
+		} else if (mw.config.get('wgCanonicalSpecialPageName') === 'Recentchanges' || mw.config.get('wgCanonicalSpecialPageName') === 'Recentchangeslinked') {
+			// Reload with recent changes updates
+			// structuredChangeFilters.ui.initialized is just on load
+			mw.hook('wikipage.content').add(function(item) {
+				if (item.is('div')) {
+					TwinkleGlobal.fluff.addLinks.recentchanges();
+				}
+			});
+		}
 	}
 };
 
+TwinkleGlobal.fluff.skipTalk = null;
+TwinkleGlobal.fluff.rollbackInPlace = null;
 
-TwinkleGlobal.fluff.spanTag = function twinklefluffspanTag(color, content) {
-	var span = document.createElement('span');
-	span.style.color = color;
-	span.appendChild(document.createTextNode(content));
-	return span;
-};
+// Consolidated construction of fluff links
+TwinkleGlobal.fluff.linkBuilder = {
+	spanTag: function(color, content) {
+		var span = document.createElement('span');
+		span.style.color = color;
+		span.appendChild(document.createTextNode(content));
+		return span;
+	},
 
-TwinkleGlobal.fluff.buildLink = function twinklefluffbuildLink(color, text) {
-	var link = document.createElement('a');
-	link.appendChild(TwinkleGlobal.fluff.spanTag('Black', '['));
-	link.appendChild(TwinkleGlobal.fluff.spanTag(color, text));
-	link.appendChild(TwinkleGlobal.fluff.spanTag('Black', ']'));
-	return link;
-};
+	buildLink: function(color, text) {
+		var link = document.createElement('a');
+		link.appendChild(TwinkleGlobal.fluff.linkBuilder.spanTag('Black', '['));
+		link.appendChild(TwinkleGlobal.fluff.linkBuilder.spanTag(color, text));
+		link.appendChild(TwinkleGlobal.fluff.linkBuilder.spanTag('Black', ']'));
+		link.href = '#';
+		return link;
+	},
 
-// Build [restore this revision] links
-TwinkleGlobal.fluff.restoreThisRevision = function (element, revType) {
-	var revertToRevision = document.createElement('div');
-	revertToRevision.setAttribute('id', 'tw-revert-to-' + (revType === 'wgDiffNewId' ? 'n' : 'o') + 'revision');
-	revertToRevision.style.fontWeight = 'bold';
+	/**
+	 * @param {string} vandal - Username of the editor being reverted (required)
+	 * @param {boolean} inline - True to create two links in a span, false
+	 * to create three links in a div (optional)
+	 * @param {number|string} [rev=wgCurRevisionId] - Revision ID being reverted (optional)
+	 * @param {string} [page=wgPageName] - Page being reverted (optional)
+	 */
+	rollbackLinks: function(vandal, inline, rev, page) {
+		var elem = inline ? 'span' : 'div';
+		var revNode = document.createElement(elem);
 
-	var revertToRevisionLink = TwinkleGlobal.fluff.buildLink('SaddleBrown', 'restore this version');
-	revertToRevisionLink.href = '#';
-	$(revertToRevisionLink).click(function() {
-		TwinkleGlobal.fluff.revertToRevision(mw.config.get(revType).toString());
-	});
-	revertToRevision.appendChild(revertToRevisionLink);
+		rev = parseInt(rev, 10);
+		if (rev) {
+			revNode.setAttribute('id', 'tw-revert' + rev);
+		} else {
+			revNode.setAttribute('id', 'tw-revert');
+		}
 
-	var title = document.getElementById(element).parentNode;
-	title.insertBefore(revertToRevision, title.firstChild);
-};
+		var normNode = document.createElement('strong');
+		var vandNode = document.createElement('strong');
 
+		var normLink = TwinkleGlobal.fluff.linkBuilder.buildLink('SteelBlue', 'rollback');
+		var vandLink = TwinkleGlobal.fluff.linkBuilder.buildLink('Red', 'vandalism');
 
-TwinkleGlobal.fluff.auto = function twinklefluffauto() {
-	if (parseInt(mw.util.getParamValue('oldid', $('#mw-diff-ntitle1 a:first').attr('href')), 10) !== mw.config.get('wgCurRevisionId')) {
-		// not latest revision
-		alert("Can't rollback, page has changed in the meantime.");
-		return;
+		$(normLink).click(function() {
+			TwinkleGlobal.fluff.revert('norm', vandal, rev, page);
+			TwinkleGlobal.fluff.disableLinks(revNode);
+		});
+		$(vandLink).click(function() {
+			TwinkleGlobal.fluff.revert('vand', vandal, rev, page);
+			TwinkleGlobal.fluff.disableLinks(revNode);
+		});
+
+		vandNode.appendChild(vandLink);
+		normNode.appendChild(normLink);
+
+		var separator = inline ? ' ' : ' || ';
+
+		if (!inline) {
+			var agfNode = document.createElement('strong');
+			var agfLink = TwinkleGlobal.fluff.linkBuilder.buildLink('DarkOliveGreen', 'rollback (AGF)');
+			$(agfLink).click(function() {
+				TwinkleGlobal.fluff.revert('agf', vandal, rev, page);
+				// TwinkleGlobal.fluff.disableLinks(revNode); // rollbackInPlace not relevant for any inline situations
+			});
+			agfNode.appendChild(agfLink);
+			revNode.appendChild(agfNode);
+		}
+		revNode.appendChild(document.createTextNode(separator));
+		revNode.appendChild(normNode);
+		revNode.appendChild(document.createTextNode(separator));
+		revNode.appendChild(vandNode);
+
+		return revNode;
+
+	},
+
+	// Build [restore this revision] links
+	restoreThisRevisionLink: function(revisionRef, inline) {
+		// If not a specific revision number, should be wgDiffNewId/wgDiffOldId/wgRevisionId
+		revisionRef = typeof revisionRef === 'number' ? revisionRef : mw.config.get(revisionRef);
+
+		var elem = inline ? 'span' : 'div';
+		var revertToRevisionNode = document.createElement(elem);
+
+		revertToRevisionNode.setAttribute('id', 'tw-revert-to-' + revisionRef);
+		revertToRevisionNode.style.fontWeight = 'bold';
+
+		var revertToRevisionLink = TwinkleGlobal.fluff.linkBuilder.buildLink('SaddleBrown', 'restore this version');
+		$(revertToRevisionLink).click(function() {
+			TwinkleGlobal.fluff.revertToRevision(revisionRef);
+		});
+
+		if (inline) {
+			revertToRevisionNode.appendChild(document.createTextNode(' '));
+		}
+		revertToRevisionNode.appendChild(revertToRevisionLink);
+		return revertToRevisionNode;
 	}
-
-	var vandal = $('#mw-diff-ntitle2').find('a.mw-userlink').text();
-
-	TwinkleGlobal.fluff.revert(mw.util.getParamValue('twinklerevert'), vandal, true);
 };
+
 
 TwinkleGlobal.fluff.addLinks = {
 	contributions: function() {
@@ -131,24 +186,11 @@ TwinkleGlobal.fluff.addLinks = {
 				(mw.config.get('wgUserName') === username && TwinkleGlobal.getPref('showRollbackLinks').indexOf('mine') !== -1)) {
 				var list = $('#mw-content-text').find('ul li:has(span.mw-uctop):has(.mw-changeslist-diff)');
 
-				var revNode = document.createElement('strong');
-				var revLink = TwinkleGlobal.fluff.buildLink('SteelBlue', 'rollback');
-				revNode.appendChild(revLink);
-
-				var revVandNode = document.createElement('strong');
-				var revVandLink = TwinkleGlobal.fluff.buildLink('Red', 'vandalism');
-				revVandNode.appendChild(revVandLink);
-
 				list.each(function(key, current) {
-					var href = $(current).find('.mw-changeslist-diff').attr('href');
-					current.appendChild(document.createTextNode(' '));
-					var tmpNode = revNode.cloneNode(true);
-					tmpNode.firstChild.setAttribute('href', href + '&twinklerevert=norm');
-					current.appendChild(tmpNode);
-					current.appendChild(document.createTextNode(' '));
-					tmpNode = revVandNode.cloneNode(true);
-					tmpNode.firstChild.setAttribute('href', href + '&twinklerevert=vand');
-					current.appendChild(tmpNode);
+					// revid is also available in the href of both
+					// .mw-changeslist-date or .mw-changeslist-diff
+					var page = $(current).find('.mw-contributions-title').text();
+					current.appendChild(TwinkleGlobal.fluff.linkBuilder.rollbackLinks(username, true, current.dataset.mwRevid, page));
 				});
 			}
 		}
@@ -162,24 +204,12 @@ TwinkleGlobal.fluff.addLinks = {
 			// and find only individual lines or nested lines
 			list = list.not('.mw-rcfilters-ui-highlights-enhanced-toplevel').find('.mw-changeslist-line-inner, td.mw-enhanced-rc-nested');
 
-			var revNode = document.createElement('strong');
-			var revLink = TwinkleGlobal.fluff.buildLink('SteelBlue', 'rollback');
-			revNode.appendChild(revLink);
-
-			var revVandNode = document.createElement('strong');
-			var revVandLink = TwinkleGlobal.fluff.buildLink('Red', 'vandalism');
-			revVandNode.appendChild(revVandLink);
-
 			list.each(function(key, current) {
-				current.appendChild(document.createTextNode(' '));
+				var vandal = $(current).find('.mw-userlink').text();
 				var href = $(current).find('.mw-changeslist-diff').attr('href');
-				var tmpNode = revNode.cloneNode(true);
-				tmpNode.firstChild.setAttribute('href', href + '&twinklerevert=norm');
-				current.appendChild(tmpNode);
-				current.appendChild(document.createTextNode(' '));
-				tmpNode = revVandNode.cloneNode(true);
-				tmpNode.firstChild.setAttribute('href', href + '&twinklerevert=vand');
-				current.appendChild(tmpNode);
+				var rev = mw.util.getParamValue('diff', href);
+				var page = current.dataset.targetPage;
+				current.appendChild(TwinkleGlobal.fluff.linkBuilder.rollbackLinks(vandal, true, rev, page));
 			});
 		}
 	},
@@ -195,37 +225,7 @@ TwinkleGlobal.fluff.addLinks = {
 				var first = histList.shift();
 				var vandal = first.querySelector('.mw-userlink').text;
 
-				var agfNode = document.createElement('strong');
-				var vandNode = document.createElement('strong');
-				var normNode = document.createElement('strong');
-
-				var agfLink = TwinkleGlobal.fluff.buildLink('DarkOliveGreen', 'rollback (AGF)');
-				var vandLink = TwinkleGlobal.fluff.buildLink('Red', 'rollback (VANDAL)');
-				var normLink = TwinkleGlobal.fluff.buildLink('SteelBlue', 'rollback');
-
-				agfLink.href = '#';
-				vandLink.href = '#';
-				normLink.href = '#';
-				$(agfLink).click(function() {
-					TwinkleGlobal.fluff.revert('agf', vandal);
-				});
-				$(vandLink).click(function() {
-					TwinkleGlobal.fluff.revert('vand', vandal);
-				});
-				$(normLink).click(function() {
-					TwinkleGlobal.fluff.revert('norm', vandal);
-				});
-
-				agfNode.appendChild(agfLink);
-				vandNode.appendChild(vandLink);
-				normNode.appendChild(normLink);
-
-				first.appendChild(document.createTextNode(' '));
-				first.appendChild(agfNode);
-				first.appendChild(document.createTextNode(' '));
-				first.appendChild(normNode);
-				first.appendChild(document.createTextNode(' '));
-				first.appendChild(vandNode);
+				first.appendChild(TwinkleGlobal.fluff.linkBuilder.rollbackLinks(vandal, true));
 			}
 
 			// oldid
@@ -235,17 +235,7 @@ TwinkleGlobal.fluff.addLinks = {
 				var href = rev.querySelector('.mw-changeslist-date').href;
 				var oldid = parseInt(mw.util.getParamValue('oldid', href), 10);
 
-				var revertToRevisionNode = document.createElement('strong');
-				var revertToRevisionLink = TwinkleGlobal.fluff.buildLink('SaddleBrown', 'restore this version');
-
-				revertToRevisionLink.href = '#';
-				$(revertToRevisionLink).click(function() {
-					TwinkleGlobal.fluff.revertToRevision(oldid.toString());
-				});
-				revertToRevisionNode.appendChild(revertToRevisionLink);
-
-				rev.appendChild(document.createTextNode(' '));
-				rev.appendChild(revertToRevisionNode);
+				rev.appendChild(TwinkleGlobal.fluff.linkBuilder.restoreThisRevisionLink(oldid, true));
 			});
 
 
@@ -276,7 +266,8 @@ TwinkleGlobal.fluff.addLinks = {
 		// Don't load if there's a single revision or weird diff (cur on latest)
 		if (mw.config.get('wgDiffOldId') && (mw.config.get('wgDiffOldId') !== mw.config.get('wgDiffNewId'))) {
 			// Add a [restore this revision] link to the older revision
-			TwinkleGlobal.fluff.restoreThisRevision('mw-diff-otitle1', 'wgDiffOldId');
+			var oldTitle = document.getElementById('mw-diff-otitle1').parentNode;
+			oldTitle.insertBefore(TwinkleGlobal.fluff.linkBuilder.restoreThisRevisionLink('wgDiffOldId'), oldTitle.firstChild);
 		}
 
 		// Newer revision
@@ -285,56 +276,32 @@ TwinkleGlobal.fluff.addLinks = {
 		// Don't show if there's a single revision or weird diff (prev on first)
 		if (document.getElementById('differences-nextlink')) {
 			// Not latest revision, add [restore this revision] link to newer revision
-			TwinkleGlobal.fluff.restoreThisRevision('mw-diff-ntitle1', 'wgDiffNewId');
+			var newTitle = document.getElementById('mw-diff-ntitle1').parentNode;
+			newTitle.insertBefore(TwinkleGlobal.fluff.linkBuilder.restoreThisRevisionLink('wgDiffNewId'), newTitle.firstChild);
 		} else if (TwinkleGlobal.getPref('showRollbackLinks').indexOf('diff') !== -1 && mw.config.get('wgDiffOldId') && (mw.config.get('wgDiffOldId') !== mw.config.get('wgDiffNewId') || document.getElementById('differences-prevlink'))) {
 			var vandal = $('#mw-diff-ntitle2').find('a').first().text();
-
-			var revertNode = document.createElement('div');
-			revertNode.setAttribute('id', 'twg-revert');
-
-			var agfNode = document.createElement('strong');
-			var vandNode = document.createElement('strong');
-			var normNode = document.createElement('strong');
-
-			var agfLink = TwinkleGlobal.fluff.buildLink('DarkOliveGreen', 'rollback (AGF)');
-			var vandLink = TwinkleGlobal.fluff.buildLink('Red', 'rollback (VANDAL)');
-			var normLink = TwinkleGlobal.fluff.buildLink('SteelBlue', 'rollback');
-
-			agfLink.href = '#';
-			vandLink.href = '#';
-			normLink.href = '#';
-			$(agfLink).click(function() {
-				TwinkleGlobal.fluff.revert('agf', vandal);
-			});
-			$(vandLink).click(function() {
-				TwinkleGlobal.fluff.revert('vand', vandal);
-			});
-			$(normLink).click(function() {
-				TwinkleGlobal.fluff.revert('norm', vandal);
-			});
-
-			agfNode.appendChild(agfLink);
-			vandNode.appendChild(vandLink);
-			normNode.appendChild(normLink);
-
-			revertNode.appendChild(agfNode);
-			revertNode.appendChild(document.createTextNode(' || '));
-			revertNode.appendChild(normNode);
-			revertNode.appendChild(document.createTextNode(' || '));
-			revertNode.appendChild(vandNode);
-
 			var ntitle = document.getElementById('mw-diff-ntitle1').parentNode;
-			ntitle.insertBefore(revertNode, ntitle.firstChild);
+
+			ntitle.insertBefore(TwinkleGlobal.fluff.linkBuilder.rollbackLinks(vandal), ntitle.firstChild);
 		}
 	},
 
 	oldid: function() { // Add a [restore this revision] link on old revisions
-		TwinkleGlobal.fluff.restoreThisRevision('mw-revision-info', 'wgRevisionId');
+		var title = document.getElementById('mw-revision-info').parentNode;
+		title.insertBefore(TwinkleGlobal.fluff.linkBuilder.restoreThisRevisionLink('wgRevisionId'), title.firstChild);
 	}
 };
 
+TwinkleGlobal.fluff.disableLinks = function disablelinks(parentNode) {
+	// Array.from not available in IE11 :(
+	$(parentNode).children().each(function(_ix, node) {
+		node.innerHTML = node.textContent; // Feels like cheating
+		$(node).css('font-weight', 'normal').css('color', 'darkgray');
+	});
+};
 
-TwinkleGlobal.fluff.revert = function revertPage(type, vandal, autoRevert, rev, page) {
+
+TwinkleGlobal.fluff.revert = function revertPage(type, vandal, rev, page) {
 	if (mw.util.isIPv6Address(vandal)) {
 		vandal = MorebitsGlobal.sanitizeIPv6(vandal);
 	}
@@ -342,21 +309,31 @@ TwinkleGlobal.fluff.revert = function revertPage(type, vandal, autoRevert, rev, 
 	var pagename = page || mw.config.get('wgPageName');
 	var revid = rev || mw.config.get('wgCurRevisionId');
 
-	MorebitsGlobal.status.init(document.getElementById('mw-content-text'));
-	$('#catlinks').remove();
+	if (TwinkleGlobal.fluff.rollbackInPlace) {
+		var notifyStatus = document.createElement('span');
+		mw.notify(notifyStatus, {
+			autoHide: false,
+			title: 'Rollback on ' + page,
+			tag: 'twinklefluff_' + rev // Shouldn't be necessary given disableLink
+		});
+		MorebitsGlobal.status.init(notifyStatus);
+	} else {
+		MorebitsGlobal.status.init(document.getElementById('mw-content-text'));
+		$('#catlinks').remove();
+	}
 
 	var params = {
 		type: type,
 		user: vandal,
 		pagename: pagename,
-		revid: revid,
-		autoRevert: !!autoRevert
+		revid: revid
 	};
 	var query = {
 		'action': 'query',
 		'prop': ['info', 'revisions', 'flagged'],
 		'titles': pagename,
-		'rvlimit': 50, // max possible
+		'intestactions': 'edit',
+		'rvlimit': 50, // intentionally limited
 		'rvprop': [ 'ids', 'timestamp', 'user', 'comment' ],
 		'curtimestamp': '',
 		'meta': 'tokens',
@@ -383,7 +360,7 @@ TwinkleGlobal.fluff.revertToRevision = function revertToRevision(oldrev) {
 		'meta': 'tokens',
 		'type': 'csrf'
 	};
-	var wikipedia_api = new MorebitsGlobal.wiki.api('Grabbing data of the earlier revision', query, TwinkleGlobal.fluff.callbacks.toRevision.main);
+	var wikipedia_api = new MorebitsGlobal.wiki.api('Grabbing data of the earlier revision', query, TwinkleGlobal.fluff.callbacks.toRevision);
 	wikipedia_api.params = { rev: oldrev };
 	wikipedia_api.post();
 };
@@ -393,53 +370,56 @@ TwinkleGlobal.fluff.userIpLink = function(user) {
 };
 
 TwinkleGlobal.fluff.callbacks = {
-	toRevision: {
-		main: function(apiobj) {
-			var xmlDoc = apiobj.responseXML;
+	toRevision: function(apiobj) {
+		var xmlDoc = apiobj.responseXML;
 
-			var lastrevid = parseInt($(xmlDoc).find('page').attr('lastrevid'), 10);
-			var touched = $(xmlDoc).find('page').attr('touched');
-			var loadtimestamp = $(xmlDoc).find('api').attr('curtimestamp');
-			var csrftoken = $(xmlDoc).find('tokens').attr('csrftoken');
-			var revertToRevID = $(xmlDoc).find('rev').attr('revid');
-			var revertToUser = $(xmlDoc).find('rev').attr('user');
+		var lastrevid = parseInt($(xmlDoc).find('page').attr('lastrevid'), 10);
+		var touched = $(xmlDoc).find('page').attr('touched');
+		var loadtimestamp = $(xmlDoc).find('api').attr('curtimestamp');
+		var csrftoken = $(xmlDoc).find('tokens').attr('csrftoken');
+		var revertToRevID = parseInt($(xmlDoc).find('rev').attr('revid'), 10);
+		var revertToUser = $(xmlDoc).find('rev').attr('user');
 
-			if (revertToRevID !== apiobj.params.rev) {
-				apiobj.statelem.error('The retrieved revision does not match the requested revision. Stopping revert.');
-				return;
-			}
-
-			var optional_summary = prompt('Please specify a reason for the revert:                                ', '');  // padded out to widen prompt in Firefox
-			if (optional_summary === null) {
-				apiobj.statelem.error('Aborted by user.');
-				return;
-			}
-			var summary = TwinkleGlobal.fluff.formatSummary('Reverted to revision ' + revertToRevID + ' by $USER', revertToUser, optional_summary);
-
-			var query = {
-				'action': 'edit',
-				'title': mw.config.get('wgPageName'),
-				'summary': summary,
-				'token': csrftoken,
-				'undo': lastrevid,
-				'undoafter': revertToRevID,
-				'basetimestamp': touched,
-				'starttimestamp': loadtimestamp,
-				'watchlist': TwinkleGlobal.getPref('watchRevertedPages').indexOf('torev') !== -1 ? 'watch' : undefined,
-				'minor': TwinkleGlobal.getPref('markRevertedPagesAsMinor').indexOf('torev') !== -1 ? true : undefined
-			};
-
-			MorebitsGlobal.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
-			MorebitsGlobal.wiki.actionCompleted.notice = 'Reversion completed';
-
-			var wikipedia_api = new MorebitsGlobal.wiki.api('Saving reverted contents', query, TwinkleGlobal.fluff.callbacks.complete, apiobj.statelem);
-			wikipedia_api.params = apiobj.params;
-			wikipedia_api.post();
-
+		if (revertToRevID !== apiobj.params.rev) {
+			apiobj.statelem.error('The retrieved revision does not match the requested revision. Stopping revert.');
+			return;
 		}
+
+		var optional_summary = prompt('Please specify a reason for the revert:                                ', '');  // padded out to widen prompt in Firefox
+		if (optional_summary === null) {
+			apiobj.statelem.error('Aborted by user.');
+			return;
+		}
+		var summary = TwinkleGlobal.fluff.formatSummary('Reverted to revision ' + revertToRevID + ' by $USER', revertToUser, optional_summary);
+
+		var query = {
+			'action': 'edit',
+			'title': mw.config.get('wgPageName'),
+			'summary': summary,
+			'token': csrftoken,
+			'undo': lastrevid,
+			'undoafter': revertToRevID,
+			'basetimestamp': touched,
+			'starttimestamp': loadtimestamp,
+			'watchlist': TwinkleGlobal.getPref('watchRevertedPages').indexOf('torev') !== -1 ? 'watch' : undefined,
+			'minor': TwinkleGlobal.getPref('markRevertedPagesAsMinor').indexOf('torev') !== -1 ? true : undefined
+		};
+
+		MorebitsGlobal.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
+		MorebitsGlobal.wiki.actionCompleted.notice = 'Reversion completed';
+
+		var wikipedia_api = new MorebitsGlobal.wiki.api('Saving reverted contents', query, TwinkleGlobal.fluff.callbacks.complete, apiobj.statelem);
+		wikipedia_api.params = apiobj.params;
+		wikipedia_api.post();
+
 	},
 	main: function(apiobj) {
 		var xmlDoc = apiobj.responseXML;
+
+		if (typeof $(xmlDoc).find('actions').attr('edit') === 'undefined') {
+			self.statelem.error("Unable to edit the page, it's probably protected.");
+			return;
+		}
 
 		var lastrevid = parseInt($(xmlDoc).find('page').attr('lastrevid'), 10);
 		var touched = $(xmlDoc).find('page').attr('touched');
@@ -593,8 +573,7 @@ TwinkleGlobal.fluff.callbacks = {
 		}
 
 		// Decide whether to notify the user on success
-		if ((!params.autoRevert || TwinkleGlobal.getPref('openTalkPageOnAutoRevert')) &&
-				TwinkleGlobal.getPref('openTalkPage').indexOf(params.type) !== -1 &&
+		if (!TwinkleGlobal.fluff.skipTalk && TwinkleGlobal.getPref('openTalkPage').indexOf(self.params.type) !== -1 &&
 				mw.config.get('wgUserName') !== params.user) {
 			params.notifyUser = true;
 		}
@@ -622,7 +601,9 @@ TwinkleGlobal.fluff.callbacks = {
 			'minor': TwinkleGlobal.getPref('markRevertedPagesAsMinor').indexOf(params.type) !== -1 ? true : undefined
 		};
 
-		MorebitsGlobal.wiki.actionCompleted.redirect = params.pagename;
+		if (!TwinkleGlobal.fluff.rollbackInPlace) {
+			MorebitsGlobal.wiki.actionCompleted.redirect = params.pagename;
+		}
 		MorebitsGlobal.wiki.actionCompleted.notice = 'Reversion completed';
 
 		var wikipedia_api = new MorebitsGlobal.wiki.api('Saving reverted contents', query, TwinkleGlobal.fluff.callbacks.complete, statelem);

@@ -197,6 +197,15 @@ TwinkleGlobal.config.sections = [
 				type: 'boolean'
 			},
 
+			// TwinkleConfig.rollbackInPlace (bool)
+			//
+			{
+				name: 'rollbackInPlace',
+				label: "Don't reload the page when rolling back from contributions or recent changes",
+				helptip: "When this is on, Twinkle won't reload the contributions or recent changes feed after reverting, allowing you to revert more than one edit at a time.",
+				type: 'boolean'
+			},
+
 			// TwinkleConfig.markRevertedPagesAsMinor (array)
 			// What types of actions that should result in marking edit as minor
 			{
