@@ -754,7 +754,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 
 			box.appendChild(document.createTextNode('If you want to set Twinkle preferences, you can use the '));
 			link = document.createElement('a');
-			link.setAttribute('href', mw.util.getUrl(mw.config.get('wgFormattedNamespaces')[mw.config.get('wgNamespaceIds').project] + ':Twinkle/Preferences'));
+			link.setAttribute('href', TwinkleGlobal.getPref('configPage'));
 			link.appendChild(document.createTextNode('Twinkle preferences panel'));
 			box.appendChild(link);
 			box.appendChild(document.createTextNode('.'));
