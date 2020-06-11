@@ -573,7 +573,7 @@ TwinkleGlobal.fluff.callbacks = {
 		}
 
 		// Decide whether to notify the user on success
-		if (!TwinkleGlobal.fluff.skipTalk && TwinkleGlobal.getPref('openTalkPage').indexOf(self.params.type) !== -1 &&
+		if (!TwinkleGlobal.fluff.skipTalk && TwinkleGlobal.getPref('openTalkPage').indexOf(params.type) !== -1 &&
 				mw.config.get('wgUserName') !== params.user) {
 			params.notifyUser = true;
 		}
