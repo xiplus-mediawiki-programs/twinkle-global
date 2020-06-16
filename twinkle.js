@@ -318,8 +318,7 @@ TwinkleGlobal.addPortlet = function(navigation, id, text, type, nextnodeid) {
 	}
 
 	// Build the DOM elements.
-	var outerDiv = document.createElement('div');
-	outerDiv.setAttribute('role', 'navigation');
+	var outerDiv = document.createElement('nav');
 	outerDiv.setAttribute('aria-labelledby', id + '-label');
 	outerDiv.className = outerDivClass + ' emptyPortlet';
 	outerDiv.id = id;
