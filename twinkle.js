@@ -247,15 +247,14 @@ TwinkleGlobal.getPref = function twinkleGetPref(name) {
  * portlet menu types all work slightly different.
  *
  * Available navigation areas depend on the skin used.
- * Vector:
- *  For each option, the outer div class contains "vector-menu", the inner div class is "vector-menu-content", and the ul is "vector-menu-content-list"
- *  "mw-panel", outer div class contains "vector-menu-portal". Existing portlets/elements: "p-logo", "p-navigation", "p-interaction", "p-tb", "p-coll-print_export"
- *  "left-navigation", outer div class contains "vector-menu-tabs" or "vector-menu-dropdown". Existing portlets: "p-namespaces", "p-variants" (menu)
- *  "right-navigation", outer div class contains "vector-menu-tabs" or "vector-menu-dropdown". Existing portlets: "p-views", "p-cactions" (menu), "p-search"
- *  Special layout of p-personal portlet (part of "head") through specialized styles.
  * Monobook:
  *  "column-one", outer div class "portlet", inner div class "pBody". Existing portlets: "p-cactions", "p-personal", "p-logo", "p-navigation", "p-search", "p-interaction", "p-tb", "p-coll-print_export"
  *  Special layout of p-cactions and p-personal through specialized styles.
+ * Vector:
+ *  "mw-panel", outer div class "portal", inner div class "body". Existing portlets/elements: "p-logo", "p-navigation", "p-interaction", "p-tb", "p-coll-print_export"
+ *  "left-navigation", outer div class "vectorTabs" or "vectorMenu", inner div class "" or "menu". Existing portlets: "p-namespaces", "p-variants" (menu)
+ *  "right-navigation", outer div class "vectorTabs" or "vectorMenu", inner div class "" or "menu". Existing portlets: "p-views", "p-cactions" (menu), "p-search"
+ *  Special layout of p-personal portlet (part of "head") through specialized styles.
  * Modern:
  *  "mw_contentwrapper" (top nav), outer div class "portlet", inner div class "pBody". Existing portlets or elements: "p-cactions", "mw_content"
  *  "mw_portlets" (sidebar), outer div class "portlet", inner div class "pBody". Existing portlets: "p-navigation", "p-search", "p-interaction", "p-tb", "p-coll-print_export"
@@ -300,8 +299,7 @@ TwinkleGlobal.addPortlet = function(navigation, id, text, type, nextnodeid) {
 			if (navigation !== 'portal' && navigation !== 'left-navigation' && navigation !== 'right-navigation') {
 				navigation = 'mw-panel';
 			}
-			outerDivClass = 'vector-menu vector-menu-' + (navigation === 'mw-panel' ? 'portal' : type === 'menu' ? 'dropdown' : 'tabs');
-			innerDivClass = 'vector-menu-content';
+			outerDivClass = navigation === 'mw-panel' ? 'portal' : type === 'menu' ? 'vectorMenu' : 'vectorTabs';
 			break;
 		case 'modern':
 			if (navigation !== 'mw_portlets' && navigation !== 'mw_contentwrapper') {
@@ -323,7 +321,6 @@ TwinkleGlobal.addPortlet = function(navigation, id, text, type, nextnodeid) {
 	var outerDiv = document.createElement('div');
 	outerDiv.setAttribute('role', 'navigation');
 	outerDiv.setAttribute('aria-labelledby', id + '-label');
-	// Vector getting vector-menu-empty FIXME TODO
 	outerDiv.className = outerDivClass + ' emptyPortlet';
 	outerDiv.id = id;
 	if (nextnode && nextnode.parentNode === root) {
@@ -332,50 +329,51 @@ TwinkleGlobal.addPortlet = function(navigation, id, text, type, nextnodeid) {
 		root.appendChild(outerDiv);
 	}
 
-	var h3 = document.createElement('h3');
-	h3.id = id + '-label';
+	var h5 = document.createElement('h3');
+	h5.id = id + '-label';
 	var ul = document.createElement('ul');
 
-	if (skin === 'vector') {
+	if (outerDivClass === 'vectorMenu') {
+
 		// add invisible checkbox to keep menu open when clicked
 		// similar to the p-cactions ("More") menu
-		if (outerDivClass.indexOf('vector-menu-dropdown') !== -1) {
-			var chkbox = document.createElement('input');
-			chkbox.className = 'vector-menu-checkbox';
-			chkbox.setAttribute('type', 'checkbox');
-			chkbox.setAttribute('aria-labelledby', id + '-label');
-			outerDiv.appendChild(chkbox);
+		var chkbox = document.createElement('input');
+		chkbox.className = 'vectorMenuCheckbox';
+		chkbox.setAttribute('type', 'checkbox');
+		chkbox.setAttribute('aria-labelledby', id + '-label');
+		outerDiv.appendChild(chkbox);
 
-			var span = document.createElement('span');
-			span.appendChild(document.createTextNode(text));
-			h3.appendChild(span);
+		var span = document.createElement('span');
+		span.appendChild(document.createTextNode(text));
+		h5.appendChild(span);
 
-			var a = document.createElement('a');
-			a.href = '#';
+		var a = document.createElement('a');
+		a.href = '#';
 
-			$(a).click(function(e) {
-				e.preventDefault();
-			});
+		$(a).click(function(e) {
+			e.preventDefault();
+		});
 
-			h3.appendChild(a);
+		h5.appendChild(a);
+		outerDiv.appendChild(h5);
+
+		ul.className = 'menu';
+		outerDiv.appendChild(ul);
+
+	} else {
+
+		h5.appendChild(document.createTextNode(text));
+		outerDiv.appendChild(h5);
+		if (innerDivClass) {
+			var innerDiv = document.createElement('div');
+			innerDiv.className = innerDivClass;
+			innerDiv.appendChild(ul);
+			outerDiv.appendChild(innerDiv);
+		} else {
+			outerDiv.appendChild(ul);
 		}
 
-		outerDiv.appendChild(h3);
-		ul.className = 'vector-menu-content-list';
-	} else {
-		h3.appendChild(document.createTextNode(text));
-		outerDiv.appendChild(h3);
 	}
-
-	if (innerDivClass) {
-		var innerDiv = document.createElement('div');
-		innerDiv.className = innerDivClass;
-		innerDiv.appendChild(ul);
-		outerDiv.appendChild(innerDiv);
-	} else {
-		outerDiv.appendChild(ul);
-	}
-
 
 	return outerDiv;
 
