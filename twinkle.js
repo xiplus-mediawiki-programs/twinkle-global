@@ -439,14 +439,14 @@ mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.ge
 // For example, mw.loader.load(scriptpathbefore + "User:UncleDouggie/morebits-test.js" + scriptpathafter);
 
 TwinkleGlobal.load = function () {
-	// Don't activate on special pages other than those on the whitelist so that
-	// they load faster, especially the watchlist.
-	var specialPageWhitelist = [ 'Block', 'Contributions', 'Recentchanges', 'Recentchangeslinked' ]; // wgRelevantUserName defined for non-sysops on Special:Block
+	// Don't activate on special pages other than those listed here, so
+	// that others load faster, especially the watchlist.
+	var activeSpecialPageList = [ 'Block', 'Contributions', 'Recentchanges', 'Recentchangeslinked' ]; // wgRelevantUserName defined for non-sysops on Special:Block
 	if (MorebitsGlobal.userIsSysop) {
-		specialPageWhitelist = specialPageWhitelist.concat([ 'DeletedContributions', 'Prefixindex' ]);
+		activeSpecialPageList = activeSpecialPageList.concat([ 'DeletedContributions', 'Prefixindex' ]);
 	}
 	if (mw.config.get('wgNamespaceNumber') === -1 &&
-		specialPageWhitelist.indexOf(mw.config.get('wgCanonicalSpecialPageName')) === -1) {
+		activeSpecialPageList.indexOf(mw.config.get('wgCanonicalSpecialPageName')) === -1) {
 		return;
 	}
 
