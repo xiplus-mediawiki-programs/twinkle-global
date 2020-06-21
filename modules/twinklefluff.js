@@ -417,7 +417,7 @@ TwinkleGlobal.fluff.callbacks = {
 		var xmlDoc = apiobj.responseXML;
 
 		if (typeof $(xmlDoc).find('actions').attr('edit') === 'undefined') {
-			self.statelem.error("Unable to edit the page, it's probably protected.");
+			apiobj.statelem.error("Unable to edit the page, it's probably protected.");
 			return;
 		}
 
