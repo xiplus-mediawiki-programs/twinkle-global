@@ -1143,7 +1143,7 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 							alert('twinkleconfig: unknown data type for preference ' + pref.name);
 							break;
 					}
-				} else if (TwinkleGlobal.prefs[pref.name]) {
+				} else if (TwinkleGlobal.prefs) {
 					// Retain the hidden preferences that may have customised by the user from twinkleoptions.js
 					// undefined if not set
 					userValue = TwinkleGlobal.prefs[pref.name];
