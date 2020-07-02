@@ -740,32 +740,33 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 			scriptPageName = mw.config.get('wgPageName').slice(mw.config.get('wgPageName').lastIndexOf('/') + 1,
 				mw.config.get('wgPageName').lastIndexOf('.js'));
 
-		if (scriptPageName === TwinkleGlobal.defaultConfig.optionsPage) {
+		if (TwinkleGlobal.getPref('onConfigSite') && scriptPageName === TwinkleGlobal.defaultConfig.optionsPage) {
 			// place "why not try the preference panel" notice
 			box.style.fontWeight = 'bold';
 			box.style.width = '80%';
 			box.style.borderWidth = '2px';
 
 			if (mw.config.get('wgArticleId') > 0) {  // page exists
-				box.appendChild(document.createTextNode('This page contains your Twinkle preferences. You can change them using the '));
+				box.appendChild(document.createTextNode('This page contains your TwinkleGlobal preferences. You can change them using the '));
 			} else {  // page does not exist
-				box.appendChild(document.createTextNode('You can customize Twinkle to suit your preferences by using the '));
+				box.appendChild(document.createTextNode('You can customize TwinkleGlobal to suit your preferences by using the '));
 			}
 			link = document.createElement('a');
 			link.setAttribute('href', TwinkleGlobal.getPref('configPage'));
-			link.appendChild(document.createTextNode('Twinkle preferences panel'));
+			link.appendChild(document.createTextNode('TwinkleGlobal preferences panel'));
 			box.appendChild(link);
 			box.appendChild(document.createTextNode(', or by editing this page.'));
 			$(box).insertAfter($('#contentSub'));
 
-		} else if (['monobook', 'vector', 'cologneblue', 'modern', 'timeless', 'minerva', 'common'].indexOf(scriptPageName) !== -1) {
+		} else if (['monobook', 'vector', 'cologneblue', 'modern', 'timeless', 'minerva', 'common'].indexOf(scriptPageName) !== -1 ||
+				scriptPageName === TwinkleGlobal.defaultConfig.optionsPage) {
 			// place "Looking for Twinkle options?" notice
 			box.style.width = '60%';
 
-			box.appendChild(document.createTextNode('If you want to set Twinkle preferences, you can use the '));
+			box.appendChild(document.createTextNode('If you want to set TwinkleGlobal preferences, you can use the '));
 			link = document.createElement('a');
 			link.setAttribute('href', TwinkleGlobal.getPref('configPage'));
-			link.appendChild(document.createTextNode('Twinkle preferences panel'));
+			link.appendChild(document.createTextNode('TwinkleGlobal preferences panel'));
 			box.appendChild(link);
 			box.appendChild(document.createTextNode('.'));
 			$(box).insertAfter($('#contentSub'));

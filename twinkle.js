@@ -163,6 +163,7 @@ TwinkleGlobal.defaultConfig = {
 	speedyTemplateItem: 'Q4847311',
 	bugReportLink: 'https://meta.wikimedia.org/wiki/User_talk:Xiplus/TwinkleGlobal',
 	optionsPage: 'twinkleoptions',
+	onConfigSite: mw.config.get('wgDBname') === 'metawiki',
 
 	// Formerly defaultConfig.friendly:
 
