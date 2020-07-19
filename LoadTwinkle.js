@@ -22,7 +22,7 @@ var ajax = function(title) {
 		'titles': title,
 		'rvprop': 'content'
 	}).then(function(data) {
-		for (var key in data.query.pages) { // eslint-disable-line guard-for-in
+		for (var key in data.query.pages) { // eslint-disable-line guard-for-in, no-unreachable-loop
 			return data.query.pages[key].revisions[0]['*'];
 		}
 	});
