@@ -8,9 +8,9 @@
  ****************************************
  *** twinkleconfig.js: Preferences module
  ****************************************
- * Mode of invocation:     Adds configuration form to Wikipedia:Twinkle/Preferences and user
-                           subpages named "/Twinkle preferences", and adds an ad box to the top of user
-                           subpages belonging to the currently logged-in user which end in '.js'
+ * Mode of invocation:     Adds configuration form to Wikipedia:Twinkle/Preferences,
+                           and adds an ad box to the top of user subpages belonging to the
+                           currently logged-in user which end in '.js'
  * Active on:              What I just said.  Yeah.
 
  I, [[User:This, that and the other]], originally wrote this.  If the code is misbehaving, or you have any
@@ -24,28 +24,6 @@ TwinkleGlobal.config = {};
 TwinkleGlobal.config.watchlistEnums = { yes: 'Add to watchlist', no: "Don't add to watchlist", 'default': 'Follow your site preferences' };
 
 TwinkleGlobal.config.commonSets = {
-	csdCriteria: {
-		db: 'Custom rationale ({{db}})',
-		g1: 'G1', g2: 'G2', g3: 'G3', g4: 'G4', g5: 'G5', g6: 'G6', g7: 'G7', g8: 'G8', g10: 'G10', g11: 'G11', g12: 'G12', g13: 'G13', g14: 'G14',
-		a1: 'A1', a2: 'A2', a3: 'A3', a5: 'A5', a7: 'A7', a9: 'A9', a10: 'A10', a11: 'A11',
-		u1: 'U1', u2: 'U2', u3: 'U3', u5: 'U5',
-		f1: 'F1', f2: 'F2', f3: 'F3', f7: 'F7', f8: 'F8', f9: 'F9', f10: 'F10',
-		c1: 'C1',
-		t2: 'T2', t3: 'T3',
-		r2: 'R2', r3: 'R3', r4: 'R4',
-		p1: 'P1', p2: 'P2'
-	},
-	csdCriteriaDisplayOrder: [
-		'db',
-		'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8', 'g10', 'g11', 'g12', 'g13', 'g14',
-		'a1', 'a2', 'a3', 'a5', 'a7', 'a9', 'a10', 'a11',
-		'u1', 'u2', 'u3', 'u5',
-		'f1', 'f2', 'f3', 'f7', 'f8', 'f9', 'f10',
-		'c1',
-		't2', 't3',
-		'r2', 'r3', 'r4',
-		'p1', 'p2'
-	],
 	namespacesNoSpecial: {
 		'0': 'Article',
 		'1': 'Talk (article)',
@@ -107,8 +85,8 @@ TwinkleGlobal.config.sections = [
 	{
 		title: 'General',
 		preferences: [
-		// TwinkleConfig.summaryAd (string)
-		// Text to be appended to the edit summary of edits made using Twinkle
+			// TwinkleConfig.summaryAd (string)
+			// Text to be appended to the edit summary of edits made using Twinkle
 			{
 				name: 'summaryAd',
 				label: "\"Ad\" to be appended to Twinkle's edit summaries",
@@ -122,10 +100,20 @@ TwinkleGlobal.config.sections = [
 				label: 'Use larger text in Twinkle dialogs',
 				type: 'boolean'
 			},
+
 			{
 				name: 'showPrefLink',
 				label: 'Include a link to the preference page in the dropdown menu',
 				type: 'boolean'
+			},
+
+			// TwinkleGlobal.config.disabledModules (array)
+			{
+				name: 'disabledModules',
+				label: 'Turn off the selected Twinkle modules',
+				helptip: 'Anything you select here will NOT be available for use, so act with care. Uncheck to reactivate.',
+				type: 'set',
+				setValues: { arv: 'GARV', speedy: 'CSD', diff: 'Diff', 'fluff': 'Revert and rollback' }
 			}
 		]
 	},
@@ -170,15 +158,6 @@ TwinkleGlobal.config.sections = [
 	{
 		title: 'Revert and rollback',  // twinklefluff module
 		preferences: [
-		// TwinkleConfig.autoMenuAfterRollback (bool)
-		// Option to automatically open the warning menu if the user talk page is opened post-reversion
-			{
-				name: 'autoMenuAfterRollback',
-				label: 'Automatically open the Twinkle warn menu on a user talk page after Twinkle rollback',
-				helptip: 'Only operates if the relevant box is checked below.',
-				type: 'boolean'
-			},
-
 			// TwinkleConfig.openTalkPage (array)
 			// What types of actions that should result in opening of talk page
 			{
@@ -363,33 +342,15 @@ TwinkleGlobal.config.sections = [
 				name: 'revertMaxRevisions',
 				type: 'integer'
 			},
-			// twinklebatchdelete.js: How many pages should be processed maximum
+			// How many pages should be queried by deprod and batchdelete/protect/undelete
 			{
 				name: 'batchMax',
 				type: 'integer',
 				adminOnly: true
 			},
-			// twinklebatchdelete.js: How many pages should be processed at a time
+			// How many pages should be processed at a time by deprod and batchdelete/protect/undelete
 			{
-				name: 'batchdeleteChunks',
-				type: 'integer',
-				adminOnly: true
-			},
-			// twinklebatchprotect.js: How many pages should be processed at a time
-			{
-				name: 'batchProtectChunks',
-				type: 'integer',
-				adminOnly: true
-			},
-			// twinklebatchundelete.js: How many pages should be processed at a time
-			{
-				name: 'batchundeleteChunks',
-				type: 'integer',
-				adminOnly: true
-			},
-			// twinkledeprod.js: How many pages should be processed at a time
-			{
-				name: 'proddeleteChunks',
+				name: 'batchChunks',
 				type: 'integer',
 				adminOnly: true
 			}
@@ -401,9 +362,9 @@ TwinkleGlobal.config.sections = [
 
 TwinkleGlobal.config.init = function twinkleconfigInit() {
 
+	// create the config page at m:User:Xiplus/Twinkle/Preferences
 	if ((mw.config.get('wgServer') + mw.util.getUrl() === TwinkleGlobal.getPref('configPage')) &&
 			mw.config.get('wgAction') === 'view') {
-		// create the config page at Wikipedia:Twinkle/Preferences, and at user subpages (for testing purposes)
 
 		if (!document.getElementById('twinkleglobal-config')) {
 			return;  // maybe the page is misconfigured, or something - but any attempt to modify it will be pointless
@@ -415,17 +376,19 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 		var contentdiv = document.getElementById('twinkleglobal-config-content');
 		contentdiv.textContent = '';  // clear children
 
-		// let user know about possible conflict with monobook.js/vector.js file
+		// let user know about possible conflict with skin js/common.js file
 		// (settings in that file will still work, but they will be overwritten by twinkleoptions.js settings)
-		var contentnotice = document.createElement('p');
-		// I hate innerHTML, but this is one thing it *is* good for...
-		contentnotice.innerHTML = '<b>Before modifying your preferences here,</b> make sure you have removed any old <code>TwinkleConfig</code> and <code>FriendlyConfig</code> settings from your <a href="' + mw.util.getUrl('Special:MyPage/skin.js') + '" title="Special:MyPage/skin.js">user JavaScript file</a>.';
-		contentdiv.appendChild(contentnotice);
-
-		// look and see if the user does in fact have any old settings in their skin JS file
-		var skinjs = new MorebitsGlobal.wiki.page('User:' + mw.config.get('wgUserName') + '/' + mw.config.get('skin') + '.js');
-		skinjs.setCallbackParameters(contentnotice);
-		skinjs.load(TwinkleGlobal.config.legacyPrefsNotice);
+		if (window.TwinkleConfig || window.FriendlyConfig) {
+			var contentnotice = document.createElement('p');
+			contentnotice.innerHTML = '<table class="plainlinks ombox ombox-content"><tr><td class="mbox-image">' +
+				'<img alt="" src="https://upload.wikimedia.org/wikipedia/commons/3/38/Imbox_content.png" /></td>' +
+				'<td class="mbox-text"><p><big><b>Before modifying your settings here,</b> you must remove your old Twinkle and Friendly settings from your personal skin JavaScript.</big></p>' +
+				'<p>To do this, you can <a href="' + mw.util.getUrl('User:' + mw.config.get('wgUserName') + '/' + mw.config.get('skin') +
+				'.js', { action: 'edit' }) + '" target="_blank"><b>edit your personal skin javascript file</b></a> or <a href="' +
+				mw.util.getUrl('User:' + mw.config.get('wgUserName') + '/common.js', { action: 'edit'}) + '" target="_blank"><b>your common.js file</b></a>, removing all lines of code that refer to <code>TwinkleConfig</code> and <code>FriendlyConfig</code>.</p>' +
+				'</td></tr></table>';
+			contentdiv.appendChild(contentnotice);
+		}
 
 		// start a table of contents
 		var toctable = document.createElement('div');
@@ -466,7 +429,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 		var tocnumber = 1;
 
 		var contentform = document.createElement('form');
-		contentform.setAttribute('action', 'javascript:void(0)');  // was #tw-save - changed to void(0) to work around Chrome issue
+		contentform.setAttribute('action', 'javascript:void(0)');  // was #twg-save - changed to void(0) to work around Chrome issue
 		contentform.addEventListener('submit', TwinkleGlobal.config.save, true);
 		contentdiv.appendChild(contentform);
 
@@ -729,12 +692,8 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 			mw.config.get('wgPageName').slice(-3) === '.js') {
 
 		var box = document.createElement('div');
+		// Styled in TwinkleGlobal.css
 		box.setAttribute('id', 'twinkleglobal-config-headerbox');
-		box.style.border = '1px #f60 solid';
-		box.style.background = '#fed';
-		box.style.padding = '0.6em';
-		box.style.margin = '0.5em auto';
-		box.style.textAlign = 'center';
 
 		var link,
 			scriptPageName = mw.config.get('wgPageName').slice(mw.config.get('wgPageName').lastIndexOf('/') + 1,
@@ -742,9 +701,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 
 		if (TwinkleGlobal.getPref('onConfigSite') && scriptPageName === TwinkleGlobal.defaultConfig.optionsPage) {
 			// place "why not try the preference panel" notice
-			box.style.fontWeight = 'bold';
-			box.style.width = '80%';
-			box.style.borderWidth = '2px';
+			box.setAttribute('class', 'config-twopt-box');
 
 			if (mw.config.get('wgArticleId') > 0) {  // page exists
 				box.appendChild(document.createTextNode('This page contains your TwinkleGlobal preferences. You can change them using the '));
@@ -761,7 +718,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 		} else if (['monobook', 'vector', 'cologneblue', 'modern', 'timeless', 'minerva', 'common'].indexOf(scriptPageName) !== -1 ||
 				scriptPageName === TwinkleGlobal.defaultConfig.optionsPage) {
 			// place "Looking for Twinkle options?" notice
-			box.style.width = '60%';
+			box.setAttribute('class', 'config-userskin-box');
 
 			box.appendChild(document.createTextNode('If you want to set TwinkleGlobal preferences, you can use the '));
 			link = document.createElement('a');
@@ -771,21 +728,6 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 			box.appendChild(document.createTextNode('.'));
 			$(box).insertAfter($('#contentSub'));
 		}
-	}
-};
-
-// MorebitsGlobal.wiki.page callback from init code
-TwinkleGlobal.config.legacyPrefsNotice = function twinkleconfigLegacyPrefsNotice(pageobj) {
-	var text = pageobj.getPageText();
-	var contentnotice = pageobj.getCallbackParameters();
-	if (text.indexOf('TwinkleConfig') !== -1 || text.indexOf('FriendlyConfig') !== -1) {
-		contentnotice.innerHTML = '<table class="plainlinks ombox ombox-content"><tr><td class="mbox-image">' +
-			'<img alt="" src="http://upload.wikimedia.org/wikipedia/en/3/38/Imbox_content.png" /></td>' +
-			'<td class="mbox-text"><p><big><b>Before modifying your settings here,</b> you must remove your old Twinkle and Friendly settings from your personal skin JavaScript.</big></p>' +
-			'<p>To do this, you can <a href="' + mw.config.get('wgScript') + '?title=User:' + encodeURIComponent(mw.config.get('wgUserName')) + '/' + mw.config.get('skin') + '.js&action=edit" target="_blank"><b>edit your personal JavaScript</b></a>, removing all lines of code that refer to <code>TwinkleConfig</code> and <code>FriendlyConfig</code>.</p>' +
-			'</td></tr></table>';
-	} else {
-		$(contentnotice).remove();
 	}
 };
 
@@ -1196,6 +1138,8 @@ TwinkleGlobal.config.saveSuccess = function twinkleconfigSaveSuccess(pageobj) {
 	noticeclear.style.clear = 'both';
 	MorebitsGlobal.status.root.appendChild(noticeclear);
 };
+
+TwinkleGlobal.addInitCallback(TwinkleGlobal.config.init);
 })(jQuery);
 
 

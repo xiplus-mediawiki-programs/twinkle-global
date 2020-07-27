@@ -8,9 +8,6 @@
  * Imported from github [https://github.com/azatoth/twinkle].
  * All changes should be made in the repository, otherwise they will be lost.
  *
- * To update this script from github, you must have a local repository set up. Then
- * follow the instructions at [https://github.com/azatoth/twinkle/blob/master/README.md].
- *
  * ----------
  *
  * This is AzaToth's Twinkle, the popular script sidekick for newbies, admins, and
@@ -25,20 +22,34 @@
 var TwinkleGlobal = {};
 window.TwinkleGlobal = TwinkleGlobal;  // allow global access
 
-// for use by custom modules (normally empty)
+/**
+ * Twinkle-specific data shared by multiple modules
+ * Likely customized per installation
+ */
+// Various hatnote templates, used when tagging (csd/xfd/tag/prod/protect) to
+// ensure MOS:ORDER
+TwinkleGlobal.hatnoteRegex = 'short description|hatnote|main|correct title|dablink|distinguish|for|further|selfref|year dab|similar names|highway detail hatnote|broader|about(?:-distinguish| other people)?|other\\s?(?:hurricane(?: use)?s|people|persons|places|ships|uses(?: of)?)|redirect(?:-(?:distinguish|synonym|multi))?|see\\s?(?:wiktionary|also(?: if exists)?)';
+
+
 TwinkleGlobal.initCallbacks = [];
-TwinkleGlobal.addInitCallback = function twinkleAddInitCallback(func) {
-	TwinkleGlobal.initCallbacks.push(func);
+/**
+ * Adds a callback to execute when Twinkle has loaded.
+ * @param {function} func
+ * @param {string} [name] - name of module used to check if is disabled.
+ * If name is not given, module is loaded unconditionally.
+ */
+TwinkleGlobal.addInitCallback = function twinkleAddInitCallback(func, name) {
+	TwinkleGlobal.initCallbacks.push({ func: func, name: name });
 };
 
 TwinkleGlobal.defaultConfig = {};
 /**
- * This holds the default set of preferences used by Twinkle.
+ * This holds the default set of preferences used by TwinkleGlobal.
  * It is important that all new preferences added here, especially admin-only ones, are also added to
- * |Twinkle.config.sections| in twinkleconfig.js, so they are configurable via the Twinkle preferences panel.
+ * |TwinkleGlobal.config.sections| in twinkleconfig.js, so they are configurable via the Twinkle preferences panel.
  * For help on the actual preferences, see the comments in twinkleconfig.js.
  *
- * Formerly Twinkle.defaultConfig.twinkle and Twinkle.defaultConfig.friendly
+ * Formerly TwinkleGlobal.defaultConfig.twinkle and TwinkleGlobal.defaultConfig.friendly
  */
 TwinkleGlobal.defaultConfig = {
 	// General
@@ -47,6 +58,8 @@ TwinkleGlobal.defaultConfig = {
 	protectionSummaryAd: ' (TwinkleGlobal)',
 	userTalkPageMode: 'tab',
 	dialogLargeFont: false,
+	disabledModules: [],
+	disabledSysopModules: [],
 	showPrefLink: true,
 
 	// GARV
@@ -147,12 +160,9 @@ TwinkleGlobal.defaultConfig = {
 	],
 
 	// Hidden preferences
-	revertMaxRevisions: 50,
+	revertMaxRevisions: 50, // intentionally limited
 	batchMax: 5000,
-	batchdeleteChunks: 50,
-	batchProtectChunks: 50,
-	batchundeleteChunks: 50,
-	proddeleteChunks: 50,
+	batchChunks: 50,
 	configPage: '//meta.wikimedia.org/wiki/User:Xiplus/Twinkle/Preferences',
 	metaApi: mw.config.get('wgDBname') === 'metawiki'
 		? new mw.Api()
@@ -242,7 +252,7 @@ TwinkleGlobal.getPref = function twinkleGetPref(name) {
 
 
 /**
- * **************** Twinkle.addPortlet() ****************
+ * **************** TwinkleGlobal.addPortlet() ****************
  *
  * Adds a portlet menu to one of the navigation areas on the page.
  * This is necessarily quite a hack since skins, navigation areas, and
@@ -250,17 +260,17 @@ TwinkleGlobal.getPref = function twinkleGetPref(name) {
  *
  * Available navigation areas depend on the skin used.
  * Vector:
- *  For each option, the outer div class contains "vector-menu", the inner div class is "vector-menu-content", and the ul is "vector-menu-content-list"
- *  "mw-panel", outer div class contains "vector-menu-portal". Existing portlets/elements: "p-logo", "p-navigation", "p-interaction", "p-tb", "p-coll-print_export"
- *  "left-navigation", outer div class contains "vector-menu-tabs" or "vector-menu-dropdown". Existing portlets: "p-namespaces", "p-variants" (menu)
- *  "right-navigation", outer div class contains "vector-menu-tabs" or "vector-menu-dropdown". Existing portlets: "p-views", "p-cactions" (menu), "p-search"
+ *  For each option, the outer nav class contains "vector-menu", the inner div class is "vector-menu-content", and the ul is "vector-menu-content-list"
+ *  "mw-panel", outer nav class contains "vector-menu-portal". Existing portlets/elements: "p-logo", "p-navigation", "p-interaction", "p-tb", "p-coll-print_export"
+ *  "left-navigation", outer nav class contains "vector-menu-tabs" or "vector-menu-dropdown". Existing portlets: "p-namespaces", "p-variants" (menu)
+ *  "right-navigation", outer nav class contains "vector-menu-tabs" or "vector-menu-dropdown". Existing portlets: "p-views", "p-cactions" (menu), "p-search"
  *  Special layout of p-personal portlet (part of "head") through specialized styles.
  * Monobook:
- *  "column-one", outer div class "portlet", inner div class "pBody". Existing portlets: "p-cactions", "p-personal", "p-logo", "p-navigation", "p-search", "p-interaction", "p-tb", "p-coll-print_export"
+ *  "column-one", outer nav class "portlet", inner div class "pBody". Existing portlets: "p-cactions", "p-personal", "p-logo", "p-navigation", "p-search", "p-interaction", "p-tb", "p-coll-print_export"
  *  Special layout of p-cactions and p-personal through specialized styles.
  * Modern:
- *  "mw_contentwrapper" (top nav), outer div class "portlet", inner div class "pBody". Existing portlets or elements: "p-cactions", "mw_content"
- *  "mw_portlets" (sidebar), outer div class "portlet", inner div class "pBody". Existing portlets: "p-navigation", "p-search", "p-interaction", "p-tb", "p-coll-print_export"
+ *  "mw_contentwrapper" (top nav), outer nav class "portlet", inner div class "pBody". Existing portlets or elements: "p-cactions", "mw_content"
+ *  "mw_portlets" (sidebar), outer nav class "portlet", inner div class "pBody". Existing portlets: "p-navigation", "p-search", "p-interaction", "p-tb", "p-coll-print_export"
  *
  * @param String navigation -- id of the target navigation area (skin dependant, on vector either of "left-navigation", "right-navigation", or "mw-panel")
  * @param String id -- id of the portlet menu to create, preferably start with "p-".
@@ -295,42 +305,42 @@ TwinkleGlobal.addPortlet = function(navigation, id, text, type, nextnodeid) {
 	if (skin !== 'vector' || (navigation !== 'left-navigation' && navigation !== 'right-navigation')) {
 		type = null; // menu supported only in vector's #left-navigation & #right-navigation
 	}
-	var outerDivClass, innerDivClass;
+	var outerNavClass, innerDivClass;
 	switch (skin) {
 		case 'vector':
 			// XXX: portal doesn't work
 			if (navigation !== 'portal' && navigation !== 'left-navigation' && navigation !== 'right-navigation') {
 				navigation = 'mw-panel';
 			}
-			outerDivClass = 'vector-menu vector-menu-' + (navigation === 'mw-panel' ? 'portal' : type === 'menu' ? 'dropdown' : 'tabs');
+			outerNavClass = 'vector-menu vector-menu-' + (navigation === 'mw-panel' ? 'portal' : type === 'menu' ? 'dropdown' : 'tabs');
 			innerDivClass = 'vector-menu-content';
 			break;
 		case 'modern':
 			if (navigation !== 'mw_portlets' && navigation !== 'mw_contentwrapper') {
 				navigation = 'mw_portlets';
 			}
-			outerDivClass = 'portlet';
+			outerNavClass = 'portlet';
 			break;
 		case 'timeless':
-			outerDivClass = 'mw-portlet';
+			outerNavClass = 'mw-portlet';
 			innerDivClass = 'mw-portlet-body';
 			break;
 		default:
 			navigation = 'column-one';
-			outerDivClass = 'portlet';
+			outerNavClass = 'portlet';
 			break;
 	}
 
 	// Build the DOM elements.
-	var outerDiv = document.createElement('nav');
-	outerDiv.setAttribute('aria-labelledby', id + '-label');
+	var outerNav = document.createElement('nav');
+	outerNav.setAttribute('aria-labelledby', id + '-label');
 	// Vector getting vector-menu-empty FIXME TODO
-	outerDiv.className = outerDivClass + ' emptyPortlet';
-	outerDiv.id = id;
+	outerNav.className = outerNavClass + ' emptyPortlet';
+	outerNav.id = id;
 	if (nextnode && nextnode.parentNode === root) {
-		root.insertBefore(outerDiv, nextnode);
+		root.insertBefore(outerNav, nextnode);
 	} else {
-		root.appendChild(outerDiv);
+		root.appendChild(outerNav);
 	}
 
 	var h3 = document.createElement('h3');
@@ -338,15 +348,19 @@ TwinkleGlobal.addPortlet = function(navigation, id, text, type, nextnodeid) {
 	var ul = document.createElement('ul');
 
 	if (skin === 'vector') {
+		ul.className = 'vector-menu-content-list';
+
 		// add invisible checkbox to keep menu open when clicked
 		// similar to the p-cactions ("More") menu
-		if (outerDivClass.indexOf('vector-menu-dropdown') !== -1) {
+		if (outerNavClass.indexOf('vector-menu-dropdown') !== -1) {
 			var chkbox = document.createElement('input');
-			chkbox.className = 'vectorMenuCheckbox vector-menu-checkbox'; // remove vectorMenuCheckbox after 1.35-wmf.37 goes live
+			chkbox.className = 'vector-menu-checkbox';
 			chkbox.setAttribute('type', 'checkbox');
 			chkbox.setAttribute('aria-labelledby', id + '-label');
-			outerDiv.appendChild(chkbox);
+			outerNav.appendChild(chkbox);
 
+			// Vector gets its title in a span; all others except
+			// timeless have no title, and it has no span
 			var span = document.createElement('span');
 			span.appendChild(document.createTextNode(text));
 			h3.appendChild(span);
@@ -360,31 +374,30 @@ TwinkleGlobal.addPortlet = function(navigation, id, text, type, nextnodeid) {
 
 			h3.appendChild(a);
 		}
-
-		outerDiv.appendChild(h3);
-		ul.className = 'menu vector-menu-content-list';  // remove menu after 1.35-wmf.37 goes live
 	} else {
+		// Basically just Timeless
 		h3.appendChild(document.createTextNode(text));
-		outerDiv.appendChild(h3);
 	}
+
+	outerNav.appendChild(h3);
 
 	if (innerDivClass) {
 		var innerDiv = document.createElement('div');
 		innerDiv.className = innerDivClass;
 		innerDiv.appendChild(ul);
-		outerDiv.appendChild(innerDiv);
+		outerNav.appendChild(innerDiv);
 	} else {
-		outerDiv.appendChild(ul);
+		outerNav.appendChild(ul);
 	}
 
 
-	return outerDiv;
+	return outerNav;
 
 };
 
 
 /**
- * **************** Twinkle.addPortletLink() ****************
+ * **************** TwinkleGlobal.addPortletLink() ****************
  * Builds a portlet menu if it doesn't exist yet, and add the portlet link.
  * @param task: Either a URL for the portlet link or a function to execute.
  */
@@ -420,6 +433,7 @@ mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.ge
 		mw.notify('Could not load your Twinkle preferences', {type: 'error'});
 	})
 	.done(function () {
+
 		// Quick pass if user has no options
 		if (TwinkleGlobal.prefs === undefined) {
 			TwinkleGlobal.prefs = {};
@@ -457,54 +471,31 @@ TwinkleGlobal.load = function () {
 	}
 
 	// Set custom Api-User-Agent header, for server-side logging purposes
-	MorebitsGlobal.wiki.api.setApiUserAgent('Twinkle/2.0 (' + mw.config.get('wgDBname') + ')');
+	MorebitsGlobal.wiki.api.setApiUserAgent('Twinkle (' + mw.config.get('wgWikiID') + ')');
 
-	// Load the modules in the order that the tabs should appear
-	// User/user talk-related
-	TwinkleGlobal.arv();
-	// TwinkleGlobal.warn();
-	if (MorebitsGlobal.userIsSysop) {
-		// TwinkleGlobal.block();
-	}
-	// TwinkleGlobal.welcome();
-	// TwinkleGlobal.shared();
-	// TwinkleGlobal.talkback();
-	// Deletion
-	TwinkleGlobal.speedy();
-	// TwinkleGlobal.prod();
-	// TwinkleGlobal.xfd();
-	// TwinkleGlobal.image();
-	// Maintenance
-	// TwinkleGlobal.protect();
-	// TwinkleGlobal.tag();
-	// Misc. ones last
-	TwinkleGlobal.diff();
-	// TwinkleGlobal.unlink();
-	TwinkleGlobal.config.init();
-	TwinkleGlobal.fluff();
-	if (MorebitsGlobal.userIsSysop) {
-		// TwinkleGlobal.deprod();
-		// TwinkleGlobal.batchdelete();
-		// TwinkleGlobal.batchprotect();
-		// TwinkleGlobal.batchundelete();
-	}
+	TwinkleGlobal.disabledModules = TwinkleGlobal.getPref('disabledModules').concat(TwinkleGlobal.getPref('disabledSysopModules'));
 
-	if (TwinkleGlobal.getPref('showPrefLink')) {
-		TwinkleGlobal.addPortletLink(TwinkleGlobal.getPref('configPage'), 'Pref', 'twg-config', 'Set Twinkle preferences');
-	}
-
-	// Run the initialization callbacks for any custom modules
-	TwinkleGlobal.initCallbacks.forEach(function (func) {
-		func();
-	});
-	TwinkleGlobal.addInitCallback = function (func) {
-		func();
+	// Redefine addInitCallback so that any modules being loaded now on are directly
+	// initialised rather than added to initCallbacks array
+	TwinkleGlobal.addInitCallback = function(func, name) {
+		if (!name || TwinkleGlobal.disabledModules.indexOf(name) === -1) {
+			func();
+		}
 	};
+	// Initialise modules that were saved in initCallbacks array
+	TwinkleGlobal.initCallbacks.forEach(function(module) {
+		TwinkleGlobal.addInitCallback(module.func, module.name);
+	});
 
 	// Increases text size in Twinkle dialogs, if so configured
 	if (TwinkleGlobal.getPref('dialogLargeFont')) {
 		mw.util.addCSS('.morebits-dialog-content, .morebits-dialog-footerlinks { font-size: 100% !important; } ' +
 			'.morebits-dialog input, .morebits-dialog select, .morebits-dialog-content button { font-size: inherit !important; }');
+	}
+
+	// Hide the lingering space if the TW menu is empty
+	if (mw.config.get('skin') === 'vector' && TwinkleGlobal.getPref('portletType') === 'menu' && $('#p-twinkle').length === 0) {
+		$('#p-cactions').css('margin-right', 'initial');
 	}
 };
 

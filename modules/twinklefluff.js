@@ -26,16 +26,6 @@ TwinkleGlobal.fluff = function twinklefluff() {
 		return;
 	}
 
-	// A list of usernames, usually only bots, that vandalism revert is jumped over; that is,
-	// if vandalism revert was chosen on such username, then its target is on the revision before.
-	// This is for handling quick bots that makes edits seconds after the original edit is made.
-	// This only affects vandalism rollback; for good faith rollback, it will stop, indicating a bot
-	// has no faith, and for normal rollback, it will rollback that edit.
-	TwinkleGlobal.fluff.trustedBots = [
-		'AnomieBOT',
-		'SineBot'
-	];
-
 	if (mw.config.get('wgIsProbablyEditable')) {
 		// Only proceed if the user can actually edit the page
 		// in question (ignored for contributions, see #632).
@@ -47,9 +37,9 @@ TwinkleGlobal.fluff = function twinklefluff() {
 			mw.hook('wikipage.diff').add(function () { // Reload alongside the revision slider
 				TwinkleGlobal.fluff.addLinks.diff();
 			});
-		} else if (mw.config.get('wgAction') === 'view' && mw.config.get('wgRevisionId') !== 0 && mw.config.get('wgCurRevisionId') !== mw.config.get('wgRevisionId')) { // wgRevisionId is 0 for flow pages
+		} else if (mw.config.get('wgAction') === 'view' && mw.config.get('wgCurRevisionId') !== mw.config.get('wgRevisionId')) {
 			TwinkleGlobal.fluff.addLinks.oldid();
-		} else if (mw.config.get('wgAction') === 'history') {
+		} else if (mw.config.get('wgAction') === 'history' && mw.config.get('wgArticleId')) {
 			TwinkleGlobal.fluff.addLinks.history();
 		}
 	} else if (mw.config.get('wgNamespaceNumber') === -1) {
@@ -70,8 +60,17 @@ TwinkleGlobal.fluff = function twinklefluff() {
 	}
 };
 
+// A list of usernames, usually only bots, that vandalism revert is jumped
+// over; that is, if vandalism revert was chosen on such username, then its
+// target is on the revision before.  This is for handling quick bots that
+// makes edits seconds after the original edit is made.  This only affects
+// vandalism rollback; for good faith rollback, it will stop, indicating a bot
+// has no faith, and for normal rollback, it will rollback that edit.
+TwinkleGlobal.fluff.trustedBots = ['AnomieBOT', 'SineBot'];
 TwinkleGlobal.fluff.skipTalk = null;
 TwinkleGlobal.fluff.rollbackInPlace = null;
+// String to insert when a username is hidden
+TwinkleGlobal.fluff.hiddenName = 'an unknown user';
 
 // Consolidated construction of fluff links
 TwinkleGlobal.fluff.linkBuilder = {
@@ -93,6 +92,7 @@ TwinkleGlobal.fluff.linkBuilder = {
 
 	/**
 	 * @param {string} vandal - Username of the editor being reverted (required)
+	 * Provide a falsey value if the username is hidden
 	 * @param {boolean} inline - True to create two links in a span, false
 	 * to create three links in a div (optional)
 	 * @param {number|string} [rev=wgCurRevisionId] - Revision ID being reverted (optional)
@@ -178,7 +178,8 @@ TwinkleGlobal.fluff.addLinks = {
 		// $('sp-contributions-footer-anon-range') relies on the fmbox
 		// id in [[MediaWiki:Sp-contributions-footer-anon-range]] and
 		// is used to show rollback/vandalism links for IP ranges
-		if (mw.config.exists('wgRelevantUserName') || !!$('#sp-contributions-footer-anon-range')[0]) {
+		var isRange = !!$('#sp-contributions-footer-anon-range')[0];
+		if (mw.config.exists('wgRelevantUserName') || isRange) {
 			// Get the username these contributions are for
 			var username = mw.config.get('wgRelevantUserName');
 			if (TwinkleGlobal.getPref('showRollbackLinks').indexOf('contribs') !== -1 ||
@@ -190,6 +191,16 @@ TwinkleGlobal.fluff.addLinks = {
 					// revid is also available in the href of both
 					// .mw-changeslist-date or .mw-changeslist-diff
 					var page = $(current).find('.mw-contributions-title').text();
+
+					// Get username for IP ranges (wgRelevantUserName is null)
+					if (isRange) {
+						// The :not is possibly unnecessary, as it appears that
+						// .mw-userlink is simply not present if the username is hidden
+						username = $(current).find('.mw-userlink:not(.history-deleted)').text();
+					}
+
+					// It's unlikely, but we can't easily check for revdel'd usernames
+					// since only a strong element is provided, with no easy selector [[phab:T255903]]
 					current.appendChild(TwinkleGlobal.fluff.linkBuilder.rollbackLinks(username, true, current.dataset.mwRevid, page));
 				});
 			}
@@ -205,7 +216,9 @@ TwinkleGlobal.fluff.addLinks = {
 			$list = $list.not('.mw-rcfilters-ui-highlights-enhanced-toplevel').find('.mw-changeslist-line-inner, td.mw-enhanced-rc-nested');
 
 			$list.each(function(key, current) {
-				var vandal = $(current).find('.mw-userlink').text();
+				// The :not is possibly unnecessary, as it appears that
+				// .mw-userlink is simply not present if the username is hidden
+				var vandal = $(current).find('.mw-userlink:not(.history-deleted)').text();
 				var href = $(current).find('.mw-changeslist-diff').attr('href');
 				var rev = mw.util.getParamValue('diff', href);
 				var page = current.dataset.targetPage;
@@ -223,7 +236,7 @@ TwinkleGlobal.fluff.addLinks = {
 			// links to the top revision
 			if (!$('.mw-firstlink').length) {
 				var first = histList.shift();
-				var vandal = first.querySelector('.mw-userlink').text;
+				var vandal = $(first).find('.mw-userlink:not(.history-deleted)').text();
 
 				first.appendChild(TwinkleGlobal.fluff.linkBuilder.rollbackLinks(vandal, true));
 			}
@@ -231,11 +244,13 @@ TwinkleGlobal.fluff.addLinks = {
 			// oldid
 			histList.forEach(function(rev) {
 				// From restoreThisRevision, non-transferable
-
+				// If the text has been revdel'd, it gets wrapped in a span with .history-deleted,
+				// and href will be undefined (and thus oldid is NaN)
 				var href = rev.querySelector('.mw-changeslist-date').href;
 				var oldid = parseInt(mw.util.getParamValue('oldid', href), 10);
-
-				rev.appendChild(TwinkleGlobal.fluff.linkBuilder.restoreThisRevisionLink(oldid, true));
+				if (!isNaN(oldid)) {
+					rev.appendChild(TwinkleGlobal.fluff.linkBuilder.restoreThisRevisionLink(oldid, true));
+				}
 			});
 
 
@@ -279,7 +294,20 @@ TwinkleGlobal.fluff.addLinks = {
 			var newTitle = document.getElementById('mw-diff-ntitle1').parentNode;
 			newTitle.insertBefore(TwinkleGlobal.fluff.linkBuilder.restoreThisRevisionLink('wgDiffNewId'), newTitle.firstChild);
 		} else if (TwinkleGlobal.getPref('showRollbackLinks').indexOf('diff') !== -1 && mw.config.get('wgDiffOldId') && (mw.config.get('wgDiffOldId') !== mw.config.get('wgDiffNewId') || document.getElementById('differences-prevlink'))) {
-			var vandal = $('#mw-diff-ntitle2').find('a').first().text();
+			// Normally .mw-userlink is a link, but if the
+			// username is hidden, it will be a span with
+			// .history-deleted as well. When a sysop views the
+			// hidden content, the span contains the username in a
+			// link element, which will *just* have
+			// .mw-userlink. The below thus finds the first
+			// instance of the class, which if hidden is the span
+			// and thus text returns undefined. Technically, this
+			// is a place where sysops *could* have more
+			// information available to them (as above, via
+			// &unhide=1), since the username will be available by
+			// checking a.mw-userlink instead, but revert() will
+			// need reworking around userHidden
+			var vandal = $('#mw-diff-ntitle2').find('.mw-userlink')[0].text;
 			var ntitle = document.getElementById('mw-diff-ntitle1').parentNode;
 
 			ntitle.insertBefore(TwinkleGlobal.fluff.linkBuilder.rollbackLinks(vandal), ntitle.firstChild);
@@ -324,17 +352,19 @@ TwinkleGlobal.fluff.revert = function revertPage(type, vandal, rev, page) {
 
 	var params = {
 		type: type,
-		user: vandal,
+		user: vandal || TwinkleGlobal.fluff.hiddenName,
+		userHidden: !vandal, // Keep track of whether the username was hidden
 		pagename: pagename,
 		revid: revid
 	};
+
 	var query = {
 		'action': 'query',
 		'prop': ['info', 'revisions', 'flagged'],
 		'titles': pagename,
 		'intestactions': 'edit',
-		'rvlimit': 50, // intentionally limited
-		'rvprop': [ 'ids', 'timestamp', 'user', 'comment' ],
+		'rvlimit': TwinkleGlobal.getPref('revertMaxRevisions'),
+		'rvprop': [ 'ids', 'timestamp', 'user' ],
 		'curtimestamp': '',
 		'meta': 'tokens',
 		'type': 'csrf'
@@ -354,7 +384,7 @@ TwinkleGlobal.fluff.revertToRevision = function revertToRevision(oldrev) {
 		'titles': mw.config.get('wgPageName'),
 		'rvlimit': 1,
 		'rvstartid': oldrev,
-		'rvprop': [ 'ids', 'timestamp', 'user', 'comment' ],
+		'rvprop': [ 'ids', 'user' ],
 		'format': 'xml',
 		'curtimestamp': '',
 		'meta': 'tokens',
@@ -378,7 +408,9 @@ TwinkleGlobal.fluff.callbacks = {
 		var loadtimestamp = $(xmlDoc).find('api').attr('curtimestamp');
 		var csrftoken = $(xmlDoc).find('tokens').attr('csrftoken');
 		var revertToRevID = parseInt($(xmlDoc).find('rev').attr('revid'), 10);
+
 		var revertToUser = $(xmlDoc).find('rev').attr('user');
+		var revertToUserHidden = typeof $(xmlDoc).find('rev').attr('userhidden') === 'string';
 
 		if (revertToRevID !== apiobj.params.rev) {
 			apiobj.statelem.error('The retrieved revision does not match the requested revision. Stopping revert.');
@@ -390,7 +422,9 @@ TwinkleGlobal.fluff.callbacks = {
 			apiobj.statelem.error('Aborted by user.');
 			return;
 		}
-		var summary = TwinkleGlobal.fluff.formatSummary('Reverted to revision ' + revertToRevID + ' by $USER', revertToUser, optional_summary);
+
+		var summary = TwinkleGlobal.fluff.formatSummary('Reverted to revision ' + revertToRevID + ' by $USER',
+			revertToUserHidden ? null : revertToUser, optional_summary);
 
 		var query = {
 			'action': 'edit',
@@ -425,7 +459,6 @@ TwinkleGlobal.fluff.callbacks = {
 		var touched = $(xmlDoc).find('page').attr('touched');
 		var loadtimestamp = $(xmlDoc).find('api').attr('curtimestamp');
 		var csrftoken = $(xmlDoc).find('tokens').attr('csrftoken');
-		var lastuser = $(xmlDoc).find('rev').attr('user');
 
 		var revs = $(xmlDoc).find('rev');
 
@@ -437,6 +470,8 @@ TwinkleGlobal.fluff.callbacks = {
 			return;
 		}
 		var top = revs[0];
+		var lastuser = top.getAttribute('user');
+
 		if (lastrevid < params.revid) {
 			MorebitsGlobal.status.error('Error', [ 'The most recent revision ID received from the server, ', MorebitsGlobal.htmlNode('strong', lastrevid), ', is less than the ID of the displayed revision. This could indicate that the current revision has been deleted, the server is lagging, or that bad data has been received. Stopping revert.' ]);
 			return;
@@ -457,6 +492,8 @@ TwinkleGlobal.fluff.callbacks = {
 						return;
 				}
 			} else if (params.type === 'vand' &&
+					// Okay to test on user since it will either fail or sysop will correctly access it
+					// Besides, none of the trusted bots are going to be revdel'd
 					TwinkleGlobal.fluff.trustedBots.indexOf(top.getAttribute('user')) !== -1 && revs.length > 1 &&
 					revs[1].getAttribute('pageId') === params.revid) {
 				MorebitsGlobal.status.info('Info', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', lastuser), ', a trusted bot, and the revision before was made by our vandal, so we will proceed with the revert.' ]);
@@ -474,6 +511,7 @@ TwinkleGlobal.fluff.callbacks = {
 					MorebitsGlobal.status.info('Info', [ 'Vandalism revert was chosen on ', MorebitsGlobal.htmlNode('strong', params.user), '. As this is a trusted bot, we assume you wanted to revert vandalism made by the previous user instead.' ]);
 					index = 2;
 					params.user = revs[1].getAttribute('user');
+					params.userHidden = revs[1].getAttribute('userhidden') === '';
 					break;
 				case 'agf':
 					MorebitsGlobal.status.warn('Notice', [ 'Good faith revert was chosen on ', MorebitsGlobal.htmlNode('strong', params.user), '. This is a trusted bot and thus AGF rollback will not proceed.' ]);
@@ -486,6 +524,7 @@ TwinkleGlobal.fluff.callbacks = {
 						MorebitsGlobal.status.info('Info', [ 'Normal revert was chosen on ', MorebitsGlobal.htmlNode('strong', params.user), '. This is a trusted bot, and per confirmation, we\'ll revert the previous revision instead.' ]);
 						index = 2;
 						params.user = revs[1].getAttribute('user');
+						params.userHidden = revs[1].getAttribute('userhidden') === '';
 					} else {
 						MorebitsGlobal.status.warn('Notice', [ 'Normal revert was chosen on ', MorebitsGlobal.htmlNode('strong', params.user), '. This is a trusted bot, but per confirmation, revert on selected revision will proceed.' ]);
 					}
@@ -504,7 +543,7 @@ TwinkleGlobal.fluff.callbacks = {
 		}
 
 		if (!found) {
-			statelem.error([ 'No previous revision found. Perhaps ', MorebitsGlobal.htmlNode('strong', params.user), ' is the only contributor, or that the user has made more than ' + TwinkleGlobal.getPref('revertMaxRevisions') + ' edits in a row.' ]);
+			statelem.error([ 'No previous revision found. Perhaps ', MorebitsGlobal.htmlNode('strong', params.user), ' is the only contributor, or that the user has made more than ' + mw.language.convertNumber(TwinkleGlobal.getPref('revertMaxRevisions')) + ' edits in a row.' ]);
 			return;
 		}
 
@@ -516,7 +555,7 @@ TwinkleGlobal.fluff.callbacks = {
 		var good_revision = revs[found];
 		var userHasAlreadyConfirmedAction = false;
 		if (params.type !== 'vand' && count > 1) {
-			if (!confirm(params.user + ' has made ' + count + ' edits in a row. Are you sure you want to revert them all?')) {
+			if (!confirm(params.user + ' has made ' + mw.language.convertNumber(count) + ' edits in a row. Are you sure you want to revert them all?')) {
 				MorebitsGlobal.status.info('Notice', 'Stopping revert.');
 				return;
 			}
@@ -527,8 +566,9 @@ TwinkleGlobal.fluff.callbacks = {
 
 		params.goodid = good_revision.getAttribute('revid');
 		params.gooduser = good_revision.getAttribute('user');
+		params.gooduserHidden = good_revision.getAttribute('userhidden') === '';
 
-		statelem.status([ ' revision ', MorebitsGlobal.htmlNode('strong', params.goodid), ' that was made ', MorebitsGlobal.htmlNode('strong', count), ' revisions ago by ', MorebitsGlobal.htmlNode('strong', params.gooduser) ]);
+		statelem.status([ ' revision ', MorebitsGlobal.htmlNode('strong', params.goodid), ' that was made ', MorebitsGlobal.htmlNode('strong', mw.language.convertNumber(count)), ' revisions ago by ', MorebitsGlobal.htmlNode('strong', params.gooduser) ]);
 
 		var summary, extra_summary;
 		switch (params.type) {
@@ -540,14 +580,13 @@ TwinkleGlobal.fluff.callbacks = {
 				}
 				userHasAlreadyConfirmedAction = true;
 
-				summary = TwinkleGlobal.fluff.formatSummary('Reverted good faith edits by $USER', params.user, extra_summary);
+				summary = TwinkleGlobal.fluff.formatSummary('Reverted [[WP:AGF|good faith]] edits by $USER',
+					params.userHidden ? null : params.user, extra_summary);
 				break;
 
 			case 'vand':
-
-				summary = 'Reverted ' + params.count + (params.count > 1 ? ' edits' : ' edit') + ' by [[Special:Contributions/' +
-				params.user + '|' + params.user + ']] ([[User talk:' + params.user + '|talk]]) to last revision by ' +
-				params.gooduser + TwinkleGlobal.getPref('summaryAd');
+				summary = TwinkleGlobal.fluff.formatSummary('Reverted ' + params.count + (params.count > 1 ? ' edits' : ' edit') + ' by $USER to last revision by ' +
+					(params.gooduserHidden ? TwinkleGlobal.fluff.hiddenName : params.gooduser), params.userHidden ? null : params.user);
 				break;
 
 			case 'norm':
@@ -562,8 +601,8 @@ TwinkleGlobal.fluff.callbacks = {
 					userHasAlreadyConfirmedAction = true;
 				}
 
-				summary = TwinkleGlobal.fluff.formatSummary('Reverted ' + params.count + (params.count > 1 ? ' edits' : ' edit') +
-				' by $USER', params.user, extra_summary);
+				summary = TwinkleGlobal.fluff.formatSummary('Reverted ' + params.count + (params.count > 1 ? ' edits' : ' edit') + ' by $USER',
+					params.userHidden ? null : params.user, extra_summary);
 				break;
 		}
 
@@ -574,8 +613,10 @@ TwinkleGlobal.fluff.callbacks = {
 
 		// Decide whether to notify the user on success
 		if (!TwinkleGlobal.fluff.skipTalk && TwinkleGlobal.getPref('openTalkPage').indexOf(params.type) !== -1 &&
-				mw.config.get('wgUserName') !== params.user) {
+				!params.userHidden && mw.config.get('wgUserName') !== params.user) {
 			params.notifyUser = true;
+			// Pass along to the warn module
+			params.vantimestamp = top.getAttribute('timestamp');
 		}
 
 		// figure out whether we need to/can review the edit
@@ -619,12 +660,12 @@ TwinkleGlobal.fluff.callbacks = {
 		if ($(xml).find('captcha').length > 0) {
 			apiobj.statelem.error('Could not rollback, because the wiki server wanted you to fill out a CAPTCHA.');
 		} else if ($edit.attr('nochange') === '') {
-			apiobj.statelem.warn('Revision we are reverting to is identical to current revision, stopping revert.');
+			apiobj.statelem.error('Revision we are reverting to is identical to current revision, stopping revert.');
 		} else {
 			apiobj.statelem.info('done');
 			var params = apiobj.params;
 
-			if (params.notifyUser) { // Only from main, not from toRevision
+			if (params.notifyUser && !params.userHidden) { // notifyUser only from main, not from toRevision
 				MorebitsGlobal.status.info('Info', [ 'Opening user talk page edit form for user ', MorebitsGlobal.htmlNode('strong', params.user) ]);
 
 				var windowQuery = {
@@ -633,6 +674,7 @@ TwinkleGlobal.fluff.callbacks = {
 					'preview': 'yes',
 					'vanarticle': params.pagename.replace(/_/g, ' '),
 					'vanarticlerevid': params.revid,
+					'vantimestamp': params.vantimestamp,
 					'vanarticlegoodrevid': params.goodid,
 					'type': params.type,
 					'count': params.count
@@ -672,36 +714,44 @@ TwinkleGlobal.fluff.callbacks = {
 	}
 };
 
-// builtInString should contain the string "$USER", which will be replaced
-// by an appropriate user link
-TwinkleGlobal.fluff.formatSummary = function(builtInString, userName, userString) {
+// If builtInString contains the string "$USER", it will be replaced
+// by an appropriate user link if a user name is provided
+TwinkleGlobal.fluff.formatSummary = function(builtInString, userName, customString) {
 	var result = builtInString;
 
 	// append user's custom reason
-	if (userString) {
-		result += ': ' + MorebitsGlobal.string.toUpperCaseFirstChar(userString);
+	if (customString) {
+		result += ': ' + MorebitsGlobal.string.toUpperCaseFirstChar(customString);
 	}
 	result += TwinkleGlobal.getPref('summaryAd');
 
 	// find number of UTF-8 bytes the resulting string takes up, and possibly add
 	// a contributions or contributions+talk link if it doesn't push the edit summary
-	// over the 255-byte limit
-	var resultLen = unescape(encodeURIComponent(result.replace('$USER', ''))).length;
-	var contribsLink = '[[Special:Contributions/' + userName + '|' + userName + ']]';
-	var contribsLen = unescape(encodeURIComponent(contribsLink)).length;
-	if (resultLen + contribsLen <= 255) {
-		var talkLink = ' ([[User talk:' + userName + '|talk]])';
-		if (resultLen + contribsLen + unescape(encodeURIComponent(talkLink)).length <= 255) {
-			result = MorebitsGlobal.string.safeReplace(result, '$USER', contribsLink + talkLink);
+	// over the 499-byte limit
+	if (/\$USER/.test(builtInString)) {
+		if (userName) {
+			var resultLen = unescape(encodeURIComponent(result.replace('$USER', ''))).length;
+			var contribsLink = '[[Special:Contributions/' + userName + '|' + userName + ']]';
+			var contribsLen = unescape(encodeURIComponent(contribsLink)).length;
+			if (resultLen + contribsLen <= 499) {
+				var talkLink = ' ([[User talk:' + userName + '|talk]])';
+				if (resultLen + contribsLen + unescape(encodeURIComponent(talkLink)).length <= 499) {
+					result = MorebitsGlobal.string.safeReplace(result, '$USER', contribsLink + talkLink);
+				} else {
+					result = MorebitsGlobal.string.safeReplace(result, '$USER', contribsLink);
+				}
+			} else {
+				result = MorebitsGlobal.string.safeReplace(result, '$USER', userName);
+			}
 		} else {
-			result = MorebitsGlobal.string.safeReplace(result, '$USER', contribsLink);
+			result = MorebitsGlobal.string.safeReplace(result, '$USER', TwinkleGlobal.fluff.hiddenName);
 		}
-	} else {
-		result = MorebitsGlobal.string.safeReplace(result, '$USER', userName);
 	}
 
 	return result;
 };
+
+TwinkleGlobal.addInitCallback(TwinkleGlobal.fluff, 'fluff');
 })(jQuery);
 
 
