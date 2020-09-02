@@ -93,8 +93,12 @@ function main() {
 			code[x] = data;
 			if (x === tests.length - 1) {
 				localStorage.Twinkle_global_xiplus_version = VERSION;
-				eval(code.join('\n;\n'));
-				message('Twinkle Done');
+				try {
+					eval(code.join('\n;\n'));
+					message('Twinkle Done');
+				} catch (e) {
+					mw.notify('Error loading Twinkle: ' + e, {type: 'error'});
+				}
 				if ($('#twinkleglobal-config-titlebar').length) {
 					$('#twinkleglobal-config-titlebar').append('--Version: Xiplus ' + localStorage.Twinkle_global_xiplus_version);
 					$('#twinkleglobal-config-titlebar').append('<button onclick="localStorage.Twinkle_global_xiplus_version =       \'\';location.reload();">Purge</button>');
