@@ -41,6 +41,9 @@ TwinkleGlobal.speedy.speedyTemplate = null;
 TwinkleGlobal.speedy.speedyTemplateDefault = {
 	'jawiki': 'Delete'
 };
+TwinkleGlobal.speedy.speedyTemplateSubst = [
+	'kowiki'
+];
 
 // This function is run when the CSD tab/header link is clicked
 TwinkleGlobal.speedy.callback = function twinklespeedyCallback() {
@@ -397,7 +400,9 @@ TwinkleGlobal.speedy.callbacks = {
 			}
 		});
 		reason = reason.substr(0, reason.length - 2); // remove trailing comma
-		var code = '{{' + TwinkleGlobal.speedy.getSpeedyTemplate() + '|1=' + reason + '}}';
+		var code = '{{' +
+			(TwinkleGlobal.speedy.speedyTemplateSubst.indexOf(mw.config.get('wgDBname')) !== -1 ? 'subst:' : '') +
+			TwinkleGlobal.speedy.getSpeedyTemplate() + '|1=' + reason + '}}';
 
 		return [code, reason];
 	},
