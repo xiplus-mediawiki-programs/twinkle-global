@@ -758,7 +758,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 			box.appendChild(document.createTextNode(', or by editing this page.'));
 			$(box).insertAfter($('#contentSub'));
 
-		} else if (['monobook', 'vector', 'cologneblue', 'modern', 'timeless', 'minerva', 'common'].indexOf(scriptPageName) !== -1 ||
+		} else if (['monobook', 'vector', 'cologneblue', 'modern', 'timeless', 'minerva', 'common', 'global'].indexOf(scriptPageName) !== -1 ||
 				scriptPageName === TwinkleGlobal.defaultConfig.optionsPage) {
 			// place "Looking for Twinkle options?" notice
 			box.style.width = '60%';
