@@ -189,7 +189,7 @@ TwinkleGlobal.fluff.addLinks = {
 				$list.each(function(key, current) {
 					// revid is also available in the href of both
 					// .mw-changeslist-date or .mw-changeslist-diff
-					var page = $(current).find('.mw-contributions-title').text();
+					var page = mw.util.getParamValue('title', $(current).find('.mw-changeslist-history').attr('href'));
 					current.appendChild(TwinkleGlobal.fluff.linkBuilder.rollbackLinks(username, true, current.dataset.mwRevid, page));
 				});
 			}
