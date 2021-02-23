@@ -156,7 +156,7 @@ TwinkleGlobal.speedy.initDialog = function twinklespeedyInitDialog(callbackfunc)
 		]
 	});
 
-	if (MorebitsGlobal.wiki.isGSWiki()) {
+	if (MorebitsGlobal.isGSWiki()) {
 		tagOptions.append({
 			type: 'checkbox',
 			list: [

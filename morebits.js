@@ -129,7 +129,7 @@ switch (MorebitsGlobal.wikiFamily) {
  * Determines whether the current wiki is a global-sysop wiki
  * @returns {boolean}
  */
-MorebitsGlobal.wiki.nonGSWikis = [
+MorebitsGlobal.nonGSWikis = [
 	'alswiki', 'anwiki', 'arwiki', 'barwiki', 'betawikiversity', 'bgwiki', 'bnwiki', 'bswiki',
 	'cawiki', 'commonswiki', 'cswiki', 'cswikinews', 'cswikisource', 'cswiktionary', 'cywiki',
 	'dawiki', 'dewiki', 'dewikibooks', 'dewikinews', 'dewikisource', 'dewiktionary',
@@ -147,8 +147,8 @@ MorebitsGlobal.wiki.nonGSWikis = [
 	'tawiki', 'testwiki', 'tewiki', 'thwiki', 'tlwiki', 'trwiki', 'ukwiki', 'urwiki', 'viwiki', 'wikidatawiki',
 	'zh_yuewiki', 'zhwiki'
 ];
-MorebitsGlobal.wiki.isGSWiki = function() {
-	return MorebitsGlobal.wiki.nonGSWikis.indexOf(mw.config.get('wgDBname')) === -1;
+MorebitsGlobal.isGSWiki = function() {
+	return MorebitsGlobal.nonGSWikis.indexOf(mw.config.get('wgDBname')) === -1;
 };
 
 

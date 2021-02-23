@@ -98,7 +98,7 @@ TwinkleGlobal.arv.callback = function (uid) {
 		label: isIP ? 'Global block (m:SRG)' : 'Global lock (m:SRG)',
 		value: 'global'
 	});
-	if (MorebitsGlobal.wiki.isGSWiki()) {
+	if (MorebitsGlobal.isGSWiki()) {
 		categories.append({
 			type: 'option',
 			label: 'Global sysops/Requests (m:GS/R)',
