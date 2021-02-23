@@ -43,7 +43,7 @@ window.MorebitsGlobal = MorebitsGlobal;  // allow global access
 /**
  * Stores wikiLang and wikiFamily from URL.
  */
-var temp = mw.config.get('wgServer').replace(/^(https?)?\/\//, '').split('.');
+var temp = mw.config.get('wgServer').replace(/^(https?)?:?\/\//, '').split('.');
 MorebitsGlobal.wikiLang = temp[0];
 MorebitsGlobal.wikiFamily = temp[1];
 
