@@ -56,12 +56,12 @@ TwinkleGlobal.batchundelete.callback = function twinklebatchundeleteCallback() {
 	Window.display();
 
 	var query = {
-		'action': 'query',
-		'generator': 'links',
-		'prop': 'info',
-		'inprop': 'protection',
-		'titles': mw.config.get('wgPageName'),
-		'gpllimit': TwinkleGlobal.getPref('batchMax') // the max for sysops
+		action: 'query',
+		generator: 'links',
+		prop: 'info',
+		inprop: 'protection',
+		titles: mw.config.get('wgPageName'),
+		gpllimit: TwinkleGlobal.getPref('batchMax') // the max for sysops
 	};
 	var statelem = new MorebitsGlobal.status('Grabbing list of pages');
 	var wikipedia_api = new MorebitsGlobal.wiki.api('loading...', query, function(apiobj) {
@@ -175,11 +175,11 @@ TwinkleGlobal.batchundelete.callbacks = {
 			var talkpagename = new mw.Title(params.page).getTalkPage().getPrefixedText();
 			if (talkpagename !== params.page) {
 				query = {
-					'action': 'query',
-					'prop': 'deletedrevisions',
-					'drvprop': 'ids',
-					'drvlimit': 1,
-					'titles': talkpagename
+					action: 'query',
+					prop: 'deletedrevisions',
+					drvprop: 'ids',
+					drvlimit: 1,
+					titles: talkpagename
 				};
 				wikipedia_api = new MorebitsGlobal.wiki.api('Checking talk page for deleted revisions', query, TwinkleGlobal.batchundelete.callbacks.undeleteTalk);
 				wikipedia_api.params = params;

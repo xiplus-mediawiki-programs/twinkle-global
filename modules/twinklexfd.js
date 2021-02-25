@@ -1228,10 +1228,10 @@ TwinkleGlobal.xfd.callbacks = {
 			} else {
 				// Find current target of redirect
 				var query = {
-					'action': 'query',
-					'titles': mw.config.get('wgPageName'),
-					'redirects': true,
-					'curtimestamp': true
+					action: 'query',
+					titles: mw.config.get('wgPageName'),
+					redirects: true,
+					curtimestamp: true
 				};
 				var wikipedia_api = new MorebitsGlobal.wiki.api('Finding target of redirect', query, TwinkleGlobal.xfd.callbacks.rfd.findTargetCallback(callback));
 				wikipedia_api.params = params;
@@ -1404,12 +1404,12 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 
 		case 'afd': // AFD
 			query = {
-				'action': 'query',
-				'list': 'allpages',
-				'apprefix': 'Articles for deletion/' + MorebitsGlobal.pageNameNorm,
-				'apnamespace': 4,
-				'apfilterredir': 'nonredirects',
-				'aplimit': MorebitsGlobal.userIsSysop ? 5000 : 500
+				action: 'query',
+				list: 'allpages',
+				apprefix: 'Articles for deletion/' + MorebitsGlobal.pageNameNorm,
+				apnamespace: 4,
+				apfilterredir: 'nonredirects',
+				aplimit: MorebitsGlobal.userIsSysop ? 5000 : 500
 			};
 			wikipedia_api = new MorebitsGlobal.wiki.api('Tagging article with deletion tag', query, TwinkleGlobal.xfd.callbacks.afd.main);
 			wikipedia_api.params = { usertalk: usertalk, reason: reason, noinclude: noinclude,
@@ -1507,12 +1507,12 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 
 		case 'mfd': // MFD
 			query = {
-				'action': 'query',
-				'list': 'allpages',
-				'apprefix': 'Miscellany for deletion/' + MorebitsGlobal.pageNameNorm,
-				'apnamespace': 4,
-				'apfilterredir': 'nonredirects',
-				'aplimit': MorebitsGlobal.userIsSysop ? 5000 : 500
+				action: 'query',
+				list: 'allpages',
+				apprefix: 'Miscellany for deletion/' + MorebitsGlobal.pageNameNorm,
+				apnamespace: 4,
+				apfilterredir: 'nonredirects',
+				aplimit: MorebitsGlobal.userIsSysop ? 5000 : 500
 			};
 			wikipedia_api = new MorebitsGlobal.wiki.api('Looking for prior nominations of this page', query, TwinkleGlobal.xfd.callbacks.mfd.main);
 			wikipedia_api.params = { usertalk: usertalk, notifyuserspace: notifyuserspace, reason: reason, noinclude: noinclude, xfdcat: xfdcat };

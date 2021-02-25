@@ -64,8 +64,8 @@ TwinkleGlobal.welcome.normal = function() {
 
 				var oWelcomeNode = welcomeNode.cloneNode(true);
 				oWelcomeNode.firstChild.setAttribute('href', oHref + '&' + $.param({
-					'friendlywelcome': TwinkleGlobal.getPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
-					'vanarticle': MorebitsGlobal.pageNameNorm
+					friendlywelcome: TwinkleGlobal.getPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
+					vanarticle: MorebitsGlobal.pageNameNorm
 				}));
 				$oList[0].parentNode.parentNode.appendChild(document.createTextNode(' '));
 				$oList[0].parentNode.parentNode.appendChild(oWelcomeNode);
@@ -76,8 +76,8 @@ TwinkleGlobal.welcome.normal = function() {
 
 				var nWelcomeNode = welcomeNode.cloneNode(true);
 				nWelcomeNode.firstChild.setAttribute('href', nHref + '&' + $.param({
-					'friendlywelcome': TwinkleGlobal.getPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
-					'vanarticle': MorebitsGlobal.pageNameNorm
+					friendlywelcome: TwinkleGlobal.getPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
+					vanarticle: MorebitsGlobal.pageNameNorm
 				}));
 				$nList[0].parentNode.parentNode.appendChild(document.createTextNode(' '));
 				$nList[0].parentNode.parentNode.appendChild(nWelcomeNode);

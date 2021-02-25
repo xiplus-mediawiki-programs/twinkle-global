@@ -72,25 +72,25 @@ TwinkleGlobal.unlink.callback = function(presetReason) {
 	var query;
 	if (mw.config.get('wgNamespaceNumber') === 6) {  // File:
 		query = {
-			'action': 'query',
-			'list': [ 'backlinks', 'imageusage' ],
-			'bltitle': mw.config.get('wgPageName'),
-			'iutitle': mw.config.get('wgPageName'),
-			'bllimit': 'max', // 500 is max for normal users, 5000 for bots and sysops
-			'iulimit': 'max', // 500 is max for normal users, 5000 for bots and sysops
-			'blnamespace': TwinkleGlobal.getPref('unlinkNamespaces'),
-			'iunamespace': TwinkleGlobal.getPref('unlinkNamespaces'),
-			'rawcontinue': true
+			action: 'query',
+			list: [ 'backlinks', 'imageusage' ],
+			bltitle: mw.config.get('wgPageName'),
+			iutitle: mw.config.get('wgPageName'),
+			bllimit: 'max', // 500 is max for normal users, 5000 for bots and sysops
+			iulimit: 'max', // 500 is max for normal users, 5000 for bots and sysops
+			blnamespace: TwinkleGlobal.getPref('unlinkNamespaces'),
+			iunamespace: TwinkleGlobal.getPref('unlinkNamespaces'),
+			rawcontinue: true
 		};
 	} else {
 		query = {
-			'action': 'query',
-			'list': 'backlinks',
-			'bltitle': mw.config.get('wgPageName'),
-			'blfilterredir': 'nonredirects',
-			'bllimit': 'max', // 500 is max for normal users, 5000 for bots and sysops
-			'blnamespace': TwinkleGlobal.getPref('unlinkNamespaces'),
-			'rawcontinue': true
+			action: 'query',
+			list: 'backlinks',
+			bltitle: mw.config.get('wgPageName'),
+			blfilterredir: 'nonredirects',
+			bllimit: 'max', // 500 is max for normal users, 5000 for bots and sysops
+			blnamespace: TwinkleGlobal.getPref('unlinkNamespaces'),
+			rawcontinue: true
 		};
 	}
 	var wikipedia_api = new MorebitsGlobal.wiki.api('Grabbing backlinks', query, TwinkleGlobal.unlink.callbacks.display.backlinks);

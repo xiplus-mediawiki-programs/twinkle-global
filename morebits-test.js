@@ -114,7 +114,7 @@ mw.loader.using('jquery.ui', function() {
 					title: 'Test MorebitsGlobal.wiki.page class',
 					modal: true,
 					buttons: {
-						'Append': function() {
+						Append: function() {
 							$(this).dialog('close');
 							TwinkleGlobal.morebitsTest.initSimpleWindow();
 
@@ -123,7 +123,7 @@ mw.loader.using('jquery.ui', function() {
 							TwinkleGlobal.morebitsTest.setPageOptions(page);
 							page.append(TwinkleGlobal.morebitsTest.finalSaveCallback);
 						},
-						'Prepend': function() {
+						Prepend: function() {
 							$(this).dialog('close');
 							TwinkleGlobal.morebitsTest.initSimpleWindow();
 
@@ -132,7 +132,7 @@ mw.loader.using('jquery.ui', function() {
 							TwinkleGlobal.morebitsTest.setPageOptions(page);
 							page.prepend(TwinkleGlobal.morebitsTest.finalSaveCallback);
 						},
-						'Insert': function() {
+						Insert: function() {
 							if ($('#beforeText').val() === '') {
 								alert('Text to insert before must be specified!');
 								return;
@@ -148,7 +148,7 @@ mw.loader.using('jquery.ui', function() {
 							TwinkleGlobal.morebitsTest.setPageOptions(page);
 							page.load(TwinkleGlobal.morebitsTest.loadCallbackInsert);
 						},
-						'Replace': function() {
+						Replace: function() {
 							$(this).dialog('close');
 							TwinkleGlobal.morebitsTest.initSimpleWindow();
 
