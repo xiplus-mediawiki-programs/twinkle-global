@@ -39,7 +39,7 @@ TwinkleGlobal.speedy = function twinklespeedy() {
 
 TwinkleGlobal.speedy.speedyTemplate = null;
 TwinkleGlobal.speedy.speedyTemplateDefault = {
-	'jawiki': 'Delete'
+	jawiki: 'Delete'
 };
 TwinkleGlobal.speedy.speedyTemplateSubst = [
 	'kowiki'
@@ -56,11 +56,11 @@ TwinkleGlobal.speedy.callback = function twinklespeedyCallback() {
 
 	var dataapi = TwinkleGlobal.getPref('dataApi');
 	dataapi.get({
-		'action': 'wbgetentities',
-		'format': 'json',
-		'ids': TwinkleGlobal.getPref('speedyTemplateItem'),
-		'props': 'sitelinks',
-		'sitefilter': mw.config.get('wgDBname')
+		action: 'wbgetentities',
+		format: 'json',
+		ids: TwinkleGlobal.getPref('speedyTemplateItem'),
+		props: 'sitelinks',
+		sitefilter: mw.config.get('wgDBname')
 	}).done(function (data) {
 		var site = data.entities[TwinkleGlobal.getPref('speedyTemplateItem')].sitelinks[mw.config.get('wgDBname')];
 		if (site !== undefined) {

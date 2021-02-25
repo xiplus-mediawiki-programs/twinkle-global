@@ -21,7 +21,7 @@
 
 TwinkleGlobal.config = {};
 
-TwinkleGlobal.config.watchlistEnums = { yes: 'Add to watchlist', no: "Don't add to watchlist", 'default': 'Follow your site preferences' };
+TwinkleGlobal.config.watchlistEnums = { yes: 'Add to watchlist', no: "Don't add to watchlist", default: 'Follow your site preferences' };
 
 TwinkleGlobal.config.commonSets = {
 	csdCriteria: {
@@ -47,32 +47,32 @@ TwinkleGlobal.config.commonSets = {
 		'p1', 'p2'
 	],
 	namespacesNoSpecial: {
-		'0': 'Article',
-		'1': 'Talk (article)',
-		'2': 'User',
-		'3': 'User talk',
-		'4': 'Wikipedia',
-		'5': 'Wikipedia talk',
-		'6': 'File',
-		'7': 'File talk',
-		'8': 'MediaWiki',
-		'9': 'MediaWiki talk',
-		'10': 'Template',
-		'11': 'Template talk',
-		'12': 'Help',
-		'13': 'Help talk',
-		'14': 'Category',
-		'15': 'Category talk',
-		'100': 'Portal',
-		'101': 'Portal talk',
-		'108': 'Book',
-		'109': 'Book talk',
-		'118': 'Draft',
-		'119': 'Draft talk',
-		'710': 'TimedText',
-		'711': 'TimedText talk',
-		'828': 'Module',
-		'829': 'Module talk'
+		0: 'Article',
+		1: 'Talk (article)',
+		2: 'User',
+		3: 'User talk',
+		4: 'Wikipedia',
+		5: 'Wikipedia talk',
+		6: 'File',
+		7: 'File talk',
+		8: 'MediaWiki',
+		9: 'MediaWiki talk',
+		10: 'Template',
+		11: 'Template talk',
+		12: 'Help',
+		13: 'Help talk',
+		14: 'Category',
+		15: 'Category talk',
+		100: 'Portal',
+		101: 'Portal talk',
+		108: 'Book',
+		109: 'Book talk',
+		118: 'Draft',
+		119: 'Draft talk',
+		710: 'TimedText',
+		711: 'TimedText talk',
+		828: 'Module',
+		829: 'Module talk'
 	}
 };
 
@@ -270,7 +270,7 @@ TwinkleGlobal.config.sections = [
 				name: 'speedySelectionStyle',
 				label: 'When to go ahead and tag/delete the page',
 				type: 'enum',
-				enumValues: { 'buttonClick': 'When I click "Submit"', 'radioClick': 'As soon as I click an option' }
+				enumValues: { buttonClick: 'When I click "Submit"', radioClick: 'As soon as I click an option' }
 			},
 
 			// TwinkleConfig.markSpeedyPagesAsPatrolled (boolean)

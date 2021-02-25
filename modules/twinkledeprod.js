@@ -41,14 +41,14 @@ TwinkleGlobal.deprod.callback = function() {
 	Window.display();
 
 	var query = {
-		'action': 'query',
-		'generator': 'categorymembers',
-		'gcmtitle': mw.config.get('wgPageName'),
-		'gcmlimit': 5000, // the max for sysops
-		'gcmnamespace': '0|6|108|2', // mostly to ignore categories
-		'prop': [ 'info', 'revisions' ],
-		'rvprop': [ 'content' ],
-		'inprop': [ 'protection' ]
+		action: 'query',
+		generator: 'categorymembers',
+		gcmtitle: mw.config.get('wgPageName'),
+		gcmlimit: 5000, // the max for sysops
+		gcmnamespace: '0|6|108|2', // mostly to ignore categories
+		prop: [ 'info', 'revisions' ],
+		rvprop: [ 'content' ],
+		inprop: [ 'protection' ]
 	};
 
 	var statelem = new MorebitsGlobal.status('Grabbing list of pages');
@@ -98,12 +98,12 @@ TwinkleGlobal.deprod.callback = function() {
 			}
 		});
 		apiobj.params.form.append({
-			'type': 'checkbox',
-			'name': 'pages',
-			'list': list
+			type: 'checkbox',
+			name: 'pages',
+			list: list
 		});
 		apiobj.params.form.append({
-			'type': 'submit'
+			type: 'submit'
 		});
 
 		var rendered = apiobj.params.form.render();
@@ -134,18 +134,18 @@ var callback_commit = function(event) {
 			var params = { page: pageName, reason: concerns[page] };
 
 			var query = {
-				'action': 'query',
-				'titles': pageName,
-				'prop': 'redirects',
-				'rdlimit': 5000  // 500 is max for normal users, 5000 for bots and sysops
+				action: 'query',
+				titles: pageName,
+				prop: 'redirects',
+				rdlimit: 5000  // 500 is max for normal users, 5000 for bots and sysops
 			};
 			var wikipedia_api = new MorebitsGlobal.wiki.api('Grabbing redirects', query, callback_deleteRedirects);
 			wikipedia_api.params = params;
 			wikipedia_api.post();
 
 			query = {
-				'action': 'query',
-				'titles': 'Talk:' + pageName
+				action: 'query',
+				titles: 'Talk:' + pageName
 			};
 			wikipedia_api = new MorebitsGlobal.wiki.api('Checking whether ' + pageName + ' has a talk page', query,
 				callback_deleteTalk);

@@ -431,11 +431,11 @@ TwinkleGlobal.prod.callback.evaluate = function twinkleprodCallbackEvaluate(e) {
 		'Template:Multidel|Template:Oldpuffull|' + // Uncommon/legacy prior XfD templates
 		'Olddrvfull|Olddelrev'; // Prior DRV templates
 	var query = {
-		'action': 'query',
-		'titles': talk_title,
-		'prop': 'categories|templates',
-		'clcategories': 'Category:Past proposed deletion candidates',
-		'tltemplates': blocking_templates
+		action: 'query',
+		titles: talk_title,
+		prop: 'categories|templates',
+		clcategories: 'Category:Past proposed deletion candidates',
+		tltemplates: blocking_templates
 	};
 
 	var wikipedia_api = new MorebitsGlobal.wiki.api('Checking talk page for prior nominations', query, TwinkleGlobal.prod.callbacks.checkpriors);

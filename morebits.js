@@ -12,6 +12,7 @@
  * - {@link MorebitsGlobal.wikitext} - utilities for dealing with wikitext
  * - {@link MorebitsGlobal.string} - utilities for manipulating strings
  * - {@link MorebitsGlobal.array} - utilities for manipulating arrays
+ * - {@link MorebitsGlobal.ip} - utilities to help process IP addresses
  *
  * Dependencies:
  * - The whole thing relies on jQuery.  But most wikis should provide this by default.
@@ -168,6 +169,9 @@ MorebitsGlobal.userIsInGroup = function (group) {
 MorebitsGlobal.userIsSysop = MorebitsGlobal.userIsInGroup('sysop');
 
 /**
+ * Deprecated as of February 2021, use {@link MorebitsGlobal.ip.sanitizeIPv6}.
+ *
+ * @deprecated Use {@link MorebitsGlobal.ip.sanitizeIPv6}.
  * Converts an IPv6 address to the canonical form stored and used by MediaWiki.
  * JavaScript translation of the {@link https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/8eb6ac3e84ea3312d391ca96c12c49e3ad0753bb/includes/utils/IP.php#131|`IP::sanitizeIP()`}
  * function from the IPUtils library.  Adddresses are verbose, uppercase,
@@ -177,60 +181,19 @@ MorebitsGlobal.userIsSysop = MorebitsGlobal.userIsInGroup('sysop');
  * @returns {string}
  */
 MorebitsGlobal.sanitizeIPv6 = function (address) {
-	address = address.trim();
-	if (address === '') {
-		return null;
-	}
-	if (!mw.util.isIPv6Address(address, true)) {
-		return address; // nothing else to do for IPv4 addresses or invalid ones
-	}
-	// Remove any whitespaces, convert to upper case
-	address = address.toUpperCase();
-	// Expand zero abbreviations
-	var abbrevPos = address.indexOf('::');
-	if (abbrevPos > -1) {
-		// We know this is valid IPv6. Find the last index of the
-		// address before any CIDR number (e.g. "a:b:c::/24").
-		var CIDRStart = address.indexOf('/');
-		var addressEnd = CIDRStart !== -1 ? CIDRStart - 1 : address.length - 1;
-		// If the '::' is at the beginning...
-		var repeat, extra, pad;
-		if (abbrevPos === 0) {
-			repeat = '0:';
-			extra = address === '::' ? '0' : ''; // for the address '::'
-			pad = 9; // 7+2 (due to '::')
-		// If the '::' is at the end...
-		} else if (abbrevPos === (addressEnd - 1)) {
-			repeat = ':0';
-			extra = '';
-			pad = 9; // 7+2 (due to '::')
-		// If the '::' is in the middle...
-		} else {
-			repeat = ':0';
-			extra = ':';
-			pad = 8; // 6+2 (due to '::')
-		}
-		var replacement = repeat;
-		pad -= address.split(':').length - 1;
-		for (var i = 1; i < pad; i++) {
-			replacement += repeat;
-		}
-		replacement += extra;
-		address = address.replace('::', replacement);
-	}
-	// Remove leading zeros from each bloc as needed
-	return address.replace(/(^|:)0+([0-9A-Fa-f]{1,4})/g, '$1$2');
+	console.warn('NOTE: MorebitsGlobal.sanitizeIPv6 was renamed to MorebitsGlobal.ip.sanitizeIPv6 in February 2021, please use that instead'); // eslint-disable-line no-console
+	return MorebitsGlobal.ip.sanitizeIPv6(address);
 };
 
 /**
  * Determines whether the current page is a redirect or soft redirect. Fails
  * to detect soft redirects on edit, history, etc. pages.  Will attempt to
- * detect Module:RfD, with the same failure points.
+ * detect [[Module:Redirect for discussion]], with the same failure points.
  *
  * @returns {boolean}
  */
 MorebitsGlobal.isPageRedirect = function() {
-	return !!(mw.config.get('wgIsRedirect') || document.getElementById('softredirect') || $('.box-RfD').length);
+	return !!(mw.config.get('wgIsRedirect') || document.getElementById('softredirect') || $('.box-Redirect_for_discussion').length);
 };
 
 /**
@@ -364,8 +327,10 @@ MorebitsGlobal.quickForm.prototype.append = function QuickFormAppend(data) {
  *  - `radio`: A radio button. Must use "list" parameter.
  *      - Attributes: name, list, event
  *      - Attributes (within list): name, label, value, checked, disabled, event, subgroup
- *  - `input`: A text box.
- *      - Attributes: name, label, value, size, disabled, required, readonly, maxlength, event
+ *  - `input`: A text input box.
+ *      - Attributes: name, label, value, size, placeholder, maxlength, disabled, required, readonly, event
+ *  - `number`: A number input box.
+ *      - Attributes: Everything the text `input` has, as well as: min, max, step, list
  *  - `dyninput`: A set of text boxes with "Remove" buttons and an "Add" button.
  *      - Attributes: name, label, min, max, sublabel, value, size, maxlength, event
  *  - `hidden`: An invisible form field.
@@ -666,6 +631,8 @@ MorebitsGlobal.quickForm.element.prototype.compute = function QuickFormElementCo
 				MorebitsGlobal.checkboxShiftClickSupport(MorebitsGlobal.quickForm.getElements(node, data.name));
 			}
 			break;
+		// input is actually a text-type, so number here inherits the same stuff
+		case 'number':
 		case 'input':
 			node = document.createElement('div');
 			node.setAttribute('id', 'div_' + id);
@@ -677,29 +644,33 @@ MorebitsGlobal.quickForm.element.prototype.compute = function QuickFormElementCo
 			}
 
 			subnode = node.appendChild(document.createElement('input'));
-			if (data.value) {
-				subnode.setAttribute('value', data.value);
-			}
 			subnode.setAttribute('name', data.name);
-			subnode.setAttribute('type', 'text');
-			if (data.size) {
-				subnode.setAttribute('size', data.size);
+
+			if (data.type === 'input') {
+				subnode.setAttribute('type', 'text');
+			} else {
+				subnode.setAttribute('type', 'number');
+				['min', 'max', 'step', 'list'].forEach(function(att) {
+					if (data[att]) {
+						subnode.setAttribute(att, data[att]);
+					}
+				});
 			}
-			if (data.disabled) {
-				subnode.setAttribute('disabled', 'disabled');
-			}
-			if (data.required) {
-				subnode.setAttribute('required', 'required');
-			}
-			if (data.readonly) {
-				subnode.setAttribute('readonly', 'readonly');
-			}
-			if (data.maxlength) {
-				subnode.setAttribute('maxlength', data.maxlength);
-			}
+
+			['value', 'size', 'placeholder', 'maxlength'].forEach(function(att) {
+				if (data[att]) {
+					subnode.setAttribute(att, data[att]);
+				}
+			});
+			['disabled', 'required', 'readonly'].forEach(function(att) {
+				if (data[att]) {
+					subnode.setAttribute(att, att);
+				}
+			});
 			if (data.event) {
 				subnode.addEventListener('keyup', data.event, false);
 			}
+
 			childContainder = subnode;
 			break;
 		case 'dyninput':
@@ -1276,6 +1247,126 @@ HTMLFormElement.prototype.getUnchecked = function(name, type) {
 		}
 	}
 	return return_array;
+};
+
+/**
+ * Utilities to help process IP addresses.
+ *
+ * @namespace MorebitsGlobal.ip
+ * @memberof Morebits
+ */
+MorebitsGlobal.ip = {
+	/**
+	 * Converts an IPv6 address to the canonical form stored and used by MediaWiki.
+	 * JavaScript translation of the {@link https://gerrit.wikimedia.org/r/plugins/gitiles/mediawiki/core/+/8eb6ac3e84ea3312d391ca96c12c49e3ad0753bb/includes/utils/IP.php#131|`IP::sanitizeIP()`}
+	 * function from the IPUtils library.  Adddresses are verbose, uppercase,
+	 * normalized, and expanded to 8 words.
+	 *
+	 * @param {string} address - The IPv6 address, with or without CIDR.
+	 * @returns {string}
+	 */
+	sanitizeIPv6: function (address) {
+		address = address.trim();
+		if (address === '') {
+			return null;
+		}
+		if (!mw.util.isIPv6Address(address, true)) {
+			return address; // nothing else to do for IPv4 addresses or invalid ones
+		}
+		// Remove any whitespaces, convert to upper case
+		address = address.toUpperCase();
+		// Expand zero abbreviations
+		var abbrevPos = address.indexOf('::');
+		if (abbrevPos > -1) {
+			// We know this is valid IPv6. Find the last index of the
+			// address before any CIDR number (e.g. "a:b:c::/24").
+			var CIDRStart = address.indexOf('/');
+			var addressEnd = CIDRStart !== -1 ? CIDRStart - 1 : address.length - 1;
+			// If the '::' is at the beginning...
+			var repeat, extra, pad;
+			if (abbrevPos === 0) {
+				repeat = '0:';
+				extra = address === '::' ? '0' : ''; // for the address '::'
+				pad = 9; // 7+2 (due to '::')
+				// If the '::' is at the end...
+			} else if (abbrevPos === (addressEnd - 1)) {
+				repeat = ':0';
+				extra = '';
+				pad = 9; // 7+2 (due to '::')
+				// If the '::' is in the middle...
+			} else {
+				repeat = ':0';
+				extra = ':';
+				pad = 8; // 6+2 (due to '::')
+			}
+			var replacement = repeat;
+			pad -= address.split(':').length - 1;
+			for (var i = 1; i < pad; i++) {
+				replacement += repeat;
+			}
+			replacement += extra;
+			address = address.replace('::', replacement);
+		}
+		// Remove leading zeros from each bloc as needed
+		return address.replace(/(^|:)0+([0-9A-Fa-f]{1,4})/g, '$1$2');
+	},
+
+	/**
+	 * Determine if the given IP address is a range.  Just conjoins
+	 * `mw.util.isIPAddress` with and without the `allowBlock` option.
+	 *
+	 * @param {string} ip
+	 * @returns {boolean} - True if given a valid IP address range, false otherwise.
+	 */
+	isRange: function (ip) {
+		return mw.util.isIPAddress(ip, true) && !mw.util.isIPAddress(ip);
+	},
+
+	/**
+	 * Check that an IP range is within the CIDR limits.  Most likely to be useful
+	 * in conjunction with `wgRelevantUserName`.  CIDR limits are harcoded as /16
+	 * for IPv4 and /32 for IPv6.
+	 *
+	 * @returns {boolean} - True for valid ranges within the CIDR limits,
+	 * otherwise false (ranges outside the limit, single IPs, non-IPs).
+	 */
+	validCIDR: function (ip) {
+		if (MorebitsGlobal.ip.isRange(ip)) {
+			var subnet = parseInt(ip.match(/\/(\d{1,3})$/)[1], 10);
+			if (subnet) { // Should be redundant
+				if (mw.util.isIPv6Address(ip, true)) {
+					if (subnet >= 32) {
+						return true;
+					}
+				} else {
+					if (subnet >= 16) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	},
+
+	/**
+	 * Get the /64 subnet for an IPv6 address.
+	 *
+	 * @param {string} ipv6 - The IPv6 address, with or without a subnet.
+	 * @returns {boolean|string} - False if not IPv6 or bigger than a 64,
+	 * otherwise the (sanitized) /64 address.
+	 */
+	get64: function (ipv6) {
+		if (!ipv6 || !mw.util.isIPv6Address(ipv6, true)) {
+			return false;
+		}
+		var subnetMatch = ipv6.match(/\/(\d{1,3})$/);
+		if (subnetMatch && parseInt(subnetMatch[1], 10) < 64) {
+			return false;
+		}
+		ipv6 = MorebitsGlobal.ip.sanitizeIPv6(ipv6);
+		var ip_re = /^((?:[0-9A-F]{1,4}:){4})(?:[0-9A-F]{1,4}:){3}[0-9A-F]{1,4}(?:\/\d{1,3})?$/;
+		return ipv6.replace(ip_re, '$1' + '0:0:0:0/64');
+	}
 };
 
 
@@ -1858,11 +1949,15 @@ MorebitsGlobal.date.prototype = {
 	 * @returns {MorebitsGlobal.date}
 	 */
 	add: function(number, unit) {
+		var num = parseInt(number, 10); // normalize
+		if (isNaN(num)) {
+			throw new Error('Invalid number "' + number + '" provided.');
+		}
 		unit = unit.toLowerCase(); // normalize
 		var unitMap = MorebitsGlobal.date.unitMap;
 		var unitNorm = unitMap[unit] || unitMap[unit + 's']; // so that both singular and  plural forms work
 		if (unitNorm) {
-			this['set' + unitNorm](this['get' + unitNorm]() + number);
+			this['set' + unitNorm](this['get' + unitNorm]() + num);
 			return this;
 		}
 		throw new Error('Invalid unit "' + unit + '": Only ' + Object.keys(unitMap).join(', ') + ' are allowed.');
@@ -2551,6 +2646,7 @@ MorebitsGlobal.wiki.page = function(pageName, status) {
 		onSaveSuccess: null,
 		onSaveFailure: null,
 		onLookupCreationSuccess: null,
+		onLookupCreationFailure: null,
 		onMoveSuccess: null,
 		onMoveFailure: null,
 		onDeleteSuccess: null,
@@ -3249,13 +3345,17 @@ MorebitsGlobal.wiki.page = function(pageName, status) {
 	 *
 	 * @param {Function} onSuccess - Callback function to be called when
 	 * the username and timestamp are found within the callback.
+	 * @param {Function} [onFailure] - Callback function to be called when
+	 * the lookup fails
 	 */
-	this.lookupCreation = function(onSuccess) {
+	this.lookupCreation = function(onSuccess, onFailure) {
+		ctx.onLookupCreationSuccess = onSuccess;
+		ctx.onLookupCreationFailure = onFailure || emptyFunction;
 		if (!onSuccess) {
 			ctx.statusElement.error('Internal error: no onSuccess callback provided to lookupCreation()!');
+			ctx.onLookupCreationFailure(this);
 			return;
 		}
-		ctx.onLookupCreationSuccess = onSuccess;
 
 		var query = {
 			action: 'query',
@@ -3281,7 +3381,7 @@ MorebitsGlobal.wiki.page = function(pageName, status) {
 			query.redirects = '';  // follow all redirects
 		}
 
-		ctx.lookupCreationApi = new MorebitsGlobal.wiki.api('Retrieving page creation information', query, fnLookupCreationSuccess, ctx.statusElement);
+		ctx.lookupCreationApi = new MorebitsGlobal.wiki.api('Retrieving page creation information', query, fnLookupCreationSuccess, ctx.statusElement, ctx.onLookupCreationFailure);
 		ctx.lookupCreationApi.setParent(this);
 		ctx.lookupCreationApi.post();
 	};
@@ -3870,13 +3970,14 @@ MorebitsGlobal.wiki.page = function(pageName, status) {
 	var fnLookupCreationSuccess = function() {
 		var response = ctx.lookupCreationApi.getResponse().query;
 
-		if (!fnCheckPageName(response)) {
+		if (!fnCheckPageName(response, ctx.onLookupCreationFailure)) {
 			return; // abort
 		}
 
 		var rev = response.pages[0].revisions && response.pages[0].revisions[0];
 		if (!rev) {
 			ctx.statusElement.error('Could not find any revisions of ' + ctx.pageName);
+			ctx.onLookupCreationFailure(this);
 			return;
 		}
 
@@ -3885,11 +3986,13 @@ MorebitsGlobal.wiki.page = function(pageName, status) {
 			ctx.creator = rev.user;
 			if (!ctx.creator) {
 				ctx.statusElement.error('Could not find name of page creator');
+				ctx.onLookupCreationFailure(this);
 				return;
 			}
 			ctx.timestamp = rev.timestamp;
 			if (!ctx.timestamp) {
 				ctx.statusElement.error('Could not find timestamp of page creation');
+				ctx.onLookupCreationFailure(this);
 				return;
 			}
 			ctx.onLookupCreationSuccess(this);
@@ -3898,7 +4001,7 @@ MorebitsGlobal.wiki.page = function(pageName, status) {
 			ctx.lookupCreationApi.query.rvlimit = 50; // modify previous query to fetch more revisions
 			ctx.lookupCreationApi.query.titles = ctx.pageName; // update pageName if redirect resolution took place in earlier query
 
-			ctx.lookupCreationApi = new MorebitsGlobal.wiki.api('Retrieving page creation information', ctx.lookupCreationApi.query, fnLookupNonRedirectCreator, ctx.statusElement);
+			ctx.lookupCreationApi = new MorebitsGlobal.wiki.api('Retrieving page creation information', ctx.lookupCreationApi.query, fnLookupNonRedirectCreator, ctx.statusElement, ctx.onLookupCreationFailure);
 			ctx.lookupCreationApi.setParent(this);
 			ctx.lookupCreationApi.post();
 		}
@@ -3923,12 +4026,14 @@ MorebitsGlobal.wiki.page = function(pageName, status) {
 			ctx.timestamp = revs[0].timestamp;
 			if (!ctx.creator) {
 				ctx.statusElement.error('Could not find name of page creator');
+				ctx.onLookupCreationFailure(this);
 				return;
 			}
 
 		}
 		if (!ctx.timestamp) {
 			ctx.statusElement.error('Could not find timestamp of page creation');
+			ctx.onLookupCreationFailure(this);
 			return;
 		}
 
@@ -4488,6 +4593,7 @@ MorebitsGlobal.wiki.preview = function(previewbox) {
 	 * @param {string} wikitext - Wikitext to render; most things should work, including `subst:` and `~~~~`.
 	 * @param {string} [pageTitle] - Optional parameter for the page this should be rendered as being on, if omitted it is taken as the current page.
 	 * @param {string} [sectionTitle] - If provided, render the text as a new section using this as the title.
+	 * @returns {jQuery.promise}
 	 */
 	this.beginRender = function(wikitext, pageTitle, sectionTitle) {
 		$(previewbox).show();
@@ -4510,7 +4616,7 @@ MorebitsGlobal.wiki.preview = function(previewbox) {
 			query.sectiontitle = sectionTitle;
 		}
 		var renderApi = new MorebitsGlobal.wiki.api('loading...', query, fnRenderSuccess, new MorebitsGlobal.status('Preview'));
-		renderApi.post();
+		return renderApi.post();
 	};
 
 	var fnRenderSuccess = function(apiobj) {
@@ -5572,7 +5678,7 @@ MorebitsGlobal.simpleWindow = function SimpleWindow(width, height) {
 				this.scrollbox.style.maxHeight = 'none';
 			}
 		},
-		resizeEnd: function() {
+		resizeStop: function() {
 			this.scrollbox = null;
 		},
 		resize: function() {

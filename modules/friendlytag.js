@@ -1422,13 +1422,13 @@ TwinkleGlobal.tag.callbacks = {
 
 			// Remove tags which appear in page text as redirects
 			var api = new MorebitsGlobal.wiki.api('Getting template redirects', {
-				'action': 'query',
-				'prop': 'linkshere',
-				'titles': getRedirectsFor.join('|'),
-				'redirects': 1,  // follow redirect if the class name turns out to be a redirect page
-				'lhnamespace': '10',  // template namespace only
-				'lhshow': 'redirect',
-				'lhlimit': 'max'
+				action: 'query',
+				prop: 'linkshere',
+				titles: getRedirectsFor.join('|'),
+				redirects: 1,  // follow redirect if the class name turns out to be a redirect page
+				lhnamespace: '10',  // template namespace only
+				lhshow: 'redirect',
+				lhlimit: 'max'
 			}, function removeRedirectTag(apiobj) {
 
 				$(apiobj.responseXML).find('page').each(function(idx, page) {
@@ -1741,13 +1741,13 @@ TwinkleGlobal.tag.callbacks = {
 			}
 
 			var api = new MorebitsGlobal.wiki.api('Getting template redirects', {
-				'action': 'query',
-				'prop': 'linkshere',
-				'titles': getRedirectsFor.join('|'),
-				'redirects': 1,
-				'lhnamespace': '10', // template namespace only
-				'lhshow': 'redirect',
-				'lhlimit': 'max'
+				action: 'query',
+				prop: 'linkshere',
+				titles: getRedirectsFor.join('|'),
+				redirects: 1,
+				lhnamespace: '10', // template namespace only
+				lhshow: 'redirect',
+				lhlimit: 'max'
 			}, function replaceRedirectTag(apiobj) {
 				$(apiobj.responseXML).find('page').each(function(idx, page) {
 					var found = false;

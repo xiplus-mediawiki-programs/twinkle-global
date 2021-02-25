@@ -69,15 +69,15 @@ TwinkleGlobal.defaultConfig = {
 	confirmOnFluff: false,
 	showRollbackLinks: [ 'diff', 'others' ],
 	fluffDisabledWikis: [
-		{ 'value': 'enwiki', 'label': '' },
-		{ 'value': 'simplewiki', 'label': '' },
-		{ 'value': 'zh_classicalwiki', 'label': '' },
-		{ 'value': 'zhwiki', 'label': '' },
-		{ 'value': 'zhwikibooks', 'label': '' },
-		{ 'value': 'zhwikiquote', 'label': '' },
-		{ 'value': 'zhwikiversity', 'label': '' },
-		{ 'value': 'zhwikivoyage', 'label': '' },
-		{ 'value': 'zhwiktionary', 'label': '' }
+		{ value: 'enwiki', label: '' },
+		{ value: 'simplewiki', label: '' },
+		{ value: 'zh_classicalwiki', label: '' },
+		{ value: 'zhwiki', label: '' },
+		{ value: 'zhwikibooks', label: '' },
+		{ value: 'zhwikiquote', label: '' },
+		{ value: 'zhwikiversity', label: '' },
+		{ value: 'zhwikivoyage', label: '' },
+		{ value: 'zhwiktionary', label: '' }
 	],
 
 	// DI (twinkleimage)
@@ -104,14 +104,14 @@ TwinkleGlobal.defaultConfig = {
 	speedyLogPageName: 'CSD log',
 	noLogOnSpeedyNomination: [ 'u1' ],
 	speedyDisabledWikis: [
-		{ 'value': 'enwiki', 'label': '' },
-		{ 'value': 'simplewiki', 'label': '' },
-		{ 'value': 'zh_classicalwiki', 'label': '' },
-		{ 'value': 'zhwiki', 'label': '' },
-		{ 'value': 'zhwikiquote', 'label': '' },
-		{ 'value': 'zhwikiversity', 'label': '' },
-		{ 'value': 'zhwikivoyage', 'label': '' },
-		{ 'value': 'zhwiktionary', 'label': '' }
+		{ value: 'enwiki', label: '' },
+		{ value: 'simplewiki', label: '' },
+		{ value: 'zh_classicalwiki', label: '' },
+		{ value: 'zhwiki', label: '' },
+		{ value: 'zhwikiquote', label: '' },
+		{ value: 'zhwikiversity', label: '' },
+		{ value: 'zhwikivoyage', label: '' },
+		{ value: 'zhwiktionary', label: '' }
 	],
 
 	// Unlink
@@ -135,15 +135,15 @@ TwinkleGlobal.defaultConfig = {
 
 	// Diff
 	diffDisabledWikis: [
-		{ 'value': 'enwiki', 'label': '' },
-		{ 'value': 'simplewiki', 'label': '' },
-		{ 'value': 'zh_classicalwiki', 'label': '' },
-		{ 'value': 'zhwiki', 'label': '' },
-		{ 'value': 'zhwikibooks', 'label': '' },
-		{ 'value': 'zhwikiquote', 'label': '' },
-		{ 'value': 'zhwikiversity', 'label': '' },
-		{ 'value': 'zhwikivoyage', 'label': '' },
-		{ 'value': 'zhwiktionary', 'label': '' }
+		{ value: 'enwiki', label: '' },
+		{ value: 'simplewiki', label: '' },
+		{ value: 'zh_classicalwiki', label: '' },
+		{ value: 'zhwiki', label: '' },
+		{ value: 'zhwikibooks', label: '' },
+		{ value: 'zhwikiquote', label: '' },
+		{ value: 'zhwikiversity', label: '' },
+		{ value: 'zhwikivoyage', label: '' },
+		{ value: 'zhwiktionary', label: '' }
 	],
 
 	// Hidden preferences

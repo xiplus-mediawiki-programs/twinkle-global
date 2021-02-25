@@ -232,14 +232,14 @@ TwinkleGlobal.image.callback.evaluate = function twinkleimageCallbackEvaluate(ev
 	var templatename = derivative ? 'dw ' + type : type;
 
 	var params = {
-		'type': type,
-		'templatename': templatename,
-		'normalized': csdcrit,
-		'non_free': non_free,
-		'source': source,
-		'reason': reason,
-		'replacement': replacement,
-		'lognomination': lognomination
+		type: type,
+		templatename: templatename,
+		normalized: csdcrit,
+		non_free: non_free,
+		source: source,
+		reason: reason,
+		replacement: replacement,
+		lognomination: lognomination
 	};
 	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
 	MorebitsGlobal.status.init(event.target);
