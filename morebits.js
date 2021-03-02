@@ -5905,8 +5905,14 @@ MorebitsGlobal.simpleWindow.prototype = {
 				$footerlinks.append(bullet);
 			}
 		}
+		var url;
+		if (wikiPage.match(/^(https?:)?\/\//)) {
+			url = wikiPage;
+		} else {
+			url = mw.util.getUrl(wikiPage);
+		}
 		var link = document.createElement('a');
-		link.setAttribute('href', mw.util.getUrl(wikiPage));
+		link.setAttribute('href', url);
 		link.setAttribute('title', wikiPage);
 		link.setAttribute('target', '_blank');
 		link.textContent = text;
