@@ -419,7 +419,6 @@ MorebitsGlobal.quickForm.prototype.append = function QuickFormAppend(data) {
 MorebitsGlobal.quickForm.element = function QuickFormElement(data) {
 	this.data = data;
 	this.childs = [];
-	this.id = MorebitsGlobal.quickForm.element.id++;
 };
 
 /**
@@ -469,7 +468,7 @@ MorebitsGlobal.quickForm.element.prototype.compute = function QuickFormElementCo
 	var node;
 	var childContainder = null;
 	var label;
-	var id = (in_id ? in_id + '_' : '') + 'node_' + this.id;
+	var id = (in_id ? in_id + '_' : '') + 'node_' + MorebitsGlobal.quickForm.element.id++;
 	if (data.adminonly && !MorebitsGlobal.userIsSysop) {
 		// hell hack alpha
 		data.type = 'hidden';
