@@ -57,16 +57,11 @@ switch (MorebitsGlobal.wikiFamily) {
 	case 'wikimedia':
 		switch (MorebitsGlobal.wikiLang) {
 			case 'commons':
-				MorebitsGlobal.interwikiPrefix = 'commons';
-				break;
 			case 'meta':
-				MorebitsGlobal.interwikiPrefix = 'meta';
-				break;
 			case 'species':
-				MorebitsGlobal.interwikiPrefix = 'species';
-				break;
 			case 'incubator':
-				MorebitsGlobal.interwikiPrefix = 'incubator';
+			case 'outreach':
+				MorebitsGlobal.interwikiPrefix = MorebitsGlobal.wikiLang;
 				break;
 			default:
 				break;
