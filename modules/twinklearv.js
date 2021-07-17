@@ -585,7 +585,6 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				}
 			}).join('. ');
 
-			reason += ':';
 			if (types) {
 				reason += types;
 			}
