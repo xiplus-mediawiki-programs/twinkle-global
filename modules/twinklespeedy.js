@@ -370,6 +370,10 @@ TwinkleGlobal.speedy.generalList = [
 	{
 		label: 'Empty page',
 		value: 'Empty page'
+	},
+	{
+		label: 'Author\'s request',
+		value: 'Author\'s request'
 	}
 ];
 
