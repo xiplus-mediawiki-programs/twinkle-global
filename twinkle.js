@@ -153,7 +153,7 @@ TwinkleGlobal.defaultConfig = {
 	batchProtectChunks: 50,
 	batchundeleteChunks: 50,
 	proddeleteChunks: 50,
-	configPage: '//meta.wikimedia.org/wiki/User:Xiplus/Twinkle/Preferences',
+	configPage: '//meta.wikimedia.org/wiki/User:Xiplus/TwinkleGlobal/Preferences',
 	metaApi: mw.config.get('wgDBname') === 'metawiki'
 		? new mw.Api()
 		: new mw.ForeignApi('https://meta.wikimedia.org/w/api.php'),
