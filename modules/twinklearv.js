@@ -607,10 +607,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			metaapi.edit('Steward requests/Global', function(revision) {
 				var text = revision.content;
 				if (new RegExp('{{\\s*([Ll]uxotool|[Ll]ock[Hh]ide|[Ll][Hh]|[Mm]ulti[Ll]ock).*?\\|\\s*(\\d+\\s*=\\s*)?' + RegExp.escape(uid, true) + '\\s*(\\||}})').test(text)) {
-					statusIndicator.error('Report already present, will not add a new one');
-					var $srgLink = '<a target="_blank" href="/wiki/m:SRG">m:SRG</a>';
-					MorebitsGlobal.status.printUserText(header + reason, 'The comments you typed are provided below, in case you wish to manually post them under the existing report for this user at ' + $srgLink + ':');
-					return $.Deferred().reject('dup');
+					return $.Deferred().reject('Report already present, will not add a new one');
 				}
 				if (mw.util.isIPAddress(uid)) {
 					text = text.replace(/\n+(== Requests for global \(un\)lock and \(un\)hiding == *\n)/, '\n\n' + header + reason + '\n\n$1');
@@ -625,11 +622,9 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			}).then(function() {
 				statusIndicator.info('Done');
 			}, function(e) {
-				if (e === 'dup') {
-					// pass
-				} else {
-					statusIndicator.error(e);
-				}
+				statusIndicator.error(e);
+				var $srgLink = '<a target="_blank" href="/wiki/m:SRG">m:SRG</a>';
+				MorebitsGlobal.status.printUserText(header + reason, 'The comments you typed are provided below, in case you wish to manually post them under the existing report for this user at ' + $srgLink + ':');
 			});
 			break;
 	}
