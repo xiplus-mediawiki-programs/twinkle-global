@@ -557,7 +557,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				}
 				header += '{{Status}}\n';
 				if (usernames.length === 1) {
-					header += '*{{LockHide|' + uid;
+					header += '*{{LockHide|1=' + uid;
 					if (form.hidename && form.hidename.checked) {
 						header += '|hidename=1';
 					}
@@ -566,8 +566,10 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 					if (usernames.length > TwinkleGlobal.getPref('srgCollapseNumber')) {
 						header += '{{Collapse top|User list}}\n';
 					}
-					header += '*{{MultiLock|';
-					header += usernames.join('|');
+					header += '*{{MultiLock';
+					usernames.forEach(function(v, i) {
+						header += '|' + (i + 1) + '=' + v;
+					});
 					if (form.hidename && form.hidename.checked) {
 						header += '|hidename=1';
 					}
