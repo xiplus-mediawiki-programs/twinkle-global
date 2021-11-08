@@ -9,7 +9,7 @@
 (function() {
 
 var VERSION = '{{subst:#time:Y-m-d H:i:s}}';
-var PREFIX = 'User:Xiplus/Twinkle/';
+var PREFIX = 'User:Xiplus/TwinkleGlobal/';
 var rebuildcache = localStorage.Twinkle_global_xiplus_version !== VERSION;
 var tests = [];
 var api;
@@ -50,26 +50,26 @@ var message = function(text) {
 
 tests.push({ name: 'morebits.js', test: true });
 tests.push({ name: 'twinkle.js', test: true });
-tests.push({ name: 'modules/twinklearv.js', test: true });
-// tests.push({name: 'modules/twinklewarn.js',          test: true});
-// tests.push({name: 'modules/friendlyshared.js',       test: true});
-// tests.push({name: 'modules/friendlytag.js',          test: true});
-// tests.push({name: 'modules/friendlytalkback.js',     test: true});
-// tests.push({name: 'modules/twinklebatchdelete.js',   test: true});
-// tests.push({name: 'modules/twinklebatchundelete.js', test: true});
-// tests.push({name: 'modules/twinkleblock.js',         test: true});
-// tests.push({name: 'modules/twinkleclose.js',         test: true});
-tests.push({ name: 'modules/twinkleconfig.js', test: true });
-// tests.push({name: 'modules/twinklecopyvio.js',       test: true});
-// tests.push({name: 'modules/twinkledelimages.js',     test: true});
-tests.push({ name: 'modules/twinklediff.js', test: true });
-tests.push({ name: 'modules/twinklefluff.js', test: true });
-// tests.push({name: 'modules/twinkleimage.js',         test: true});
-// tests.push({name: 'modules/twinkleprotect.js',       test: true});
-tests.push({ name: 'modules/twinklespeedy.js', test: true });
-// tests.push({name: 'modules/twinklestub.js',          test: true});
-// tests.push({name: 'modules/twinkleunlink.js',        test: true});
-// tests.push({name: 'modules/twinklexfd.js',           test: true});
+tests.push({ name: 'twinklearv.js', test: true });
+// tests.push({name: 'twinklewarn.js',          test: true});
+// tests.push({name: 'friendlyshared.js',       test: true});
+// tests.push({name: 'friendlytag.js',          test: true});
+// tests.push({name: 'friendlytalkback.js',     test: true});
+// tests.push({name: 'twinklebatchdelete.js',   test: true});
+// tests.push({name: 'twinklebatchundelete.js', test: true});
+// tests.push({name: 'twinkleblock.js',         test: true});
+// tests.push({name: 'twinkleclose.js',         test: true});
+tests.push({ name: 'twinkleconfig.js', test: true });
+// tests.push({name: 'twinklecopyvio.js',       test: true});
+// tests.push({name: 'twinkledelimages.js',     test: true});
+tests.push({ name: 'twinklediff.js', test: true });
+tests.push({ name: 'twinklefluff.js', test: true });
+// tests.push({name: 'twinkleimage.js',         test: true});
+// tests.push({name: 'twinkleprotect.js',       test: true});
+tests.push({ name: 'twinklespeedy.js', test: true });
+// tests.push({name: 'twinklestub.js',          test: true});
+// tests.push({name: 'twinkleunlink.js',        test: true});
+// tests.push({name: 'twinklexfd.js',           test: true});
 
 
 function main() {
@@ -79,7 +79,7 @@ function main() {
 		api = new mw.ForeignApi('https://meta.wikimedia.org/w/api.php');
 	}
 
-	mw.loader.load('https://meta.wikimedia.org/w/index.php?title=User:Xiplus/Twinkle/morebits.css&action=raw&ctype=text/css', 'text/css');
+	mw.loader.load('https://meta.wikimedia.org/w/index.php?title=User:Xiplus/TwinkleGlobal/morebits.css&action=raw&ctype=text/css', 'text/css');
 
 	var finished = 0;
 	var code = [];
