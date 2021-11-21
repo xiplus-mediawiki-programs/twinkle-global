@@ -126,22 +126,20 @@ switch (MorebitsGlobal.wikiFamily) {
  * @returns {boolean}
  */
 MorebitsGlobal.nonGSWikis = [
-	'alswiki', 'anwiki', 'arwiki', 'barwiki', 'betawikiversity', 'bgwiki', 'bnwiki', 'bswiki',
-	'cawiki', 'commonswiki', 'cswiki', 'cswikinews', 'cswikisource', 'cswiktionary', 'cywiki',
-	'dawiki', 'dewiki', 'dewikibooks', 'dewikinews', 'dewikisource', 'dewiktionary',
-	'elwiki', 'enwiki', 'enwikinews', 'enwikiquote', 'enwikisource', 'enwikivoyage', 'enwiktionary',
-	'eowiki', 'eswiki', 'eswikinews', 'eswiktionary', 'etwiki', 'euwiki',
-	'fawiki', 'fiwiki', 'fiwiktionary', 'frwiki', 'frwikibooks', 'frwikinews', 'frwikisource',
-	'frwikiversity', 'frwiktionary', 'glwiki', 'hewiki', 'hewikisource', 'hrwiki', 'huwiki',
-	'idwiki', 'incubatorwiki', 'iswiki', 'itwiki', 'jawiki', 'kawiki', 'kowiki',
-	'lawiki', 'lmowiki', 'loginwiki', 'ltwiki', 'lvwiki', 'metawiki', 'mkwiki', 'mlwiki', 'mrwiki', 'mswiki',
-	'nlwiki', 'nlwikibooks', 'nlwikimedia', 'nlwiktionary', 'nnwiki', 'nowiki',
-	'plwiki', 'plwikimedia', 'plwikiquote', 'plwikisource', 'plwiktionary', 'ptwiki',
-	'rowiki', 'ruwiki',
-	'sewikimedia', 'simplewiki', 'skwiki', 'slwiki', 'sourceswiki', 'specieswiki', 'srwiki',
-	'svwiki', 'svwiktionary',
-	'tawiki', 'testwiki', 'tewiki', 'thwiki', 'tlwiki', 'trwiki', 'ukwiki', 'urwiki', 'viwiki', 'wikidatawiki',
-	'zh_yuewiki', 'zhwiki'
+	'alswiki', 'anwiki', 'arwiki', 'betawikiversity', 'bgwiki', 'bnwiki', 'bswiki', 
+	'cawiki', 'commonswiki', 'cswiki', 'cswikisource', 'cswiktionary', 'cywiki', 'dawiki',
+	'dewiki', 'dewikibooks', 'dewikisource', 'dewiktionary', 'elwiki', 'enwiki', 
+	'enwikinews', 'enwikiquote', 'enwikisource', 'enwiktionary', 'eowiki', 'eswiki', 
+	'eswikinews', 'etwiki', 'euwiki', 'fawiki', 'fiwiki', 'fiwiktionary', 'frwiki', 
+	'frwikibooks', 'frwikinews', 'frwikisource', 'frwikiversity', 'frwiktionary', 
+	'glwiki', 'hewiki', 'hewikisource', 'hrwiki', 'huwiki', 'idwiki', 'iswiki', 
+	'itwiki', 'jawiki', 'kawiki', 'kowiki', 'lawiki', 'lmowiki', 'loginwiki', 
+	'ltwiki', 'lvwiki', 'metawiki', 'mkwiki', 'mlwiki', 'mrwiki', 'mswiki', 'nlwiki', 
+	'nlwikibooks', 'nlwikimedia', 'nlwiktionary', 'nnwiki', 'nowiki', 'plwiki', 
+	'plwikimedia', 'plwikiquote', 'plwikisource', 'plwiktionary', 'ptwiki', 'rowiki', 
+	'ruwiki', 'sewikimedia', 'simplewiki', 'skwiki', 'slwiki', 'sourceswiki', 'specieswiki', 
+	'srwiki', 'svwiki', 'svwiktionary', 'tawiki', 'testwiki', 'tewiki', 'thwiki', 'tlwiki', 
+	'trwiki', 'ukwiki', 'urwiki', 'viwiki', 'wikidatawiki', 'zh_yuewiki', 'zhwiki'
 ];
 MorebitsGlobal.isGSWiki = function() {
 	return MorebitsGlobal.nonGSWikis.indexOf(mw.config.get('wgDBname')) === -1;
