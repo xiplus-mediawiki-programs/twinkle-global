@@ -30,7 +30,7 @@
 		"yoda": "error",
 		"block-spacing": "error",
 		"brace-style": ["error", "1tbs"],
-		"comma-dangle": "error",
+		"comma-dangle": ["error", "only-multiline"],
 		"comma-spacing": ["error", { "before": false, "after": true }],
 		"computed-property-spacing": ["error", "never"],
 		"func-call-spacing": ["error", "never"],
