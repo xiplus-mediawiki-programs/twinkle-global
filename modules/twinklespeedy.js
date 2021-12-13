@@ -156,6 +156,19 @@ TwinkleGlobal.speedy.initDialog = function twinklespeedyInitDialog(callbackfunc)
 		]
 	});
 
+	tagOptions.append({
+		type: 'checkbox',
+		list: [
+			{
+				label: 'Wrap deletion tag with <noinclude>',
+				value: 'noinclude',
+				name: 'noinclude',
+				checked: mw.config.get('wgNamespaceNumber') === 10,
+				tooltip: 'Will wrap the deletion tag in <noinclude> tags, so that it won\'t transclude. This option is not normally required.'
+			}
+		]
+	});
+
 	if (MorebitsGlobal.isGSWiki()) {
 		tagOptions.append({
 			type: 'checkbox',
@@ -490,7 +503,7 @@ TwinkleGlobal.speedy.callbacks = {
 
 			// check for existing deletion tags
 			var delete_re_string = MorebitsGlobal.pageNameRegex(RegExp.escape(TwinkleGlobal.speedy.getSpeedyTemplate(), true));
-			var delete_re = new RegExp('{{\\s*(delete|' + delete_re_string + ')\\s*(\\|(?:{{[^{}]*}}|[^{}])*)?}}\\s*', 'i');
+			var delete_re = new RegExp('(<noinclude>)?{{\\s*(delete|' + delete_re_string + ')\\s*(\\|(?:{{[^{}]*}}|[^{}])*)?}}(</noinclude>)?\\s*', 'i');
 			var textNoSd = text.replace(delete_re, '');
 			if (text !== textNoSd && !confirm('The page already has the CSD-related template on it. Do you want to remove this one and add yours template?')) {
 				statelem.error('Aborted marking by user.');
@@ -498,9 +511,8 @@ TwinkleGlobal.speedy.callbacks = {
 			}
 			text = textNoSd;
 
-			// Wrap SD template in noinclude tags if we are in template space.
-			// Won't work with userboxes in userspace, or any other transcluded page outside template space
-			if (mw.config.get('wgNamespaceNumber') === 10) {  // Template:
+			// Wrap SD template in noinclude tags if user want to.
+			if (params.noinclude) {
 				code = '<noinclude>' + code + '</noinclude>';
 			}
 
@@ -610,13 +622,15 @@ TwinkleGlobal.speedy.callback.evaluateUser = function twinklespeedyCallbackEvalu
 
 	var blank = form.blank.checked;
 	var gsr = form.gsr ? form.gsr.checked : false;
+	var noinclude = form.noinclude.checked;
 
 	var params = {
 		values: values,
 		normalizeds: normalizeds,
 		templateParams: TwinkleGlobal.speedy.getParameters(form, values),
 		blank: blank,
-		gsr: gsr
+		gsr: gsr,
+		noinclude: noinclude
 	};
 	if (!params.templateParams) {
 		return;
