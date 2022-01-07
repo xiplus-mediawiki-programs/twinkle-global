@@ -31,10 +31,7 @@ TwinkleGlobal.fluff = function twinklefluff() {
 	// This is for handling quick bots that makes edits seconds after the original edit is made.
 	// This only affects vandalism rollback; for good faith rollback, it will stop, indicating a bot
 	// has no faith, and for normal rollback, it will rollback that edit.
-	TwinkleGlobal.fluff.trustedBots = [
-		'AnomieBOT',
-		'SineBot'
-	];
+	TwinkleGlobal.fluff.trustedBots = [];
 
 	if (mw.config.get('wgIsProbablyEditable')) {
 		// Only proceed if the user can actually edit the page
@@ -110,7 +107,6 @@ TwinkleGlobal.fluff.linkBuilder = {
 		}
 
 		var normNode = document.createElement('strong');
-		var vandNode = document.createElement('strong');
 
 		var normLink = TwinkleGlobal.fluff.linkBuilder.buildLink('SteelBlue', 'rollback');
 		var vandLink = TwinkleGlobal.fluff.linkBuilder.buildLink('Red', 'vandalism');
@@ -124,25 +120,9 @@ TwinkleGlobal.fluff.linkBuilder = {
 			TwinkleGlobal.fluff.disableLinks(revNode);
 		});
 
-		vandNode.appendChild(vandLink);
 		normNode.appendChild(normLink);
 
-		var separator = inline ? ' ' : ' || ';
-
-		if (!inline) {
-			var agfNode = document.createElement('strong');
-			var agfLink = TwinkleGlobal.fluff.linkBuilder.buildLink('DarkOliveGreen', 'rollback (AGF)');
-			$(agfLink).click(function() {
-				TwinkleGlobal.fluff.revert('agf', vandal, rev, page);
-				// TwinkleGlobal.fluff.disableLinks(revNode); // rollbackInPlace not relevant for any inline situations
-			});
-			agfNode.appendChild(agfLink);
-			revNode.appendChild(agfNode);
-		}
-		revNode.appendChild(document.createTextNode(separator));
 		revNode.appendChild(normNode);
-		revNode.appendChild(document.createTextNode(separator));
-		revNode.appendChild(vandNode);
 
 		return revNode;
 
