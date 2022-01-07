@@ -5,3 +5,16 @@
 .skin-vector .vector-menu-dropdown #p-twinkle {
 	width: 3.24em;
 }
+
+/* twinklefluff.js */
+.tw-rollback-link-wrapper {
+	color: black;
+}
+
+.tw-rollback-link-revert-to-text {
+	color: saddlebrown;
+}
+
+.tw-rollback-link-normal-text {
+	color: steelblue;
+}
