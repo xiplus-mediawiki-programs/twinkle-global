@@ -425,6 +425,7 @@ USAGE
 ## updating all files.
 __DATA__
 twinkle.js
+  twinkle.css
   morebits.js
   morebits.css
   modules/twinkleconfig.js
