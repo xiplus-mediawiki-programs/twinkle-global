@@ -80,6 +80,7 @@ function main() {
 	}
 
 	mw.loader.load('https://meta.wikimedia.org/w/index.php?title=User:Xiplus/TwinkleGlobal/morebits.css&action=raw&ctype=text/css', 'text/css');
+	mw.loader.load('https://meta.wikimedia.org/w/index.php?title=User:Xiplus/TwinkleGlobal/twinkle.css&action=raw&ctype=text/css', 'text/css');
 
 	var finished = 0;
 	var code = [];
