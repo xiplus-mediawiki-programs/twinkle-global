@@ -75,7 +75,6 @@ TwinkleGlobal.defaultConfig = {
 		{ value: 'zhwiki', label: '' },
 		{ value: 'zhwikibooks', label: '' },
 		{ value: 'zhwikiquote', label: '' },
-		{ value: 'zhwikiversity', label: '' },
 		{ value: 'zhwikivoyage', label: '' },
 		{ value: 'zhwiktionary', label: '' }
 	],
@@ -109,7 +108,6 @@ TwinkleGlobal.defaultConfig = {
 		{ value: 'zh_classicalwiki', label: '' },
 		{ value: 'zhwiki', label: '' },
 		{ value: 'zhwikiquote', label: '' },
-		{ value: 'zhwikiversity', label: '' },
 		{ value: 'zhwikivoyage', label: '' },
 		{ value: 'zhwiktionary', label: '' }
 	],
@@ -141,7 +139,6 @@ TwinkleGlobal.defaultConfig = {
 		{ value: 'zhwiki', label: '' },
 		{ value: 'zhwikibooks', label: '' },
 		{ value: 'zhwikiquote', label: '' },
-		{ value: 'zhwikiversity', label: '' },
 		{ value: 'zhwikivoyage', label: '' },
 		{ value: 'zhwiktionary', label: '' }
 	],
