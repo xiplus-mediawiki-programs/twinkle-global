@@ -5763,6 +5763,7 @@ MorebitsGlobal.simpleWindow = function SimpleWindow(width, height) {
 	});
 
 	var $widget = $(this.content).dialog('widget');
+	$widget.attr('lang', 'en');
 
 	// delete the placeholder button (it's only there so the buttonpane gets created)
 	$widget.find('button').each(function(key, value) {
