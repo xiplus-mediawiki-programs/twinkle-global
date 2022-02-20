@@ -28,9 +28,11 @@ TwinkleGlobal.arv = function twinklearv() {
 	var title = mw.util.isIPAddress(username) ? 'Report IP to stewards' : 'Report user to stewards';
 
 	TwinkleGlobal.addPortletLink(function() {
-		TwinkleGlobal.arv.callback(username);
+		TwinkleGlobal.arv.callback([username]);
 	}, 'GARV', 'twg-arv', title);
 };
+
+TwinkleGlobal.arv.usernames = [];
 
 // Return: header, language, project
 TwinkleGlobal.arv.getProject = function () {
@@ -73,18 +75,19 @@ TwinkleGlobal.arv.getProject = function () {
 	}
 };
 
-TwinkleGlobal.arv.callback = function (uid) {
+TwinkleGlobal.arv.callback = function (usernames, defaultCategory) {
+	TwinkleGlobal.arv.usernames = usernames;
 	var Window = new MorebitsGlobal.simpleWindow(600, 500);
 	Window.setTitle('Advance Reporting and Vetting'); // Backronym
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Add custom reason', TwinkleGlobal.getPref('configPage'));
 	Window.addFooterLink('Suggest useful reasons', TwinkleGlobal.getPref('bugReportLink'));
-	if (mw.util.isIPAddress(uid)) {
+	if (mw.util.isIPAddress(usernames[0])) {
 		Window.addFooterLink('Global blocks', 'm:Global blocks');
 	} else {
 		Window.addFooterLink('Global locks', 'm:Global locks');
 	}
-	var isIP = mw.util.isIPAddress(uid);
+	var isIP = mw.util.isIPAddress(usernames[0]);
 	// form initialise
 	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.arv.callback.evaluate);
 	var categories = form.append({
@@ -96,20 +99,23 @@ TwinkleGlobal.arv.callback = function (uid) {
 	categories.append({
 		type: 'option',
 		label: isIP ? 'Global block (m:SRG)' : 'Global lock (m:SRG)',
-		value: 'global'
+		value: 'global',
+		selected: defaultCategory === 'global'
 	});
 	if (MorebitsGlobal.isGSWiki()) {
 		categories.append({
 			type: 'option',
 			label: 'Global sysops/Requests (m:GS/R)',
-			value: 'gsr'
+			value: 'gsr',
+			selected: defaultCategory === 'gsr'
 		});
 	}
 	if (!isIP) {
 		categories.append({
 			type: 'option',
 			label: 'Checkuser (m:SRCU)',
-			value: 'srcu'
+			value: 'srcu',
+			selected: defaultCategory === 'srcu'
 		});
 	}
 	form.append({
@@ -121,7 +127,7 @@ TwinkleGlobal.arv.callback = function (uid) {
 	form.append({
 		type: 'hidden',
 		name: 'uid',
-		value: uid
+		value: usernames[0]
 	});
 
 	var result = form.render();
@@ -139,7 +145,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 	var root = e.target.form;
 	var old_area = MorebitsGlobal.quickForm.getElements(root, 'work_area')[0];
 	var work_area = null;
-	var username = mw.config.get('wgRelevantUserName');
+	var username = TwinkleGlobal.arv.usernames[0];
 
 	switch (value) {
 		case 'global':
@@ -181,7 +187,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					label: 'Usernames',
 					sublabel: 'Username: ',
 					tooltip: 'Without the User:-prefix',
-					min: 1
+					min: TwinkleGlobal.arv.usernames.length
 				});
 				work_area.append({
 					type: 'checkbox',
@@ -227,7 +233,9 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 				name: 'reason'
 			});
 			work_area = work_area.render();
-			$('input:text[name=username]', work_area).first().val(username);
+			TwinkleGlobal.arv.usernames.forEach(function(username, index) {
+				$('input:text[name=username]', work_area).eq(index).val(username);
+			});
 			old_area.parentNode.replaceChild(work_area, old_area);
 			break;
 
@@ -320,7 +328,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					label: 'Users to compare',
 					sublabel: 'Username :',
 					tooltip: 'Usernames of suspected sockpuppets. Without the User:-prefix.',
-					min: 2,
+					min: Math.max(TwinkleGlobal.arv.usernames.length, 2),
 					max: 10
 				});
 			work_area.append({
@@ -351,7 +359,9 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 				]
 			});
 			work_area = work_area.render();
-			$('input:text[name=sockpuppet]', work_area).first().val(username);
+			TwinkleGlobal.arv.usernames.forEach(function(username, index) {
+				$('input:text[name=sockpuppet]', work_area).eq(index).val(username);
+			});
 			old_area.parentNode.replaceChild(work_area, old_area);
 			break;
 	}
@@ -360,7 +370,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 TwinkleGlobal.arv.callback.changeHidename = function(e) {
 	var checked = e.target.checked;
 	var form = e.target.form;
-	var username = mw.config.get('wgRelevantUserName');
+	var username = TwinkleGlobal.arv.usernames[0];
 
 	if (checked) {
 		form.header.value = '';
