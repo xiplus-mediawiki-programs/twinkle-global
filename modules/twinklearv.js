@@ -25,7 +25,7 @@ TwinkleGlobal.arv = function twinklearv() {
 		return;
 	}
 
-	var title = mw.util.isIPAddress(username) ? 'Report IP to stewards' : 'Report user to stewards';
+	var title = mw.util.isIPAddress(username, true) ? 'Report IP to stewards' : 'Report user to stewards';
 
 	TwinkleGlobal.addPortletLink(function() {
 		TwinkleGlobal.arv.callback([username]);
@@ -82,12 +82,12 @@ TwinkleGlobal.arv.callback = function (usernames, defaultCategory) {
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Add custom reason', TwinkleGlobal.getPref('configPage'));
 	Window.addFooterLink('Suggest useful reasons', TwinkleGlobal.getPref('bugReportLink'));
-	if (mw.util.isIPAddress(usernames[0])) {
+	if (mw.util.isIPAddress(usernames[0], true)) {
 		Window.addFooterLink('Global blocks', 'm:Global blocks');
 	} else {
 		Window.addFooterLink('Global locks', 'm:Global locks');
 	}
-	var isIP = mw.util.isIPAddress(usernames[0]);
+	var isIP = mw.util.isIPAddress(usernames[0], true);
 	// form initialise
 	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.arv.callback.evaluate);
 	var categories = form.append({
@@ -153,11 +153,11 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 		default:
 			work_area = new MorebitsGlobal.quickForm.element({
 				type: 'field',
-				label: mw.util.isIPAddress(username)
+				label: mw.util.isIPAddress(username, true)
 					? 'Request for global block' : 'Request for global lock',
 				name: 'work_area'
 			});
-			if (mw.util.isIPAddress(username)) {
+			if (mw.util.isIPAddress(username, true)) {
 				work_area.append({
 					type: 'input',
 					name: 'header',
@@ -527,11 +527,11 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			});
 
 			if (!usernames.length) {
-				alert('You must specify at least one ' + mw.util.isIPAddress(uid) ? 'IP' : 'user');
+				alert('You must specify at least one ' + mw.util.isIPAddress(uid, true) ? 'IP' : 'user');
 				return;
 			}
 
-			if (mw.util.isIPAddress(uid)) {
+			if (mw.util.isIPAddress(uid, true)) {
 				header = '=== Global block ';
 				if (form.header.value.trim()) {
 					header += 'for ' + form.header.value.trim();
@@ -621,7 +621,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				if (new RegExp('{{\\s*([Ll]uxotool|[Ll]ock[Hh]ide|[Ll][Hh]|[Mm]ulti[Ll]ock).*?\\|\\s*(\\d+\\s*=\\s*)?' + RegExp.escape(uid, true) + '\\s*(\\||}})').test(text)) {
 					return $.Deferred().reject('Report already present, will not add a new one');
 				}
-				if (mw.util.isIPAddress(uid)) {
+				if (mw.util.isIPAddress(uid, true)) {
 					text = text.replace(/\n+(== Requests for global \(un\)lock and \(un\)hiding == *\n)/, '\n\n' + header + reason + '\n\n$1');
 				} else {
 					text = text.replace(/\n+(== See also == *\n)/, '\n\n' + header + reason + '\n\n$1');
