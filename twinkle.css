@@ -18,3 +18,8 @@
 .tw-rollback-link-normal-text {
 	color: steelblue;
 }
+
+/* User:Xiplus/TwinkleGlobal/Preferences */
+#twinkleglobal-config-content input[type=checkbox] {
+	margin-right: 2px;
+}
