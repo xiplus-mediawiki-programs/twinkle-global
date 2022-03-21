@@ -185,7 +185,7 @@ TwinkleGlobal.config.sections = [
 				name: 'openTalkPage',
 				label: 'Open user talk page after these types of reversions',
 				type: 'set',
-				setValues: { agf: 'AGF rollback', norm: 'Normal rollback', vand: 'Vandalism rollback', torev: '"Restore this version"' }
+				setValues: { norm: 'Normal rollback', torev: '"Restore this version"' }
 			},
 
 			// TwinkleConfig.openTalkPageOnAutoRevert (bool)
@@ -212,7 +212,7 @@ TwinkleGlobal.config.sections = [
 				name: 'markRevertedPagesAsMinor',
 				label: 'Mark as minor edit for these types of reversions',
 				type: 'set',
-				setValues: { agf: 'AGF rollback', norm: 'Normal rollback', vand: 'Vandalism rollback', torev: '"Restore this version"' }
+				setValues: { norm: 'Normal rollback', torev: '"Restore this version"' }
 			},
 
 			// TwinkleConfig.watchRevertedPages (array)
@@ -221,7 +221,7 @@ TwinkleGlobal.config.sections = [
 				name: 'watchRevertedPages',
 				label: 'Add pages to watchlist for these types of reversions',
 				type: 'set',
-				setValues: { agf: 'AGF rollback', norm: 'Normal rollback', vand: 'Vandalism rollback', torev: '"Restore this version"' }
+				setValues: { norm: 'Normal rollback', torev: '"Restore this version"' }
 			},
 
 			// TwinkleConfig.offerReasonOnNormalRevert (boolean)
