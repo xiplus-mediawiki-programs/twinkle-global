@@ -83,9 +83,9 @@ TwinkleGlobal.arv.callback = function (usernames, defaultCategory) {
 	Window.addFooterLink('Add custom reason', TwinkleGlobal.getPref('configPage'));
 	Window.addFooterLink('Suggest useful reasons', TwinkleGlobal.getPref('bugReportLink'));
 	if (mw.util.isIPAddress(usernames[0], true)) {
-		Window.addFooterLink('Global blocks', 'm:Global blocks');
+		Window.addFooterLink('Global blocks', 'm:Special:MyLanguage/Global blocks');
 	} else {
-		Window.addFooterLink('Global locks', 'm:Global locks');
+		Window.addFooterLink('Global locks', 'm:Special:MyLanguage/Global locks');
 	}
 	var isIP = mw.util.isIPAddress(usernames[0], true);
 	// form initialise
