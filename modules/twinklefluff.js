@@ -414,7 +414,6 @@ TwinkleGlobal.fluff.callbacks = {
 			statelem.error('We have less than one additional revision, thus impossible to revert.');
 			return;
 		}
-		var top = revs[0];
 		if (lastrevid < params.revid) {
 			MorebitsGlobal.status.error('Error', [ 'The most recent revision ID received from the server, ', MorebitsGlobal.htmlNode('strong', lastrevid), ', is less than the ID of the displayed revision. This could indicate that the current revision has been deleted, the server is lagging, or that bad data has been received. Stopping revert.' ]);
 			return;
@@ -423,22 +422,7 @@ TwinkleGlobal.fluff.callbacks = {
 		if (params.revid !== lastrevid) {
 			MorebitsGlobal.status.warn('Warning', [ 'Latest revision ', MorebitsGlobal.htmlNode('strong', lastrevid), ' doesn\'t equal our revision ', MorebitsGlobal.htmlNode('strong', params.revid) ]);
 			if (lastuser === params.user) {
-				switch (params.type) {
-					case 'vand':
-						MorebitsGlobal.status.info('Info', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', params.user), '. As we assume vandalism, we will proceed to revert.' ]);
-						break;
-					case 'agf':
-						MorebitsGlobal.status.warn('Warning', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', params.user), '. As we assume good faith, we will stop the revert, as the problem might have been fixed.' ]);
-						return;
-					default:
-						MorebitsGlobal.status.warn('Notice', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', params.user), ', but we will stop the revert.' ]);
-						return;
-				}
-			} else if (params.type === 'vand' &&
-					TwinkleGlobal.fluff.trustedBots.indexOf(top.getAttribute('user')) !== -1 && revs.length > 1 &&
-					revs[1].getAttribute('pageId') === params.revid) {
-				MorebitsGlobal.status.info('Info', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', lastuser), ', a trusted bot, and the revision before was made by our vandal, so we will proceed with the revert.' ]);
-				index = 2;
+				MorebitsGlobal.status.warn('Notice', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', params.user), ', but we will stop the revert.' ]);
 			} else {
 				MorebitsGlobal.status.error('Error', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', lastuser), ', so it might have already been reverted, we will stop the revert.']);
 				return;
@@ -447,27 +431,13 @@ TwinkleGlobal.fluff.callbacks = {
 		}
 
 		if (TwinkleGlobal.fluff.trustedBots.indexOf(params.user) !== -1) {
-			switch (params.type) {
-				case 'vand':
-					MorebitsGlobal.status.info('Info', [ 'Vandalism revert was chosen on ', MorebitsGlobal.htmlNode('strong', params.user), '. As this is a trusted bot, we assume you wanted to revert vandalism made by the previous user instead.' ]);
-					index = 2;
-					params.user = revs[1].getAttribute('user');
-					break;
-				case 'agf':
-					MorebitsGlobal.status.warn('Notice', [ 'Good faith revert was chosen on ', MorebitsGlobal.htmlNode('strong', params.user), '. This is a trusted bot and thus AGF rollback will not proceed.' ]);
-					return;
-				case 'norm':
-				/* falls through */
-				default:
-					var cont = confirm('Normal revert was chosen, but the most recent edit was made by a trusted bot (' + params.user + '). Do you want to revert the revision before instead?');
-					if (cont) {
-						MorebitsGlobal.status.info('Info', [ 'Normal revert was chosen on ', MorebitsGlobal.htmlNode('strong', params.user), '. This is a trusted bot, and per confirmation, we\'ll revert the previous revision instead.' ]);
-						index = 2;
-						params.user = revs[1].getAttribute('user');
-					} else {
-						MorebitsGlobal.status.warn('Notice', [ 'Normal revert was chosen on ', MorebitsGlobal.htmlNode('strong', params.user), '. This is a trusted bot, but per confirmation, revert on selected revision will proceed.' ]);
-					}
-					break;
+			var cont = confirm('Normal revert was chosen, but the most recent edit was made by a trusted bot (' + params.user + '). Do you want to revert the revision before instead?');
+			if (cont) {
+				MorebitsGlobal.status.info('Info', [ 'Normal revert was chosen on ', MorebitsGlobal.htmlNode('strong', params.user), '. This is a trusted bot, and per confirmation, we\'ll revert the previous revision instead.' ]);
+				index = 2;
+				params.user = revs[1].getAttribute('user');
+			} else {
+				MorebitsGlobal.status.warn('Notice', [ 'Normal revert was chosen on ', MorebitsGlobal.htmlNode('strong', params.user), '. This is a trusted bot, but per confirmation, revert on selected revision will proceed.' ]);
 			}
 		}
 		var found = false;
@@ -509,41 +479,17 @@ TwinkleGlobal.fluff.callbacks = {
 		statelem.status([ ' revision ', MorebitsGlobal.htmlNode('strong', params.goodid), ' that was made ', MorebitsGlobal.htmlNode('strong', count), ' revisions ago by ', MorebitsGlobal.htmlNode('strong', params.gooduser) ]);
 
 		var summary, extra_summary;
-		switch (params.type) {
-			case 'agf':
-				extra_summary = prompt('An optional comment for the edit summary:                              ', '');  // padded out to widen prompt in Firefox
-				if (extra_summary === null) {
-					statelem.error('Aborted by user.');
-					return;
-				}
-				userHasAlreadyConfirmedAction = true;
-
-				summary = TwinkleGlobal.fluff.formatSummary('Reverted good faith edits by $USER', params.user, extra_summary);
-				break;
-
-			case 'vand':
-
-				summary = 'Reverted ' + params.count + (params.count > 1 ? ' edits' : ' edit') + ' by [[Special:Contributions/' +
-				params.user + '|' + params.user + ']] ([[User talk:' + params.user + '|talk]]) to last revision by ' +
-				params.gooduser + TwinkleGlobal.getPref('summaryAd');
-				break;
-
-			case 'norm':
-			/* falls through */
-			default:
-				if (TwinkleGlobal.getPref('offerReasonOnNormalRevert')) {
-					extra_summary = prompt('An optional comment for the edit summary:                              ', '');  // padded out to widen prompt in Firefox
-					if (extra_summary === null) {
-						statelem.error('Aborted by user.');
-						return;
-					}
-					userHasAlreadyConfirmedAction = true;
-				}
-
-				summary = TwinkleGlobal.fluff.formatSummary('Reverted ' + params.count + (params.count > 1 ? ' edits' : ' edit') +
-				' by $USER', params.user, extra_summary);
-				break;
+		if (TwinkleGlobal.getPref('offerReasonOnNormalRevert')) {
+			extra_summary = prompt('An optional comment for the edit summary:                              ', '');  // padded out to widen prompt in Firefox
+			if (extra_summary === null) {
+				statelem.error('Aborted by user.');
+				return;
+			}
+			userHasAlreadyConfirmedAction = true;
 		}
+
+		summary = TwinkleGlobal.fluff.formatSummary('Reverted ' + params.count + (params.count > 1 ? ' edits' : ' edit') +
+		' by $USER', params.user, extra_summary);
 
 		if (TwinkleGlobal.getPref('confirmOnFluff') && !userHasAlreadyConfirmedAction && !confirm('Reverting page: are you sure?')) {
 			statelem.error('Aborted by user.');
