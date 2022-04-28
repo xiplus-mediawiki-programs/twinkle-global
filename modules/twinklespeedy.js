@@ -38,6 +38,7 @@ TwinkleGlobal.speedy = function twinklespeedy() {
 };
 
 TwinkleGlobal.speedy.speedyTemplate = null;
+TwinkleGlobal.speedy.speedyTemplateRegex = null;
 TwinkleGlobal.speedy.speedyTemplateDefault = {
 	jawiki: 'Delete'
 };
@@ -47,27 +48,69 @@ TwinkleGlobal.speedy.speedyTemplateSubst = [
 
 // This function is run when the CSD tab/header link is clicked
 TwinkleGlobal.speedy.callback = function twinklespeedyCallback() {
-	var DBname = mw.config.get('wgDBname');
-	if (DBname in TwinkleGlobal.speedy.speedyTemplateDefault) {
-		TwinkleGlobal.speedy.speedyTemplate = TwinkleGlobal.speedy.speedyTemplateDefault[DBname];
-		TwinkleGlobal.speedy.initDialog(TwinkleGlobal.speedy.callback.evaluateUser);
-		return;
+	var cacheKey = 'Twinkle_global_xiplus_speedy_template';
+	var cache = mw.storage.getObject(cacheKey);
+	if (cache) {
+		var cacheTime = new Date(cache.timestamp);
+		if (cache.template && cache.regex && !isNaN(cacheTime.getTime()) && new Date() - cacheTime < 7 * 86400 * 1000) {
+			TwinkleGlobal.speedy.speedyTemplate = cache.template;
+			TwinkleGlobal.speedy.speedyTemplateRegex = cache.regex;
+			TwinkleGlobal.speedy.initDialog(TwinkleGlobal.speedy.callback.evaluateUser);
+			return;
+		}
 	}
 
-	var dataapi = TwinkleGlobal.getPref('dataApi');
-	dataapi.get({
-		action: 'wbgetentities',
-		format: 'json',
-		ids: TwinkleGlobal.getPref('speedyTemplateItem'),
-		props: 'sitelinks',
-		sitefilter: mw.config.get('wgDBname')
-	}).done(function (data) {
-		var site = data.entities[TwinkleGlobal.getPref('speedyTemplateItem')].sitelinks[mw.config.get('wgDBname')];
-		if (site !== undefined) {
-			TwinkleGlobal.speedy.speedyTemplate = site.title.replace(/^[^:]+:/, '');
+	var getTemplate = function() {
+		var def = $.Deferred();
+		var DBname = mw.config.get('wgDBname');
+		if (DBname in TwinkleGlobal.speedy.speedyTemplateDefault) {
+			TwinkleGlobal.speedy.speedyTemplate = TwinkleGlobal.speedy.speedyTemplateDefault[DBname];
+			return def.resolve();
 		}
-	}).always(function () {
-		TwinkleGlobal.speedy.initDialog(TwinkleGlobal.speedy.callback.evaluateUser, true);
+
+		var dataapi = TwinkleGlobal.getPref('dataApi');
+		dataapi.get({
+			action: 'wbgetentities',
+			format: 'json',
+			ids: TwinkleGlobal.getPref('speedyTemplateItem'),
+			props: 'sitelinks',
+			sitefilter: mw.config.get('wgDBname')
+		}).done(function (data) {
+			var site = data.entities[TwinkleGlobal.getPref('speedyTemplateItem')].sitelinks[mw.config.get('wgDBname')];
+			if (site !== undefined) {
+				TwinkleGlobal.speedy.speedyTemplate = new mw.Title(site.title).title;
+			}
+			return def.resolve();
+		}).fail(function() {
+			mw.notify('Failed to get speedy template title', { type: 'error' });
+		});
+		return def;
+	};
+
+	getTemplate().then(function() {
+		var api = new mw.Api();
+		api.get({
+			action: 'query',
+			format: 'json',
+			prop: 'redirects',
+			titles: 'Template:' + TwinkleGlobal.speedy.speedyTemplate,
+			rdlimit: 'max',
+			formatversion: '2',
+		}).then(function (data) {
+			var redirects = [MorebitsGlobal.pageNameRegex(TwinkleGlobal.speedy.speedyTemplate)];
+			(data.query.pages[0].redirects || []).forEach(function(redirect) {
+				redirects.push(MorebitsGlobal.pageNameRegex(new mw.Title(redirect.title).title));
+			});
+			TwinkleGlobal.speedy.speedyTemplateRegex = redirects.join('|');
+
+			mw.storage.setObject(cacheKey, {
+				template: TwinkleGlobal.speedy.speedyTemplate,
+				regex: TwinkleGlobal.speedy.speedyTemplateRegex,
+				timestamp: new Date().toISOString(),
+			});
+
+			TwinkleGlobal.speedy.initDialog(TwinkleGlobal.speedy.callback.evaluateUser, true);
+		});
 	});
 };
 
@@ -419,7 +462,7 @@ TwinkleGlobal.speedy.callbacks = {
 		reason = reason.substr(0, reason.length - 2); // remove trailing comma
 		var code = '{{' +
 			(TwinkleGlobal.speedy.speedyTemplateSubst.indexOf(mw.config.get('wgDBname')) !== -1 ? 'subst:' : '') +
-			TwinkleGlobal.speedy.getSpeedyTemplate() + '|1=' + reason + '}}';
+			(TwinkleGlobal.speedy.speedyTemplate || 'Delete') + '|1=' + reason + '}}';
 
 		return [code, reason];
 	},
@@ -502,8 +545,7 @@ TwinkleGlobal.speedy.callbacks = {
 			statelem.status('Checking for tags on the page...');
 
 			// check for existing deletion tags
-			var delete_re_string = MorebitsGlobal.pageNameRegex(RegExp.escape(TwinkleGlobal.speedy.getSpeedyTemplate(), true));
-			var delete_re = new RegExp('(<noinclude>)?{{\\s*(delete|' + delete_re_string + ')\\s*(\\|(?:{{[^{}]*}}|[^{}])*)?}}(</noinclude>)?\\s*', 'i');
+			var delete_re = new RegExp('(<noinclude>)?{{\\s*(' + TwinkleGlobal.speedy.speedyTemplateRegex + ')\\s*(\\|(?:{{[^{}]*}}|[^{}])*)?}}(</noinclude>)?\\s*', 'i');
 			var textNoSd = text.replace(delete_re, '');
 			if (text !== textNoSd && !confirm('The page already has the CSD-related template on it. Do you want to remove this one and add yours template?')) {
 				statelem.error('Aborted marking by user.');
@@ -584,10 +626,6 @@ TwinkleGlobal.speedy.getParameters = function twinklespeedyGetParameters(form, v
 		parameters.push(currentParams);
 	});
 	return parameters;
-};
-
-TwinkleGlobal.speedy.getSpeedyTemplate = function twinklespeedyGetSpeedyTemplate() {
-	return TwinkleGlobal.speedy.speedyTemplate || 'Delete';
 };
 
 
