@@ -541,7 +541,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				usernames.forEach(function(v) {
 					header += '* {{Luxotool|' + v + '}}\n';
 				});
-				summary = 'Reporting [[Special:Contributions/' + uid + '|' + uid + ']]';
+				summary = 'Reporting [[Special:Contributions/' + usernames[0] + '|' + usernames[0] + ']]';
 				if (usernames.length > 1) {
 					summary += ' and ' + (usernames.length - 1) + ' other IP';
 					if (usernames.length > 2) {
@@ -557,7 +557,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				if (form.hidename && form.hidename.checked) {
 					summary = 'Reporting ' + (usernames.length > 1 ? usernames.length + ' accounts' : 'an account');
 				} else {
-					summary = 'Reporting [[Special:CentralAuth/' + uid + '|' + uid + ']]';
+					summary = 'Reporting [[Special:CentralAuth/' + usernames[0] + '|' + usernames[0] + ']]';
 					if (usernames.length > 1) {
 						summary += ' and ' + (usernames.length - 1) + ' other account';
 						if (usernames.length > 2) {
@@ -567,7 +567,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				}
 				header += '{{Status}}\n';
 				if (usernames.length === 1) {
-					header += '*{{LockHide|1=' + uid;
+					header += '*{{LockHide|1=' + usernames[0];
 					if (form.hidename && form.hidename.checked) {
 						header += '|hidename=1';
 					}
@@ -618,7 +618,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			metaapi = TwinkleGlobal.getPref('metaApi');
 			metaapi.edit('Steward requests/Global', function(revision) {
 				var text = revision.content;
-				if (new RegExp('{{\\s*([Ll]uxotool|[Ll]ock[Hh]ide|[Ll][Hh]|[Mm]ulti[Ll]ock).*?\\|\\s*(\\d+\\s*=\\s*)?' + RegExp.escape(uid, true) + '\\s*(\\||}})').test(text)) {
+				if (new RegExp('{{\\s*([Ll]uxotool|[Ll]ock[Hh]ide|[Ll][Hh]|[Mm]ulti[Ll]ock).*?\\|\\s*(\\d+\\s*=\\s*)?' + RegExp.escape(usernames[0], true) + '\\s*(\\||}})').test(text)) {
 					return $.Deferred().reject('Report already present, will not add a new one');
 				}
 				if (mw.util.isIPAddress(uid, true)) {
