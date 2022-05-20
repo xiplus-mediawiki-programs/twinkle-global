@@ -79,6 +79,8 @@ TwinkleGlobal.speedy.callback = function twinklespeedyCallback() {
 			var site = data.entities[TwinkleGlobal.getPref('speedyTemplateItem')].sitelinks[mw.config.get('wgDBname')];
 			if (site !== undefined) {
 				TwinkleGlobal.speedy.speedyTemplate = new mw.Title(site.title).title;
+			} else {
+				TwinkleGlobal.speedy.speedyTemplate = 'Delete';
 			}
 			return def.resolve();
 		}).fail(function() {
