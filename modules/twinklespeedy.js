@@ -40,10 +40,12 @@ TwinkleGlobal.speedy = function twinklespeedy() {
 TwinkleGlobal.speedy.speedyTemplate = null;
 TwinkleGlobal.speedy.speedyTemplateRegex = null;
 TwinkleGlobal.speedy.speedyTemplateDefault = {
-	jawiki: 'Delete'
+	jawiki: 'Delete',
+	ptwiki: 'ER/TwinkleGlobal'
 };
 TwinkleGlobal.speedy.speedyTemplateSubst = [
-	'kowiki'
+	'kowiki',
+	'ptwiki'
 ];
 
 // This function is run when the CSD tab/header link is clicked
