@@ -27,7 +27,7 @@ TwinkleGlobal.diff = function twinklediff() {
 	TwinkleGlobal.addPortletLink(mw.util.getUrl(mw.config.get('wgPageName'), {diff: 'cur', oldid: 'prev'}), 'Last', 'tw-lastdiff', 'Show most recent diff');
 
 	// Show additional tabs only on diff pages
-	if (mw.util.getParamValue('diff')) {
+	if (mw.config.get('wgDiffNewId')) {
 		TwinkleGlobal.addPortletLink(function() {
 			TwinkleGlobal.diff.evaluate(false);
 		}, 'Since', 'tw-since', 'Show difference between last diff and the revision made by previous user');
@@ -35,8 +35,7 @@ TwinkleGlobal.diff = function twinklediff() {
 			TwinkleGlobal.diff.evaluate(true);
 		}, 'Since mine', 'tw-sincemine', 'Show difference between last diff and my last revision');
 
-		var oldid = /oldid=(.+)/.exec($('#mw-diff-ntitle1').find('strong a').first().attr('href'))[1];
-		TwinkleGlobal.addPortletLink(mw.util.getUrl(mw.config.get('wgPageName'), {diff: 'cur', oldid: oldid}), 'Current', 'tw-curdiff', 'Show difference to current revision');
+		TwinkleGlobal.addPortletLink(mw.util.getUrl(mw.config.get('wgPageName'), {diff: 'cur', oldid: mw.config.get('wgDiffNewId')}), 'Current', 'tw-curdiff', 'Show difference to current revision');
 	}
 };
 
