@@ -163,7 +163,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					name: 'header',
 					label: 'Header: Global block for ',
 					value: '[[Special:Contributions/' + username + '|' + username + ']]',
-					size: 77
+					size: 50
 				});
 				work_area.append({
 					type: 'dyninput',
@@ -180,7 +180,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					name: 'header',
 					label: 'Header: Global lock for ',
 					value: '[[User:' + username + '|' + username + ']]',
-					size: 77
+					size: 50
 				});
 				work_area.append({
 					type: 'dyninput',
