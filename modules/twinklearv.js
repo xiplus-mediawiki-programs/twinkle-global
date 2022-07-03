@@ -163,7 +163,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					name: 'header',
 					label: 'Header: Global block for ',
 					value: '[[Special:Contributions/' + username + '|' + username + ']]',
-					size: 50
+					size: 77
 				});
 				work_area.append({
 					type: 'dyninput',
@@ -171,7 +171,8 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					label: 'IPs',
 					sublabel: 'IP: ',
 					tooltip: 'Without the User:-prefix',
-					min: 1
+					min: 1,
+					size: 50
 				});
 			} else {
 				work_area.append({
@@ -179,7 +180,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					name: 'header',
 					label: 'Header: Global lock for ',
 					value: '[[User:' + username + '|' + username + ']]',
-					size: 50
+					size: 77
 				});
 				work_area.append({
 					type: 'dyninput',
@@ -187,7 +188,8 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					label: 'Usernames',
 					sublabel: 'Username: ',
 					tooltip: 'Without the User:-prefix',
-					min: TwinkleGlobal.arv.usernames.length
+					min: TwinkleGlobal.arv.usernames.length,
+					size: 50
 				});
 				work_area.append({
 					type: 'checkbox',
@@ -307,7 +309,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 				name: 'header',
 				label: 'Header: ',
 				value: username + '@' + TwinkleGlobal.arv.getProject()[0],
-				size: 70
+				size: 65
 			});
 			work_area.append({
 				type: 'input',
