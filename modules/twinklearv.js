@@ -280,13 +280,6 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 				name: 'work_area'
 			});
 
-			// Beta feature
-			work_area.append({
-				type: 'div',
-				label: 'This is a beta feature. Remember to review your edits after clicking "Submit query".',
-				style: 'color: orange; font-weight: bold;'
-			});
-
 			var localCheckuser = [
 				/* Wikimedia */ 'metawiki', 'commonswiki', 'specieswiki', 'wikidatawiki',
 				/* Wikipedia L1 */ 'arwiki', 'bnwiki', 'cawiki', 'cswiki', 'dawiki', 'dewiki', 'enwiki', 'eswiki',
