@@ -180,7 +180,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					name: 'header',
 					label: 'Header: Global lock for ',
 					value: '[[User:' + username + '|' + username + ']]',
-					size: 50
+					className: 'mgfullwidth'
 				});
 				work_area.append({
 					type: 'dyninput',

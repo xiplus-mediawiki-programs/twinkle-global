@@ -59,6 +59,12 @@ form.mgquickform input[type=text], form.mgquickform select
 	font-size: 110%;
 }
 
+form.mgquickform input.mgfullwidth
+{
+	width: 100%;
+	box-sizing: border-box;
+}
+
 form.mgquickform select
 {
 	border: 1px solid gray;
