@@ -258,7 +258,7 @@ TwinkleGlobal.xfd.callback.change_category = function twinklexfdCallbackChangeCa
 				.chosen({width: '100%'});
 
 			// Reduce padding
-			mw.util.addCSS('.morebits-dialog .chosen-drop .chosen-results li { padding-top: 2px; padding-bottom: 2px; }');
+			mw.util.addCSS('.morebitsglobal-dialog .chosen-drop .chosen-results li { padding-top: 2px; padding-bottom: 2px; }');
 
 			break;
 		case 'tfd':

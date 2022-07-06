@@ -10,26 +10,26 @@
 
 /* MorebitsGlobal.status */
 
-.morebits_status_status {
+.morebitsglobal_status_status {
 	color: #4682B4;
 }
 
-.morebits_status_info {
+.morebitsglobal_status_info {
 	color: #228B22;
 }
 
-.morebits_status_warn {
+.morebitsglobal_status_warn {
 	color: #FF4500;
 }
 
-.morebits_status_error {
+.morebitsglobal_status_error {
 	color: #FF4500;
 	font-weight: bold;
 }
 
 /* MorebitsGlobal.quickForm */
 
-form.quickform
+form.mgquickform
 {
 	width: 96%;
 	vertical-align: middle;
@@ -37,36 +37,36 @@ form.quickform
 	padding: .5em;
 }
 
-form.quickform *
+form.mgquickform *
 {
 	font-family: sans-serif;
 }
 
-form.quickform fieldset
+form.mgquickform fieldset
 {
 	margin: .4em 0 1em;
 }
 
-form.quickform legend
+form.mgquickform legend
 {
 	color: #31628F;
 	font-weight: bold;
 }
 
-form.quickform input[type=text], form.quickform select
+form.mgquickform input[type=text], form.mgquickform select
 {
 	min-width: 15em;
 	font-size: 110%;
 }
 
-form.quickform select
+form.mgquickform select
 {
 	border: 1px solid gray;
 	margin-left: .2em;
 }
 
-form.quickform input[type=checkbox],
-form.quickform input[type=radio] {
+form.mgquickform input[type=checkbox],
+form.mgquickform input[type=radio] {
 	height: 13px;
 	margin-top: 2px;
 	margin-right: 2px;
@@ -76,11 +76,11 @@ form.quickform input[type=radio] {
 	vertical-align: top;
 }
 
-form.quickform div {
+form.mgquickform div {
 	line-height: 18px;
 }
 
-form.quickform h5
+form.mgquickform h5
 {
 	margin: .5em 0 0;
 	padding: .3em .2em .2em;
@@ -88,43 +88,43 @@ form.quickform h5
 }
 
 /* only give the top border to headers with something above them */
-form.quickform div + h5, form.quickform div + div > h5, form.quickform h5 + h5
+form.mgquickform div + h5, form.mgquickform div + div > h5, form.mgquickform h5 + h5
 {
 	border-top: 1px solid #88A;
 }
 
-form.quickform textarea
+form.mgquickform textarea
 {
 	width: 100%;
 	height: 4em;
 	font-size: 150%;
 }
 
-form.quickform input:disabled + label
+form.mgquickform input:disabled + label
 {
 	color: gray;
 }
 
-form.quickform span.quickformDescription
+form.mgquickform span.mgquickformDescription
 {
 	font-style: italic;
 }
 
-form.quickform .quickformSubgroup
+form.mgquickform .mgquickformSubgroup
 {
 	margin-bottom: .5em;
 	margin-left: 3em;
 }
 
 /* The tooltip button and the content itself */
-form.quickform .morebits-tooltipButton
+form.mgquickform .morebitsglobal-tooltipButton
 {
 	color: mediumblue;
 	font-weight: bold;
 	cursor: help;
 	padding: .3em;
 }
-.morebits-ui-tooltip
+.morebitsglobal-ui-tooltip
 {
 	padding: 4px 6px 4px 6px;
 	font-size: 13px;
@@ -133,7 +133,7 @@ form.quickform .morebits-tooltipButton
 
 /* Scrollbox styles, for use within MorebitsGlobal.simpleWindow */
 
-div.morebits-scrollbox
+div.morebitsglobal-scrollbox
 {
 	background: white;
 	border: 1px solid gray;
@@ -144,14 +144,14 @@ div.morebits-scrollbox
 	padding: 6px 6px 0;
 }
 
-div.morebits-scrollbox > h5:first-child
+div.morebitsglobal-scrollbox > h5:first-child
 {
 	border: none;
 	margin-top: 0;
 	padding-top: 0;
 }
 
-div.morebits-scrollbox > :last-child
+div.morebitsglobal-scrollbox > :last-child
 {
 	margin-bottom: 6px;
 }
@@ -159,7 +159,7 @@ div.morebits-scrollbox > :last-child
 
 /* Previewbox */
 
-div.morebits-previewbox
+div.morebitsglobal-previewbox
 {
 	background: white;
 	color: black;
@@ -168,12 +168,12 @@ div.morebits-previewbox
 	padding: .2em .4em;
 }
 
-div.morebits-previewbox *:not(img)
+div.morebitsglobal-previewbox *:not(img)
 {
 	vertical-align: baseline;
 }
 
-div.morebits-previewbox .mw-editsection
+div.morebitsglobal-previewbox .mw-editsection
 {
 	display: none;
 }
@@ -181,7 +181,7 @@ div.morebits-previewbox .mw-editsection
 
 /* MorebitsGlobal.simpleWindow */
 
-.morebits-dialog {
+.morebitsglobal-dialog {
 	border: 1px #666 solid;
 	font-family: sans-serif;
 	background-color: #F0F8FF;
@@ -190,18 +190,18 @@ div.morebits-previewbox .mw-editsection
 
 /* px translations in comments are w.r.t standard browser settings,
    in other settings, the sizes would be scaled accordingly */
-.skin-vector .morebits-dialog {
+.skin-vector .morebitsglobal-dialog {
 	font-size: 75%; /* 100% is 16px => 75% is 12px */
 }
-.skin-timeless .morebits-dialog {
+.skin-timeless .morebitsglobal-dialog {
 	font-size: 79%; /* 100% is 15.2px => 79% is 12.008px */
 }
-.skin-monobook .morebits-dialog,
-.skin-modern .morebits-dialog {
+.skin-monobook .morebitsglobal-dialog,
+.skin-modern .morebitsglobal-dialog {
 	font-size: 120%; /* 100% is 10px => 120% is 12px */
 }
 
-body .ui-dialog.morebits-dialog .ui-dialog-titlebar {
+body .ui-dialog.morebitsglobal-dialog .ui-dialog-titlebar {
 	height: 1em;
 	background-color: #BCCADF !important;
 	background-image: none !important;
@@ -211,11 +211,11 @@ body .ui-dialog.morebits-dialog .ui-dialog-titlebar {
 	white-space: nowrap;
 }
 
-.morebits-dialog-scriptname {
+.morebitsglobal-dialog-scriptname {
 	font-weight: normal;
 }
 
-.ui-dialog.morebits-dialog .ui-dialog-titlebar-close {
+.ui-dialog.morebitsglobal-dialog .ui-dialog-titlebar-close {
 	height: 100%;
 	right: 0;
 	top: auto;
@@ -223,42 +223,42 @@ body .ui-dialog.morebits-dialog .ui-dialog-titlebar {
 	margin: -.5em -.15em 0;
 }
 
-.ui-dialog.morebits-dialog .ui-dialog-titlebar-close span {
+.ui-dialog.morebitsglobal-dialog .ui-dialog-titlebar-close span {
 	margin: .33em;
 }
 
-.ui-dialog.morebits-dialog .morebits-dialog-content {
+.ui-dialog.morebitsglobal-dialog .morebitsglobal-dialog-content {
 	padding: 0;
 }
 
-body .ui-dialog.morebits-dialog .ui-dialog-buttonpane {
+body .ui-dialog.morebitsglobal-dialog .ui-dialog-buttonpane {
 	background-color: #BCCADF;
 	margin: 0;
 	min-height: .5em;
 	padding-left: 1.2em !important;
 }
 
-body .ui-dialog.morebits-dialog .ui-dialog-buttonpane button {
+body .ui-dialog.morebitsglobal-dialog .ui-dialog-buttonpane button {
 	float: none;
 	margin: .2em 0 -.1em;
 	cursor: auto;
 }
 
-.morebits-dialog-buttons {
+.morebitsglobal-dialog-buttons {
 	font-size: 108%; /* 100% is 12px => 108% is 12.96px */
 }
 
-.morebits-dialog-footerlinks {
+.morebitsglobal-dialog-footerlinks {
 	font-size: 97%; /* 100% is 12px (from above) => 97% is 11.64px */
 	float: right;
 	margin: .7em .4em 0 0;
 }
 
-body .ui-dialog.morebits-dialog .morebits-dialog-footerlinks a {
+body .ui-dialog.morebitsglobal-dialog .morebitsglobal-dialog-footerlinks a {
 	color: #3062AD;
 }
 
-.morebits-dialog-buttons[data-empty] + .morebits-dialog-footerlinks {
+.morebitsglobal-dialog-buttons[data-empty] + .morebitsglobal-dialog-footerlinks {
 	margin: .1em .4em -.2em 0;
 }
 

@@ -7,15 +7,15 @@
 }
 
 /* twinklefluff.js */
-.tw-rollback-link-wrapper {
+.twg-rollback-link-wrapper {
 	color: black;
 }
 
-.tw-rollback-link-revert-to-text {
+.twg-rollback-link-revert-to-text {
 	color: saddlebrown;
 }
 
-.tw-rollback-link-normal-text {
+.twg-rollback-link-normal-text {
 	color: steelblue;
 }
 

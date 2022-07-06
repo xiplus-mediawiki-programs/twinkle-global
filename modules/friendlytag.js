@@ -129,7 +129,7 @@ TwinkleGlobal.tag.callback = function friendlytagCallback() {
 			form.append({
 				type: 'div',
 				id: 'tagWorkArea',
-				className: 'morebits-scrollbox',
+				className: 'morebitsglobal-scrollbox',
 				style: 'max-height: 28em'
 			});
 
@@ -619,7 +619,7 @@ TwinkleGlobal.tag.updateSortOrder = function(e) {
 
 	// Used in quick filter event function
 	allCheckboxDivs = $workarea.find('[name=articleTags], [name=alreadyPresentArticleTags]').parent();
-	allHeaders = $workarea.find('h5, .quickformDescription');
+	allHeaders = $workarea.find('h5, .mgquickformDescription');
 
 	// clear search, because the search results are not preserved over mode change
 	e.target.form.quickfilter.value = '';
@@ -627,7 +627,7 @@ TwinkleGlobal.tag.updateSortOrder = function(e) {
 	// style adjustments
 	$workarea.find('h5').css({ 'font-size': '110%' });
 	$workarea.find('h5:not(:first-child)').css({ 'margin-top': '1em' });
-	$workarea.find('div').filter(':has(span.quickformDescription)').css({ 'margin-top': '0.4em' });
+	$workarea.find('div').filter(':has(span.mgquickformDescription)').css({ 'margin-top': '0.4em' });
 
 	MorebitsGlobal.quickForm.getElements(e.target.form, 'articleTags').forEach(generateLinks);
 	var alreadyPresentTags = MorebitsGlobal.quickForm.getElements(e.target.form, 'alreadyPresentArticleTags');

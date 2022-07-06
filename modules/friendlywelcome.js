@@ -140,7 +140,7 @@ TwinkleGlobal.welcome.callback = function friendlywelcomeCallback(uid) {
 	form.append({
 		type: 'div',
 		id: 'welcomeWorkArea',
-		className: 'morebits-scrollbox'
+		className: 'morebitsglobal-scrollbox'
 	});
 
 	form.append({

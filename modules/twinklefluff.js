@@ -81,9 +81,9 @@ TwinkleGlobal.fluff.linkBuilder = {
 
 	buildLink: function(className, text) {
 		var link = document.createElement('a');
-		link.appendChild(TwinkleGlobal.fluff.linkBuilder.spanTag('tw-rollback-link-wrapper', '['));
-		link.appendChild(TwinkleGlobal.fluff.linkBuilder.spanTag('tw-rollback-link-' + className + '-text', text));
-		link.appendChild(TwinkleGlobal.fluff.linkBuilder.spanTag('tw-rollback-link-wrapper', ']'));
+		link.appendChild(TwinkleGlobal.fluff.linkBuilder.spanTag('twg-rollback-link-wrapper', '['));
+		link.appendChild(TwinkleGlobal.fluff.linkBuilder.spanTag('twg-rollback-link-' + className + '-text', text));
+		link.appendChild(TwinkleGlobal.fluff.linkBuilder.spanTag('twg-rollback-link-wrapper', ']'));
 		link.href = '#';
 		return link;
 	},
@@ -115,7 +115,7 @@ TwinkleGlobal.fluff.linkBuilder = {
 			TwinkleGlobal.fluff.disableLinks(revNode);
 		});
 
-		normNode.setAttribute('class', 'tw-rollback-link-normal');
+		normNode.setAttribute('class', 'twg-rollback-link-normal');
 
 		normNode.appendChild(normLink);
 
@@ -134,7 +134,7 @@ TwinkleGlobal.fluff.linkBuilder = {
 		var revertToRevisionNode = document.createElement(elem);
 
 		revertToRevisionNode.setAttribute('id', 'tw-revert-to-' + revisionRef);
-		revertToRevisionNode.setAttribute('class', 'tw-rollback-link-revert-to');
+		revertToRevisionNode.setAttribute('class', 'twg-rollback-link-revert-to');
 		revertToRevisionNode.style.fontWeight = 'bold';
 
 		var revertToRevisionLink = TwinkleGlobal.fluff.linkBuilder.buildLink('revert-to', 'restore this version');

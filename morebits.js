@@ -497,7 +497,7 @@ MorebitsGlobal.quickForm.element.prototype.compute = function QuickFormElementCo
 	switch (data.type) {
 		case 'form':
 			node = document.createElement('form');
-			node.className = 'quickform';
+			node.className = 'mgquickform';
 			node.setAttribute('action', 'javascript:void(0);');
 			if (data.event) {
 				node.addEventListener(data.eventType || 'submit', data.event, false);
@@ -658,7 +658,7 @@ MorebitsGlobal.quickForm.element.prototype.compute = function QuickFormElementCo
 						});
 
 						var subgroup = subgroupRaw.render(cur_id);
-						subgroup.className = 'quickformSubgroup';
+						subgroup.className = 'mgquickformSubgroup';
 						subnode.subgroup = subgroup;
 						subnode.shown = false;
 
@@ -866,7 +866,7 @@ MorebitsGlobal.quickForm.element.prototype.compute = function QuickFormElementCo
 					data.label = [ data.label ];
 				}
 				var result = document.createElement('span');
-				result.className = 'quickformDescription';
+				result.className = 'mgquickformDescription';
 				for (i = 0; i < data.label.length; ++i) {
 					if (typeof data.label[i] === 'string') {
 						result.appendChild(document.createTextNode(data.label[i]));
@@ -973,13 +973,13 @@ MorebitsGlobal.quickForm.element.prototype.compute = function QuickFormElementCo
  */
 MorebitsGlobal.quickForm.element.generateTooltip = function QuickFormElementGenerateTooltip(node, data) {
 	var tooltipButton = node.appendChild(document.createElement('span'));
-	tooltipButton.className = 'morebits-tooltipButton';
+	tooltipButton.className = 'morebitsglobal-tooltipButton';
 	tooltipButton.title = data.tooltip; // Provides the content for jQuery UI
 	tooltipButton.appendChild(document.createTextNode('?'));
 	$(tooltipButton).tooltip({
 		position: { my: 'left top', at: 'center bottom', collision: 'flipfit' },
 		// Deprecated in UI 1.12, but MW stuck on 1.9.2 indefinitely; see #398 and T71386
-		tooltipClass: 'morebits-ui-tooltip'
+		tooltipClass: 'morebitsglobal-ui-tooltip'
 	});
 };
 
@@ -1206,7 +1206,7 @@ MorebitsGlobal.quickForm.setElementVisibility = function QuickFormSetElementVisi
  * @param {boolean} [visibility] - Skip this to toggle visibility.
  */
 MorebitsGlobal.quickForm.setElementTooltipVisibility = function QuickFormSetElementTooltipVisibility(element, visibility) {
-	$(MorebitsGlobal.quickForm.getElementContainer(element)).find('.morebits-tooltipButton').toggle(visibility);
+	$(MorebitsGlobal.quickForm.getElementContainer(element)).find('.morebitsglobal-tooltipButton').toggle(visibility);
 };
 
 
@@ -4657,7 +4657,7 @@ MorebitsGlobal.wiki.page = function(pageName, status) {
  */
 MorebitsGlobal.wiki.preview = function(previewbox) {
 	this.previewbox = previewbox;
-	$(previewbox).addClass('morebits-previewbox').hide();
+	$(previewbox).addClass('morebitsglobal-previewbox').hide();
 
 	/**
 	 * Displays the preview box, and begins an asynchronous attempt
@@ -5254,7 +5254,7 @@ MorebitsGlobal.status.prototype = {
 
 	/** Complete the html, for the second part of the status message. */
 	render: function() {
-		this.node.className = 'morebits_status_' + this.type;
+		this.node.className = 'morebitsglobal_status_' + this.type;
 		while (this.target.hasChildNodes()) {
 			this.target.removeChild(this.target.firstChild);
 		}
@@ -5321,7 +5321,7 @@ MorebitsGlobal.status.error = function(text, status) {
 MorebitsGlobal.status.actionCompleted = function(text) {
 	var node = document.createElement('div');
 	node.appendChild(document.createElement('b')).appendChild(document.createTextNode(text));
-	node.className = 'morebits_status_info';
+	node.className = 'morebitsglobal_status_info';
 	if (MorebitsGlobal.status.root) {
 		MorebitsGlobal.status.root.appendChild(node);
 	}
@@ -5726,15 +5726,15 @@ MorebitsGlobal.taskManager = function() {
 MorebitsGlobal.simpleWindow = function SimpleWindow(width, height) {
 	var content = document.createElement('div');
 	this.content = content;
-	content.className = 'morebits-dialog-content';
-	content.id = 'morebits-dialog-content-' + Math.round(Math.random() * 1e15);
+	content.className = 'morebitsglobal-dialog-content';
+	content.id = 'morebitsglobal-dialog-content-' + Math.round(Math.random() * 1e15);
 
 	this.height = height;
 
 	$(this.content).dialog({
 		autoOpen: false,
 		buttons: { 'Placeholder button': function() {} },
-		dialogClass: 'morebits-dialog',
+		dialogClass: 'morebitsglobal-dialog',
 		width: Math.min(parseInt(window.innerWidth, 10), parseInt(width ? width : 800, 10)),
 		// give jQuery the given height value (which represents the anticipated height of the dialog) here, so
 		// it can position the dialog appropriately
@@ -5746,7 +5746,7 @@ MorebitsGlobal.simpleWindow = function SimpleWindow(width, height) {
 			$(event.target).dialog('destroy').remove();
 		},
 		resizeStart: function() {
-			this.scrollbox = $(this).find('.morebits-scrollbox')[0];
+			this.scrollbox = $(this).find('.morebitsglobal-scrollbox')[0];
 			if (this.scrollbox) {
 				this.scrollbox.style.maxHeight = 'none';
 			}
@@ -5772,13 +5772,13 @@ MorebitsGlobal.simpleWindow = function SimpleWindow(width, height) {
 
 	// add container for the buttons we add, and the footer links (if any)
 	var buttonspan = document.createElement('span');
-	buttonspan.className = 'morebits-dialog-buttons';
+	buttonspan.className = 'morebitsglobal-dialog-buttons';
 	var linksspan = document.createElement('span');
-	linksspan.className = 'morebits-dialog-footerlinks';
+	linksspan.className = 'morebitsglobal-dialog-footerlinks';
 	$widget.find('.ui-dialog-buttonpane').append(buttonspan, linksspan);
 
 	// resize the scrollbox with the dialog, if one is present
-	$widget.resizable('option', 'alsoResize', '#' + this.content.id + ' .morebits-scrollbox, #' + this.content.id);
+	$widget.resizable('option', 'alsoResize', '#' + this.content.id + ' .morebitsglobal-scrollbox, #' + this.content.id);
 };
 
 MorebitsGlobal.simpleWindow.prototype = {
@@ -5821,9 +5821,9 @@ MorebitsGlobal.simpleWindow.prototype = {
 	display: function() {
 		if (this.scriptName) {
 			var $widget = $(this.content).dialog('widget');
-			$widget.find('.morebits-dialog-scriptname').remove();
+			$widget.find('.morebitsglobal-dialog-scriptname').remove();
 			var scriptnamespan = document.createElement('span');
-			scriptnamespan.className = 'morebits-dialog-scriptname';
+			scriptnamespan.className = 'morebitsglobal-dialog-scriptname';
 			scriptnamespan.textContent = this.scriptName + ' \u00B7 ';  // U+00B7 MIDDLE DOT = &middot;
 			$widget.find('.ui-dialog-title').prepend(scriptnamespan);
 		}
@@ -5891,7 +5891,7 @@ MorebitsGlobal.simpleWindow.prototype = {
 		} else {
 			$(this.content).dialog('option', 'height', 'auto');
 		}
-		$(this.content).dialog('widget').find('.morebits-dialog-content')[0].style.maxHeight = parseInt(this.height - 30, 10) + 'px';
+		$(this.content).dialog('widget').find('.morebitsglobal-dialog-content')[0].style.maxHeight = parseInt(this.height - 30, 10) + 'px';
 		return this;
 	},
 
@@ -5934,9 +5934,9 @@ MorebitsGlobal.simpleWindow.prototype = {
 		});
 		// remove all buttons from the button pane and re-add them
 		if (this.buttons.length > 0) {
-			$(this.content).dialog('widget').find('.morebits-dialog-buttons').empty().append(this.buttons)[0].removeAttribute('data-empty');
+			$(this.content).dialog('widget').find('.morebitsglobal-dialog-buttons').empty().append(this.buttons)[0].removeAttribute('data-empty');
 		} else {
-			$(this.content).dialog('widget').find('.morebits-dialog-buttons')[0].setAttribute('data-empty', 'data-empty');  // used by CSS
+			$(this.content).dialog('widget').find('.morebitsglobal-dialog-buttons')[0].setAttribute('data-empty', 'data-empty');  // used by CSS
 		}
 		return this;
 	},
@@ -5949,7 +5949,7 @@ MorebitsGlobal.simpleWindow.prototype = {
 	purgeContent: function() {
 		this.buttons = [];
 		// delete all buttons in the buttonpane
-		$(this.content).dialog('widget').find('.morebits-dialog-buttons').empty();
+		$(this.content).dialog('widget').find('.morebitsglobal-dialog-buttons').empty();
 
 		while (this.content.hasChildNodes()) {
 			this.content.removeChild(this.content.firstChild);
@@ -5969,7 +5969,7 @@ MorebitsGlobal.simpleWindow.prototype = {
 	 * @returns {MorebitsGlobal.simpleWindow}
 	 */
 	addFooterLink: function(text, wikiPage, prep) {
-		var $footerlinks = $(this.content).dialog('widget').find('.morebits-dialog-footerlinks');
+		var $footerlinks = $(this.content).dialog('widget').find('.morebitsglobal-dialog-footerlinks');
 		if (this.hasFooterLinks) {
 			var bullet = document.createElement('span');
 			bullet.textContent = ' \u2022 ';  // U+2022 BULLET
@@ -6026,7 +6026,7 @@ MorebitsGlobal.simpleWindow.prototype = {
  * @param {boolean} enabled
  */
 MorebitsGlobal.simpleWindow.setButtonsEnabled = function(enabled) {
-	$('.morebits-dialog-buttons button').prop('disabled', !enabled);
+	$('.morebitsglobal-dialog-buttons button').prop('disabled', !enabled);
 };
 
 

@@ -502,8 +502,8 @@ TwinkleGlobal.load = function () {
 
 	// Increases text size in Twinkle dialogs, if so configured
 	if (TwinkleGlobal.getPref('dialogLargeFont')) {
-		mw.util.addCSS('.morebits-dialog-content, .morebits-dialog-footerlinks { font-size: 100% !important; } ' +
-			'.morebits-dialog input, .morebits-dialog select, .morebits-dialog-content button { font-size: inherit !important; }');
+		mw.util.addCSS('.morebitsglobal-dialog-content, .morebitsglobal-dialog-footerlinks { font-size: 100% !important; } ' +
+			'.morebitsglobal-dialog input, .morebitsglobal-dialog select, .morebitsglobal-dialog-content button { font-size: inherit !important; }');
 	}
 };
 

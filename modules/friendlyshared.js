@@ -32,7 +32,7 @@ TwinkleGlobal.shared.callback = function friendlysharedCallback() {
 	var div = form.append({
 		type: 'div',
 		id: 'sharedip-templatelist',
-		className: 'morebits-scrollbox'
+		className: 'morebitsglobal-scrollbox'
 	}
 	);
 	div.append({ type: 'header', label: 'Shared IP address templates' });
