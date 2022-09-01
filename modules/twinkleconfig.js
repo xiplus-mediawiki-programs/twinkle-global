@@ -21,7 +21,15 @@
 
 TwinkleGlobal.config = {};
 
-TwinkleGlobal.config.watchlistEnums = { yes: 'Add to watchlist', no: "Don't add to watchlist", default: 'Follow your site preferences' };
+TwinkleGlobal.config.watchlistEnums = {
+	'yes': 'Add to watchlist (indefinitely)',
+	'no': "Don't add to watchlist",
+	'default': 'Follow your site preferences',
+	'1 week': 'Watch for 1 week',
+	'1 month': 'Watch for 1 month',
+	'3 months': 'Watch for 3 months',
+	'6 months': 'Watch for 6 months'
+};
 
 TwinkleGlobal.config.commonSets = {
 	csdCriteria: {
@@ -170,12 +178,9 @@ TwinkleGlobal.config.sections = [
 	{
 		title: 'Revert and rollback',  // twinklefluff module
 		preferences: [
-		// TwinkleConfig.autoMenuAfterRollback (bool)
-		// Option to automatically open the warning menu if the user talk page is opened post-reversion
 			{
-				name: 'autoMenuAfterRollback',
-				label: 'Automatically open the Twinkle warn menu on a user talk page after Twinkle rollback',
-				helptip: 'Only operates if the relevant box is checked below.',
+				name: 'showVandRollbackLink',
+				label: 'Show "Vandalism rollback" link',
 				type: 'boolean'
 			},
 
@@ -185,7 +190,7 @@ TwinkleGlobal.config.sections = [
 				name: 'openTalkPage',
 				label: 'Open user talk page after these types of reversions',
 				type: 'set',
-				setValues: { norm: 'Normal rollback', torev: '"Restore this version"' }
+				setValues: { norm: 'Normal rollback', vand: 'Vandalism rollback' }
 			},
 
 			// TwinkleConfig.openTalkPageOnAutoRevert (bool)
@@ -212,7 +217,7 @@ TwinkleGlobal.config.sections = [
 				name: 'markRevertedPagesAsMinor',
 				label: 'Mark as minor edit for these types of reversions',
 				type: 'set',
-				setValues: { norm: 'Normal rollback', torev: '"Restore this version"' }
+				setValues: { norm: 'Normal rollback', vand: 'Vandalism rollback', torev: '"Restore this version"' }
 			},
 
 			// TwinkleConfig.watchRevertedPages (array)
@@ -221,7 +226,15 @@ TwinkleGlobal.config.sections = [
 				name: 'watchRevertedPages',
 				label: 'Add pages to watchlist for these types of reversions',
 				type: 'set',
-				setValues: { norm: 'Normal rollback', torev: '"Restore this version"' }
+				setValues: { norm: 'Normal rollback', vand: 'Vandalism rollback', torev: '"Restore this version"' }
+			},
+			// TwinkleConfig.watchRevertedExpiry
+			// If any of the above items are selected, whether to expire the watch
+			{
+				name: 'watchRevertedExpiry',
+				label: 'When reverting a page, how long to watch it for',
+				type: 'enum',
+				enumValues: TwinkleGlobal.config.watchlistEnums
 			},
 
 			// TwinkleConfig.offerReasonOnNormalRevert (boolean)
@@ -235,8 +248,15 @@ TwinkleGlobal.config.sections = [
 
 			{
 				name: 'confirmOnFluff',
-				label: 'Provide a confirmation message before reverting',
+				label: 'Require confirmation before reverting (all devices)',
 				helptip: 'For users of pen or touch devices, and chronically indecisive people.',
+				type: 'boolean'
+			},
+
+			{
+				name: 'confirmOnMobileFluff',
+				label: 'Require confirmation before reverting (mobile devices only)',
+				helptip: 'Avoid accidental reversions when on mobile devices.',
 				type: 'boolean'
 			},
 
@@ -1187,7 +1207,7 @@ TwinkleGlobal.config.saveSuccess = function twinkleconfigSaveSuccess(pageobj) {
 	pageobj.getStatusElement().info('successful');
 
 	var noticebox = document.createElement('div');
-	noticebox.className = 'successbox';
+	noticebox.className = 'mw-message-box mw-message-box-success';
 	noticebox.style.fontSize = '100%';
 	noticebox.style.marginTop = '2em';
 	noticebox.innerHTML = '<p><b>Your Twinkle preferences have been saved.</b></p><p>To see the changes, you will need to <b>clear your browser cache entirely</b> (see <a href="' + mw.util.getUrl('WP:BYPASS') + '" title="WP:BYPASS">WP:BYPASS</a> for instructions).</p>';

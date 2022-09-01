@@ -60,13 +60,17 @@ TwinkleGlobal.defaultConfig = {
 	blankTalkpageOnIndefBlock: false,
 
 	// Fluff (revert and rollback)
+	autoMenuAfterRollback: false,
+	showVandRollbackLink: false,
 	openTalkPage: [ 'agf', 'norm', 'vand' ],
 	openTalkPageOnAutoRevert: false,
 	rollbackInPlace: false,
 	markRevertedPagesAsMinor: [ 'vand' ],
 	watchRevertedPages: [ 'agf', 'norm', 'vand', 'torev' ],
+	watchRevertedExpiry: '1 month',
 	offerReasonOnNormalRevert: true,
 	confirmOnFluff: false,
+	confirmOnMobileFluff: true,
 	showRollbackLinks: [ 'diff', 'others' ],
 	fluffDisabledWikis: [
 		{ value: 'enwiki', label: '' },
@@ -119,7 +123,6 @@ TwinkleGlobal.defaultConfig = {
 	watchWarnings: true,
 	oldSelect: false,
 	customWarningList: [],
-	autoMenuAfterRollback: false,
 
 	// XfD
 	xfdWatchDiscussion: 'default',
@@ -484,7 +487,6 @@ TwinkleGlobal.load = function () {
 	TwinkleGlobal.diff();
 	// TwinkleGlobal.unlink();
 	TwinkleGlobal.config.init();
-	TwinkleGlobal.fluff();
 	if (MorebitsGlobal.userIsSysop) {
 		// TwinkleGlobal.deprod();
 		// TwinkleGlobal.batchdelete();

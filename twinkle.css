@@ -19,6 +19,10 @@
 	color: steelblue;
 }
 
+.twg-rollback-link-vandalism-text {
+	color: red;
+}
+
 /* User:Xiplus/TwinkleGlobal/Preferences */
 #twinkleglobal-config-content input[type=checkbox] {
 	margin-right: 2px;
