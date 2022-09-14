@@ -571,7 +571,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 					if (usernames.length > TwinkleGlobal.getPref('srgCollapseNumber')) {
 						header += '{{Collapse top|User list}}\n';
 					}
-					header += '*{{MultiLock';
+					header += '{{MultiLock';
 					usernames.forEach(function(v, i) {
 						header += '|' + (i + 1) + '=' + v;
 					});
