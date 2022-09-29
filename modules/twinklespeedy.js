@@ -45,6 +45,7 @@ TwinkleGlobal.speedy.speedyTemplateDefault = {
 };
 TwinkleGlobal.speedy.speedyTemplateSubst = [
 	'kowiki',
+	'hrwiki',
 	'ptwiki'
 ];
 
