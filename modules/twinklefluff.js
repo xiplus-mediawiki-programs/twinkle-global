@@ -134,11 +134,13 @@ TwinkleGlobal.fluff.linkBuilder = {
 		normLink.style.fontWeight = 'bold';
 		vandLink.style.fontWeight = 'bold';
 
-		$(normLink).click(function() {
+		$(normLink).click(function(e) {
+			e.preventDefault();
 			TwinkleGlobal.fluff.revert('norm', vandal, rev, page);
 			TwinkleGlobal.fluff.disableLinks(revNode);
 		});
-		$(vandLink).click(function() {
+		$(vandLink).click(function(e) {
+			e.preventDefault();
 			TwinkleGlobal.fluff.revert('vand', vandal, rev, page);
 			TwinkleGlobal.fluff.disableLinks(revNode);
 		});
@@ -175,7 +177,8 @@ TwinkleGlobal.fluff.linkBuilder = {
 		revertToRevisionNode.style.fontWeight = 'bold';
 
 		var revertToRevisionLink = TwinkleGlobal.fluff.linkBuilder.buildLink('revert-to', 'restore this version');
-		$(revertToRevisionLink).click(function() {
+		$(revertToRevisionLink).click(function(e) {
+			e.preventDefault();
 			TwinkleGlobal.fluff.revertToRevision(revisionRef);
 		});
 
