@@ -533,7 +533,7 @@ TwinkleGlobal.speedy.callbacks = {
 					} else {
 						text += 'https:' + mw.config.get('wgServer') + mw.util.getUrl();
 					}
-					text += ': ' + reason + ' --~~~~';
+					text += ': ' + reason + ' ~~~~';
 
 					return {
 						text: text,

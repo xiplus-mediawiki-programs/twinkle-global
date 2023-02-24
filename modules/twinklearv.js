@@ -337,7 +337,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 				type: 'textarea',
 				name: 'reason',
 				label: 'Reason',
-				tooltip: 'will add --~~~~'
+				tooltip: 'will add ~~~~'
 			});
 			work_area.append({
 				type: 'header',
@@ -418,7 +418,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			if (reason.search(/[.?!;]$/) === -1) {
 				reason += '.';
 			}
-			reason += ' --~~~~';
+			reason += ' ~~~~';
 
 			MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
 			MorebitsGlobal.status.init(form);
@@ -475,7 +475,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			});
 
 			header += ' |discussion      = ' + form.discussion.value + '\n' +
-				' |reason          = ' + reason + ' --~~~~\n' +
+				' |reason          = ' + reason + ' ~~~~\n' +
 				'}}';
 
 			summary = 'Requesting checkuser for ' + headerVal;
@@ -603,7 +603,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			if (reason.search(/[.?!;]$/) === -1) {
 				reason += '.';
 			}
-			reason += ' --~~~~';
+			reason += ' ~~~~';
 
 			MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
 			MorebitsGlobal.status.init(form);
