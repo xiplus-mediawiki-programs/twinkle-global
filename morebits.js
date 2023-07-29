@@ -180,6 +180,7 @@ MorebitsGlobal.nonGSWikis = [
 	'loginwiki',
 	'ltwiki',
 	'lvwiki',
+	'mediawikiwiki',
 	'metawiki',
 	'mkwiki',
 	'mlwiki',
