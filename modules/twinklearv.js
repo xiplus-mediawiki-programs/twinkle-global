@@ -613,7 +613,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			metaapi = TwinkleGlobal.getPref('metaApi');
 			metaapi.edit('Steward requests/Global', function(revision) {
 				var text = revision.content;
-				if (new RegExp('{{\\s*([Ll]uxotool|[Ll]ock[Hh]ide|[Ll][Hh]|[Mm]ulti[Ll]ock).*?\\|\\s*(\\d+\\s*=\\s*)?' + RegExp.escape(usernames[0], true) + '\\s*(\\||}})').test(text)) {
+				if (new RegExp('{{\\s*([Ll]uxotool|[Ll]ock[Hh]ide|[Ll][Hh]|[Mm]ulti[Ll]ock)[^}]*?\\|\\s*(\\d+\\s*=\\s*)?' + RegExp.escape(usernames[0], true) + '\\s*(\\||}})').test(text)) {
 					return $.Deferred().reject('Report already present, will not add a new one');
 				}
 				if (mw.util.isIPAddress(uid, true)) {
