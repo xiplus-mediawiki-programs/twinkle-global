@@ -179,7 +179,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					type: 'input',
 					name: 'header',
 					label: 'Header: Global lock for ',
-					value: '[[User:' + username + '|' + username + ']]',
+					value: username,
 					className: 'mgfullwidth'
 				});
 				work_area.append({
@@ -370,7 +370,7 @@ TwinkleGlobal.arv.callback.changeHidename = function(e) {
 	if (checked) {
 		form.header.value = '';
 	} else {
-		form.header.value = '[[User:' + username + '|' + username + ']]';
+		form.header.value = username;
 	}
 };
 
