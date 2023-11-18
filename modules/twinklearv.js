@@ -489,7 +489,9 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			metaapi.edit('Steward requests/Checkuser', function(revision) {
 				var text = revision.content;
 
-				text = text.replace(/(== See also == <!-- DO NOT EDIT UNDER THIS LINE -->)/, (m) => header + '\n\n' + m);
+				text = text.replace(/(== See also == <!-- DO NOT EDIT UNDER THIS LINE -->)/, function(m) {
+					return header + '\n\n' + m;
+				});
 				return {
 					text: text,
 					summary: summary + TwinkleGlobal.getPref('summaryAd'),
@@ -617,9 +619,13 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 					return $.Deferred().reject('Report already present, will not add a new one');
 				}
 				if (mw.util.isIPAddress(uid, true)) {
-					text = text.replace(/\n+(== Requests for global \(un\)lock and \(un\)hiding == *\n)/, (_, p1) => '\n\n' + header + reason + '\n\n' + p1);
+					text = text.replace(/\n+(== Requests for global \(un\)lock and \(un\)hiding == *\n)/, function(_, p1) {
+						return '\n\n' + header + reason + '\n\n' + p1;
+					});
 				} else {
-					text = text.replace(/\n+(== See also == *\n)/, (_, p1) => '\n\n' + header + reason + '\n\n' + p1);
+					text = text.replace(/\n+(== See also == *\n)/, function(_, p1) {
+						return '\n\n' + header + reason + '\n\n' + p1;
+					});
 				}
 				return {
 					text: text,
