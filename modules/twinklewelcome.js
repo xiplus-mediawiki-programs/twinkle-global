@@ -6,16 +6,16 @@
 
 /*
  ****************************************
- *** friendlywelcome.js: Welcome module
+ *** twinklewelcome.js: Welcome module
  ****************************************
  * Mode of invocation:     Tab ("Wel"), or from links on diff pages
  * Active on:              Any page with relevant user name (userspace,
  *                         contribs, etc.) and diff pages
  */
 
-TwinkleGlobal.welcome = function friendlywelcome() {
-	if (mw.util.getParamValue('friendlywelcome')) {
-		if (mw.util.getParamValue('friendlywelcome') === 'auto') {
+TwinkleGlobal.welcome = function twinklewelcome() {
+	if (mw.util.getParamValue('twinklewelcome')) {
+		if (mw.util.getParamValue('twinklewelcome') === 'auto') {
 			TwinkleGlobal.welcome.auto();
 		} else {
 			TwinkleGlobal.welcome.semiauto();
@@ -64,7 +64,7 @@ TwinkleGlobal.welcome.normal = function() {
 
 				var oWelcomeNode = welcomeNode.cloneNode(true);
 				oWelcomeNode.firstChild.setAttribute('href', oHref + '&' + $.param({
-					friendlywelcome: TwinkleGlobal.getPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
+					twinklewelcome: TwinkleGlobal.getPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
 					vanarticle: MorebitsGlobal.pageNameNorm
 				}));
 				$oList[0].parentNode.parentNode.appendChild(document.createTextNode(' '));
@@ -76,7 +76,7 @@ TwinkleGlobal.welcome.normal = function() {
 
 				var nWelcomeNode = welcomeNode.cloneNode(true);
 				nWelcomeNode.firstChild.setAttribute('href', nHref + '&' + $.param({
-					friendlywelcome: TwinkleGlobal.getPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
+					twinklewelcome: TwinkleGlobal.getPref('quickWelcomeMode') === 'auto' ? 'auto' : 'norm',
 					vanarticle: MorebitsGlobal.pageNameNorm
 				}));
 				$nList[0].parentNode.parentNode.appendChild(document.createTextNode(' '));
@@ -87,7 +87,7 @@ TwinkleGlobal.welcome.normal = function() {
 	if (mw.config.get('wgRelevantUserName')) {
 		TwinkleGlobal.addPortletLink(function() {
 			TwinkleGlobal.welcome.callback(mw.config.get('wgRelevantUserName'));
-		}, 'Wel', 'friendly-welcome', 'Welcome user');
+		}, 'Wel', 'twg-welcome', 'Welcome user');
 	}
 };
 
@@ -111,7 +111,7 @@ TwinkleGlobal.welcome.welcomeUser = function welcomeUser() {
 	wikipedia_page.load(TwinkleGlobal.welcome.callbacks.main);
 };
 
-TwinkleGlobal.welcome.callback = function friendlywelcomeCallback(uid) {
+TwinkleGlobal.welcome.callback = function twinklewelcomeCallback(uid) {
 	if (uid === mw.config.get('wgUserName') && !confirm('Are you really sure you want to welcome yourself?...')) {
 		return;
 	}
@@ -773,7 +773,7 @@ TwinkleGlobal.welcome.callbacks = {
 	}
 };
 
-TwinkleGlobal.welcome.callback.evaluate = function friendlywelcomeCallbackEvaluate(e) {
+TwinkleGlobal.welcome.callback.evaluate = function twinklewelcomeCallbackEvaluate(e) {
 	var form = e.target;
 
 	var params = {

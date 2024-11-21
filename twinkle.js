@@ -37,8 +37,6 @@ TwinkleGlobal.defaultConfig = {};
  * It is important that all new preferences added here, especially admin-only ones, are also added to
  * |Twinkle.config.sections| in twinkleconfig.js, so they are configurable via the Twinkle preferences panel.
  * For help on the actual preferences, see the comments in twinkleconfig.js.
- *
- * Formerly Twinkle.defaultConfig.twinkle and Twinkle.defaultConfig.friendly
  */
 TwinkleGlobal.defaultConfig = {
 	// General
@@ -162,8 +160,6 @@ TwinkleGlobal.defaultConfig = {
 	bugReportLink: 'https://meta.wikimedia.org/wiki/User_talk:Xiplus/TwinkleGlobal',
 	optionsPage: 'twinkleoptions',
 	onConfigSite: mw.config.get('wgDBname') === 'metawiki',
-
-	// Formerly defaultConfig.friendly:
 
 	// Tag
 	groupByDefault: true,

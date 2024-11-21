@@ -6,11 +6,10 @@
 
 /*
  ****************************************
- *** friendlytalkback.js: Talkback module
+ *** twinkletalkback.js: Talkback module
  ****************************************
  * Mode of invocation:     Tab ("TB")
  * Active on:              Any page with relevant user name (userspace, contribs, etc.)
- * Config directives in:   FriendlyConfig
  */
 
 TwinkleGlobal.talkback = function() {
@@ -19,7 +18,7 @@ TwinkleGlobal.talkback = function() {
 		return;
 	}
 
-	TwinkleGlobal.addPortletLink(TwinkleGlobal.talkback.callback, 'TB', 'friendly-talkback', 'Easy talkback');
+	TwinkleGlobal.addPortletLink(TwinkleGlobal.talkback.callback, 'TB', 'twg-talkback', 'Easy talkback');
 };
 
 TwinkleGlobal.talkback.callback = function() {

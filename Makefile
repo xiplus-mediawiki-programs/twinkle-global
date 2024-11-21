@@ -16,10 +16,10 @@ modules = modules/twinklearv.js \
 		  modules/twinkleunlink.js \
 		  modules/twinklewarn.js \
 		  modules/twinklexfd.js \
-		  modules/friendlyshared.js \
-		  modules/friendlytag.js \
-		  modules/friendlytalkback.js \
-		  modules/friendlywelcome.js
+		  modules/twinkleshared.js \
+		  modules/twinkletag.js \
+		  modules/twinkletalkback.js \
+		  modules/twinklewelcome.js
 
 deploy: twinkle.js twinkle.css twinkle-pagestyles.css morebits.js morebits.css $(modules)
 	./sync.pl ${ARGS} --deploy $^

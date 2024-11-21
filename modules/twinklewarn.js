@@ -17,7 +17,7 @@ TwinkleGlobal.warn = function twinklewarn() {
 	if (mw.config.get('wgRelevantUserName')) {
 		TwinkleGlobal.addPortletLink(TwinkleGlobal.warn.callback, 'Warn', 'twg-warn', 'Warn/notify user');
 		if (TwinkleGlobal.getPref('autoMenuAfterRollback') && mw.config.get('wgNamespaceNumber') === 3 &&
-				mw.util.getParamValue('vanarticle') && !mw.util.getParamValue('friendlywelcome') && !mw.util.getParamValue('noautowarn')) {
+				mw.util.getParamValue('vanarticle') && !mw.util.getParamValue('twinklewelcome') && !mw.util.getParamValue('noautowarn')) {
 			TwinkleGlobal.warn.callback();
 		}
 	}

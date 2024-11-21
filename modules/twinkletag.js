@@ -5,22 +5,22 @@
 
 /*
  ****************************************
- *** friendlytag.js: Tag module
+ *** twinkletag.js: Tag module
  ****************************************
  * Mode of invocation:     Tab ("Tag")
  * Active on:              Existing articles and drafts; file pages with a corresponding file
  *                         which is local (not on Commons); all redirects
  */
 
-TwinkleGlobal.tag = function friendlytag() {
+TwinkleGlobal.tag = function twinkletag() {
 	// redirect tagging
 	if (MorebitsGlobal.wiki.isPageRedirect()) {
 		TwinkleGlobal.tag.mode = 'redirect';
-		TwinkleGlobal.addPortletLink(TwinkleGlobal.tag.callback, 'Tag', 'friendly-tag', 'Tag redirect');
+		TwinkleGlobal.addPortletLink(TwinkleGlobal.tag.callback, 'Tag', 'twg-tag', 'Tag redirect');
 	// file tagging
 	} else if (mw.config.get('wgNamespaceNumber') === 6 && !document.getElementById('mw-sharedupload') && document.getElementById('mw-imagepage-section-filehistory')) {
 		TwinkleGlobal.tag.mode = 'file';
-		TwinkleGlobal.addPortletLink(TwinkleGlobal.tag.callback, 'Tag', 'friendly-tag', 'Add maintenance tags to file');
+		TwinkleGlobal.addPortletLink(TwinkleGlobal.tag.callback, 'Tag', 'twg-tag', 'Add maintenance tags to file');
 	// article/draft article tagging
 	} else if ([0, 118].indexOf(mw.config.get('wgNamespaceNumber')) !== -1 && mw.config.get('wgCurRevisionId')) {
 		TwinkleGlobal.tag.mode = 'article';
@@ -29,13 +29,13 @@ TwinkleGlobal.tag = function friendlytag() {
 			// Disabled on latest diff because the diff slider could be used to slide
 			// away from the latest diff without causing the script to reload
 			!mw.config.get('wgDiffNewId');
-		TwinkleGlobal.addPortletLink(TwinkleGlobal.tag.callback, 'Tag', 'friendly-tag', 'Add or remove article maintenance tags');
+		TwinkleGlobal.addPortletLink(TwinkleGlobal.tag.callback, 'Tag', 'twg-tag', 'Add or remove article maintenance tags');
 	}
 };
 
 TwinkleGlobal.tag.checkedTags = [];
 
-TwinkleGlobal.tag.callback = function friendlytagCallback() {
+TwinkleGlobal.tag.callback = function twinkletagCallback() {
 	var Window = new MorebitsGlobal.simpleWindow(630, TwinkleGlobal.tag.mode === 'article' ? 500 : 400);
 	Window.setScriptName('Twinkle');
 	// anyone got a good policy/guideline/info page/instructional page link??
@@ -1304,7 +1304,7 @@ TwinkleGlobal.tag.callbacks = {
 						lang: params.translationLanguage,
 						reason: params.translationComments
 					});
-					pntPage.load(function friendlytagCallbacksTranslationListPage(pageobj) {
+					pntPage.load(function twinkletagCallbacksTranslationListPage(pageobj) {
 						var old_text = pageobj.getPageText();
 						var params = pageobj.getCallbackParameters();
 						var statelem = pageobj.getStatusElement();
@@ -1858,7 +1858,7 @@ TwinkleGlobal.tag.callbacks = {
 
 	},
 
-	file: function friendlytagCallbacksFile(pageobj) {
+	file: function twinkletagCallbacksFile(pageobj) {
 		var text = pageobj.getPageText();
 		var params = pageobj.getCallbackParameters();
 		var summary = 'Adding ';
@@ -1959,7 +1959,7 @@ TwinkleGlobal.tag.callbacks = {
 	}
 };
 
-TwinkleGlobal.tag.callback.evaluate = function friendlytagCallbackEvaluate(e) {
+TwinkleGlobal.tag.callback.evaluate = function twinkletagCallbackEvaluate(e) {
 	var form = e.target;
 	var params = {};
 	if (form.patrolPage) {
