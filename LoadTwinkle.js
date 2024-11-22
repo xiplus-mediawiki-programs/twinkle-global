@@ -63,7 +63,7 @@ tests.push({ name: 'twinkleconfig.js', test: true });
 // tests.push({name: 'twinklecopyvio.js',       test: true});
 // tests.push({name: 'twinkledelimages.js',     test: true});
 tests.push({ name: 'twinklediff.js', test: true });
-tests.push({ name: 'twinklefluff.js', test: true });
+tests.push({ name: 'twinklerollback.js', test: true });
 // tests.push({name: 'twinkleimage.js',         test: true});
 // tests.push({name: 'twinkleprotect.js',       test: true});
 tests.push({ name: 'twinklespeedy.js', test: true });

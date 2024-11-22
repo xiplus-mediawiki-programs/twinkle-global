@@ -142,7 +142,7 @@ TwinkleGlobal.config.sections = [
 				label: 'Turn off the selected Twinkle modules',
 				helptip: 'Anything you select here will NOT be available for use on any wiki.',
 				type: 'set',
-				setValues: { arv: 'GARV', fluff: 'Revert and rollback', speedy: 'CSD', diff: 'Diff' }
+				setValues: { arv: 'GARV', rollback: 'Revert and rollback', speedy: 'CSD', diff: 'Diff' }
 			}
 		]
 	},
@@ -185,7 +185,7 @@ TwinkleGlobal.config.sections = [
 	},
 
 	{
-		title: 'Revert and rollback',  // twinklefluff module
+		title: 'Revert and rollback',
 		preferences: [
 			{
 				name: 'showVandRollbackLink',
@@ -256,14 +256,14 @@ TwinkleGlobal.config.sections = [
 			},
 
 			{
-				name: 'confirmOnFluff',
+				name: 'confirmOnRollback',
 				label: 'Require confirmation before reverting (all devices)',
 				helptip: 'For users of pen or touch devices, and chronically indecisive people.',
 				type: 'boolean'
 			},
 
 			{
-				name: 'confirmOnMobileFluff',
+				name: 'confirmOnMobileRollback',
 				label: 'Require confirmation before reverting (mobile devices only)',
 				helptip: 'Avoid accidental reversions when on mobile devices.',
 				type: 'boolean'
@@ -280,9 +280,9 @@ TwinkleGlobal.config.sections = [
 				setValues: { diff: 'Diff pages', others: 'Contributions pages of other users', mine: 'My contributions page', recent: 'Recent changes and related changes special pages', history: 'History pages' }
 			},
 
-			// Disable fluff on these wikis.
+			// Disable rollback on these wikis.
 			{
-				name: 'fluffDisabledWikis',
+				name: 'rollbackDisabledWikis',
 				label: 'Disable revert function on these wikis',
 				helptip: 'Use wiki\'s database name.',
 				type: 'customList',
@@ -387,7 +387,7 @@ TwinkleGlobal.config.sections = [
 				name: 'portletNext',
 				type: 'string'
 			},
-			// twinklefluff.js: defines how many revision to query maximum, maximum possible is 50, default is 50
+			// twinklerollback.js: defines how many revision to query maximum, maximum possible is 50, default is 50
 			{
 				name: 'revertMaxRevisions',
 				type: 'integer'

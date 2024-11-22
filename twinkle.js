@@ -58,7 +58,7 @@ TwinkleGlobal.defaultConfig = {
 	// Block
 	blankTalkpageOnIndefBlock: false,
 
-	// Fluff (revert and rollback)
+	// Rollback
 	autoMenuAfterRollback: false,
 	showVandRollbackLink: false,
 	openTalkPage: [ 'agf', 'norm', 'vand' ],
@@ -68,10 +68,10 @@ TwinkleGlobal.defaultConfig = {
 	watchRevertedPages: [ 'agf', 'norm', 'vand', 'torev' ],
 	watchRevertedExpiry: '1 month',
 	offerReasonOnNormalRevert: true,
-	confirmOnFluff: false,
-	confirmOnMobileFluff: true,
+	confirmOnRollback: false,
+	confirmOnMobileRollback: true,
 	showRollbackLinks: [ 'diff', 'others' ],
-	fluffDisabledWikis: [
+	rollbackDisabledWikis: [
 		{ value: 'enwiki', label: '' },
 		{ value: 'simplewiki', label: '' },
 		{ value: 'zh_classicalwiki', label: '' },

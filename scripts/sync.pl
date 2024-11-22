@@ -431,6 +431,6 @@ twinkle.js
   modules/twinkleconfig.js
   modules/twinklearv.js
   modules/twinklediff.js
-  modules/twinklefluff.js
+  modules/twinklerollback.js
   modules/twinklespeedy.js
   LoadTwinkle.js
