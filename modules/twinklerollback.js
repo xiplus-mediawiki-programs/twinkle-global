@@ -671,10 +671,18 @@ TwinkleGlobal.rollback.callbacks = {
 				break;
 		}
 
-		if ((TwinkleGlobal.getPref('confirmOnRollback') ||
-			// Mobile user agent taken from [[en:MediaWiki:Gadget-confirmationRollback-mobile.js]]
-			(TwinkleGlobal.getPref('confirmOnMobileRollback') && /Android|webOS|iPhone|iPad|iPod|BlackBerry|Mobile|Opera Mini/i.test(navigator.userAgent))) &&
-			!userHasAlreadyConfirmedAction && !confirm('Reverting page: are you sure?')) {
+		var needToDisplayConfirmation =
+			(
+				TwinkleGlobal.getPref('confirmOnRollback') ||
+				(
+					TwinkleGlobal.getPref('confirmOnMobileRollback') &&
+					// Mobile user agent taken from [[en:MediaWiki:Gadget-confirmationRollback-mobile.js]]
+					/Android|webOS|iPhone|iPad|iPod|BlackBerry|Mobile|Opera Mini/i.test(navigator.userAgent)
+				)
+			) &&
+			!userHasAlreadyConfirmedAction;
+
+		if (needToDisplayConfirmation && !confirm('Reverting page: are you sure?')) {
 			statelem.error('Aborted by user.');
 			return;
 		}
