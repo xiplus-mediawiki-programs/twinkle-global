@@ -235,9 +235,9 @@ TwinkleGlobal.getPref = function twinkleGetPref(name) {
 	}
 
 	// Backwards compatibility code because we renamed confirmOnFluff to confirmOnRollback, and confirmOnMobileFluff to confirmOnMobileRollback
-	if (name === 'confirmOnRollback' && TwinkleGlobal.prefs.confirmOnFluff !== undefined) {
+	if (name === 'confirmOnRollback' && typeof TwinkleGlobal.prefs === 'object' && TwinkleGlobal.prefs.confirmOnFluff !== undefined) {
 		return TwinkleGlobal.prefs.confirmOnFluff;
-	} else if (name === 'confirmOnMobileRollback' && TwinkleGlobal.prefs.confirmOnMobileFluff !== undefined) {
+	} else if (name === 'confirmOnMobileRollback' && typeof TwinkleGlobal.prefs === 'object' && TwinkleGlobal.prefs.confirmOnMobileFluff !== undefined) {
 		return TwinkleGlobal.prefs.confirmOnMobileFluff;
 	}
 
