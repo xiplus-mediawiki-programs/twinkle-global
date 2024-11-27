@@ -6005,6 +6005,20 @@ MorebitsGlobal.simpleWindow.setButtonsEnabled = function(enabled) {
 	$('.morebitsglobal-dialog-buttons button').prop('disabled', !enabled);
 };
 
+// Create capital letter aliases for all Morebits @classes (functions that work with the `new` keyword), to follow the coding convention that classes should start with an uppercase letter. This will let us start fixing ESLint `new-cap` errors in other files.
+MorebitsGlobal.BatchOperation = MorebitsGlobal.batchOperation;
+MorebitsGlobal.Date = MorebitsGlobal.date;
+MorebitsGlobal.QuickForm = MorebitsGlobal.quickForm;
+MorebitsGlobal.QuickForm.Element = MorebitsGlobal.quickForm.element;
+MorebitsGlobal.SimpleWindow = MorebitsGlobal.simpleWindow;
+MorebitsGlobal.Status = MorebitsGlobal.status;
+MorebitsGlobal.TaskManager = MorebitsGlobal.taskManager;
+MorebitsGlobal.Unbinder = MorebitsGlobal.unbinder;
+MorebitsGlobal.UserspaceLogger = MorebitsGlobal.userspaceLogger;
+MorebitsGlobal.wiki.Api = MorebitsGlobal.wiki.api;
+MorebitsGlobal.wiki.Page = MorebitsGlobal.wiki.page;
+MorebitsGlobal.wiki.Preview = MorebitsGlobal.wiki.preview;
+MorebitsGlobal.wikitext.Page = MorebitsGlobal.wikitext.page;
 
 }(window, document, jQuery)); // End wrap with anonymous function
 
