@@ -19,13 +19,13 @@ TwinkleGlobal.image = function twinkleimage() {
 };
 
 TwinkleGlobal.image.callback = function twinkleimageCallback() {
-	var Window = new MorebitsGlobal.simpleWindow(600, 330);
+	var Window = new MorebitsGlobal.SimpleWindow(600, 330);
 	Window.setTitle('File for dated speedy deletion');
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Speedy deletion policy', 'WP:CSD#Files');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#image');
 
-	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.image.callback.evaluate);
+	var form = new MorebitsGlobal.QuickForm(TwinkleGlobal.image.callback.evaluate);
 	form.append({
 		type: 'checkbox',
 		list: [
@@ -111,7 +111,7 @@ TwinkleGlobal.image.callback = function twinkleimageCallback() {
 TwinkleGlobal.image.callback.choice = function twinkleimageCallbackChoose(event) {
 	var value = event.target.values;
 	var root = event.target.form;
-	var work_area = new MorebitsGlobal.quickForm.element({
+	var work_area = new MorebitsGlobal.QuickForm.Element({
 		type: 'div',
 		name: 'work_area'
 	});
@@ -241,14 +241,14 @@ TwinkleGlobal.image.callback.evaluate = function twinkleimageCallbackEvaluate(ev
 		replacement: replacement,
 		lognomination: lognomination
 	};
-	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-	MorebitsGlobal.status.init(event.target);
+	MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.Status.init(event.target);
 
 	MorebitsGlobal.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
 	MorebitsGlobal.wiki.actionCompleted.notice = 'Tagging complete';
 
 	// Tagging image
-	var wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Tagging file with deletion tag');
+	var wikipedia_page = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'), 'Tagging file with deletion tag');
 	wikipedia_page.setCallbackParameters(params);
 	wikipedia_page.load(TwinkleGlobal.image.callbacks.taggingImage);
 
@@ -264,7 +264,7 @@ TwinkleGlobal.image.callback.evaluate = function twinkleimageCallbackEvaluate(ev
 		// No auto-notification, display what was going to be added.
 		var noteData = document.createElement('pre');
 		noteData.appendChild(document.createTextNode('{{subst:di-' + templatename + '-notice|1=' + mw.config.get('wgTitle') + '}} ~~~~'));
-		MorebitsGlobal.status.info('Notification', [ 'Following/similar data should be posted to the original uploader:', document.createElement('br'), noteData ]);
+		MorebitsGlobal.Status.info('Notification', [ 'Following/similar data should be posted to the original uploader:', document.createElement('br'), noteData ]);
 	}
 };
 
@@ -323,7 +323,7 @@ TwinkleGlobal.image.callbacks = {
 		if (initialContrib === mw.config.get('wgUserName')) {
 			pageobj.getStatusElement().warn('You (' + initialContrib + ') created this page; skipping user notification');
 		} else {
-			var usertalkpage = new MorebitsGlobal.wiki.page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')');
+			var usertalkpage = new MorebitsGlobal.wiki.Page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')');
 			var notifytext = '\n{{subst:di-' + params.templatename + '-notice|1=' + mw.config.get('wgTitle');
 			if (params.type === 'no permission') {
 				notifytext += params.source ? '|source=' + params.source : '';

@@ -24,14 +24,14 @@ TwinkleGlobal.protect = function twinkleprotect() {
 };
 
 TwinkleGlobal.protect.callback = function twinkleprotectCallback() {
-	var Window = new MorebitsGlobal.simpleWindow(620, 530);
+	var Window = new MorebitsGlobal.SimpleWindow(620, 530);
 	Window.setTitle(MorebitsGlobal.userIsSysop ? 'Apply, request or tag page protection' : 'Request or tag page protection');
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Protection templates', 'Template:Protection templates');
 	Window.addFooterLink('Protection policy', 'WP:PROT');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#protect');
 
-	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.protect.callback.evaluate);
+	var form = new MorebitsGlobal.QuickForm(TwinkleGlobal.protect.callback.evaluate);
 	var actionfield = form.append({
 		type: 'field',
 		label: 'Type of action'
@@ -225,14 +225,14 @@ TwinkleGlobal.protect.callback.showLogAndCurrentProtectInfo = function twinklepr
 			$linkMarkup.append($('<a target="_blank" href="' + mw.util.getUrl('Special:Log', {action: 'view', page: mw.config.get('wgPageName'), type: 'stable'}) + '">pending changes log</a>)'));
 		}
 
-		MorebitsGlobal.status.init($('div[name="hasprotectlog"] span')[0]);
-		MorebitsGlobal.status.warn(
+		MorebitsGlobal.Status.init($('div[name="hasprotectlog"] span')[0]);
+		MorebitsGlobal.Status.warn(
 			currentlyProtected ? 'Previous protections' : 'This page has been protected in the past',
 			$linkMarkup[0]
 		);
 	}
 
-	MorebitsGlobal.status.init($('div[name="currentprot"] span')[0]);
+	MorebitsGlobal.Status.init($('div[name="currentprot"] span')[0]);
 	var protectionNode = [], statusLevel = 'info';
 
 	if (currentlyProtected) {
@@ -259,7 +259,7 @@ TwinkleGlobal.protect.callback.showLogAndCurrentProtectInfo = function twinklepr
 		protectionNode.push($('<b>no protection</b>')[0]);
 	}
 
-	MorebitsGlobal.status[statusLevel]('Current protection level', protectionNode);
+	MorebitsGlobal.Status[statusLevel]('Current protection level', protectionNode);
 };
 
 TwinkleGlobal.protect.callback.changeAction = function twinkleprotectCallbackChangeAction(e) {
@@ -270,7 +270,7 @@ TwinkleGlobal.protect.callback.changeAction = function twinkleprotectCallbackCha
 
 	switch (e.target.values) {
 		case 'protect':
-			field_preset = new MorebitsGlobal.quickForm.element({ type: 'field', label: 'Preset', name: 'field_preset' });
+			field_preset = new MorebitsGlobal.QuickForm.Element({ type: 'field', label: 'Preset', name: 'field_preset' });
 			field_preset.append({
 				type: 'select',
 				name: 'category',
@@ -283,7 +283,7 @@ TwinkleGlobal.protect.callback.changeAction = function twinkleprotectCallbackCha
 					TwinkleGlobal.protect.protectionTypesCreate
 			});
 
-			field2 = new MorebitsGlobal.quickForm.element({ type: 'field', label: 'Protection options', name: 'field2' });
+			field2 = new MorebitsGlobal.QuickForm.Element({ type: 'field', label: 'Protection options', name: 'field2' });
 			field2.append({ type: 'div', name: 'currentprot', label: ' ' });  // holds the current protection level, as filled out by the async callback
 			field2.append({ type: 'div', name: 'hasprotectlog', label: ' ' });
 			// for existing pages
@@ -576,7 +576,7 @@ TwinkleGlobal.protect.callback.changeAction = function twinkleprotectCallbackCha
 			}
 			/* falls through */
 		case 'tag':
-			field1 = new MorebitsGlobal.quickForm.element({ type: 'field', label: 'Tagging options', name: 'field1' });
+			field1 = new MorebitsGlobal.QuickForm.Element({ type: 'field', label: 'Tagging options', name: 'field1' });
 			field1.append({ type: 'div', name: 'currentprot', label: ' ' });  // holds the current protection level, as filled out by the async callback
 			field1.append({ type: 'div', name: 'hasprotectlog', label: ' ' });
 			field1.append({
@@ -606,7 +606,7 @@ TwinkleGlobal.protect.callback.changeAction = function twinkleprotectCallbackCha
 			break;
 
 		case 'request':
-			field_preset = new MorebitsGlobal.quickForm.element({ type: 'field', label: 'Type of protection', name: 'field_preset' });
+			field_preset = new MorebitsGlobal.QuickForm.Element({ type: 'field', label: 'Type of protection', name: 'field_preset' });
 			field_preset.append({
 				type: 'select',
 				name: 'category',
@@ -615,7 +615,7 @@ TwinkleGlobal.protect.callback.changeAction = function twinkleprotectCallbackCha
 				list: mw.config.get('wgArticleId') ? TwinkleGlobal.protect.protectionTypes : TwinkleGlobal.protect.protectionTypesCreate
 			});
 
-			field1 = new MorebitsGlobal.quickForm.element({ type: 'field', label: 'Options', name: 'field1' });
+			field1 = new MorebitsGlobal.QuickForm.Element({ type: 'field', label: 'Options', name: 'field1' });
 			field1.append({ type: 'div', name: 'currentprot', label: ' ' });  // holds the current protection level, as filled out by the async callback
 			field1.append({ type: 'div', name: 'hasprotectlog', label: ' ' });
 			field1.append({
@@ -1161,7 +1161,7 @@ TwinkleGlobal.protect.callback.evaluate = function twinkleprotectCallbackEvaluat
 			}
 
 			var protectIt = function twinkleprotectCallbackProtectIt(next) {
-				thispage = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Protecting page');
+				thispage = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'), 'Protecting page');
 				if (mw.config.get('wgArticleId')) {
 					if (form.editmodify.checked) {
 						thispage.setEditProtection(form.editlevel.value, form.editexpiry.value);
@@ -1182,8 +1182,8 @@ TwinkleGlobal.protect.callback.evaluate = function twinkleprotectCallbackEvaluat
 				}
 
 				if (!statusInited) {
-					MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-					MorebitsGlobal.status.init(form);
+					MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+					MorebitsGlobal.Status.init(form);
 					statusInited = true;
 				}
 
@@ -1195,7 +1195,7 @@ TwinkleGlobal.protect.callback.evaluate = function twinkleprotectCallbackEvaluat
 					thispage.getStatusElement().info('done');
 				}
 
-				thispage = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Applying pending changes protection');
+				thispage = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'), 'Applying pending changes protection');
 				thispage.setFlaggedRevs(stabilizeValues.pclevel, stabilizeValues.pcexpiry);
 
 				if (stabilizeValues.protectReason) {
@@ -1206,8 +1206,8 @@ TwinkleGlobal.protect.callback.evaluate = function twinkleprotectCallbackEvaluat
 				}
 
 				if (!statusInited) {
-					MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-					MorebitsGlobal.status.init(form);
+					MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+					MorebitsGlobal.Status.init(form);
 					statusInited = true;
 				}
 
@@ -1232,8 +1232,8 @@ TwinkleGlobal.protect.callback.evaluate = function twinkleprotectCallbackEvaluat
 		case 'tag':
 			// apply a protection template
 
-			MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-			MorebitsGlobal.status.init(form);
+			MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+			MorebitsGlobal.Status.init(form);
 
 			MorebitsGlobal.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
 			MorebitsGlobal.wiki.actionCompleted.followRedirect = false;
@@ -1381,8 +1381,8 @@ TwinkleGlobal.protect.callback.evaluate = function twinkleprotectCallbackEvaluat
 				expiry: form.expiry.value
 			};
 
-			MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-			MorebitsGlobal.status.init(form);
+			MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+			MorebitsGlobal.Status.init(form);
 
 			var rppName = 'Wikipedia:Requests for page protection';
 
@@ -1390,7 +1390,7 @@ TwinkleGlobal.protect.callback.evaluate = function twinkleprotectCallbackEvaluat
 			MorebitsGlobal.wiki.actionCompleted.redirect = rppName;
 			MorebitsGlobal.wiki.actionCompleted.notice = 'Nomination completed, redirecting now to the discussion page';
 
-			var rppPage = new MorebitsGlobal.wiki.page(rppName, 'Requesting protection of page');
+			var rppPage = new MorebitsGlobal.wiki.Page(rppName, 'Requesting protection of page');
 			rppPage.setFollowRedirect(true);
 			rppPage.setCallbackParameters(rppparams);
 			rppPage.load(TwinkleGlobal.protect.callbacks.fileRequest);
@@ -1404,11 +1404,11 @@ TwinkleGlobal.protect.callback.evaluate = function twinkleprotectCallbackEvaluat
 TwinkleGlobal.protect.callbacks = {
 	taggingPageInitial: function(tagparams) {
 		if (tagparams.tag === 'noop') {
-			MorebitsGlobal.status.info('Applying protection template', 'nothing to do');
+			MorebitsGlobal.Status.info('Applying protection template', 'nothing to do');
 			return;
 		}
 
-		var protectedPage = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Tagging page');
+		var protectedPage = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'), 'Tagging page');
 		protectedPage.setCallbackParameters(tagparams);
 		protectedPage.load(TwinkleGlobal.protect.callbacks.taggingPage);
 	},
@@ -1443,7 +1443,7 @@ TwinkleGlobal.protect.callbacks = {
 				if (!text.match(/{{(?:redr|this is a redirect|r(?:edirect)?(?:.?cat.*)?[ _]?sh)/i)) {
 					text = text.replace(/#REDIRECT ?(\[\[.*?\]\])(.*)/i, '#REDIRECT $1$2\n\n{{' + tag + '}}');
 				} else {
-					MorebitsGlobal.status.info('Redirect category shell present', 'nothing to do');
+					MorebitsGlobal.Status.info('Redirect category shell present', 'nothing to do');
 					return;
 				}
 			} else if (params.noinclude) {

@@ -92,7 +92,7 @@ TwinkleGlobal.welcome.normal = function() {
 };
 
 TwinkleGlobal.welcome.welcomeUser = function welcomeUser() {
-	MorebitsGlobal.status.init(document.getElementById('mw-content-text'));
+	MorebitsGlobal.Status.init(document.getElementById('mw-content-text'));
 	$('#catlinks').remove();
 
 	var params = {
@@ -105,7 +105,7 @@ TwinkleGlobal.welcome.welcomeUser = function welcomeUser() {
 	MorebitsGlobal.wiki.actionCompleted.redirect = userTalkPage;
 	MorebitsGlobal.wiki.actionCompleted.notice = 'Welcoming complete, reloading talk page in a few seconds';
 
-	var wikipedia_page = new MorebitsGlobal.wiki.page(userTalkPage, 'User talk page modification');
+	var wikipedia_page = new MorebitsGlobal.wiki.Page(userTalkPage, 'User talk page modification');
 	wikipedia_page.setFollowRedirect(true);
 	wikipedia_page.setCallbackParameters(params);
 	wikipedia_page.load(TwinkleGlobal.welcome.callbacks.main);
@@ -116,13 +116,13 @@ TwinkleGlobal.welcome.callback = function twinklewelcomeCallback(uid) {
 		return;
 	}
 
-	var Window = new MorebitsGlobal.simpleWindow(600, 420);
+	var Window = new MorebitsGlobal.SimpleWindow(600, 420);
 	Window.setTitle('Welcome user');
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Welcoming Committee', 'WP:WC');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#welcome');
 
-	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.welcome.callback.evaluate);
+	var form = new MorebitsGlobal.QuickForm(TwinkleGlobal.welcome.callback.evaluate);
 
 	form.append({
 		type: 'select',
@@ -174,7 +174,7 @@ TwinkleGlobal.welcome.callback = function twinklewelcomeCallback(uid) {
 TwinkleGlobal.welcome.populateWelcomeList = function(e) {
 	var type = e.target.value;
 
-	var container = new MorebitsGlobal.quickForm.element({ type: 'fragment' });
+	var container = new MorebitsGlobal.QuickForm.Element({ type: 'fragment' });
 
 	if ((type === 'standard' || type === 'anonymous') && TwinkleGlobal.getPref('customWelcomeList').length) {
 		container.append({ type: 'header', label: 'Custom welcome templates' });
@@ -721,7 +721,7 @@ TwinkleGlobal.welcome.getTemplateWikitext = function(template, article) {
 
 TwinkleGlobal.welcome.callbacks = {
 	preview: function(form) {
-		var previewDialog = new MorebitsGlobal.simpleWindow(750, 400);
+		var previewDialog = new MorebitsGlobal.SimpleWindow(750, 400);
 		previewDialog.setTitle('Welcome template preview');
 		previewDialog.setScriptName('Welcome user');
 		previewDialog.setModality(true);
@@ -731,7 +731,7 @@ TwinkleGlobal.welcome.callbacks = {
 		previewdiv.style.fontSize = 'small';
 		previewDialog.setContent(previewdiv);
 
-		var previewer = new MorebitsGlobal.wiki.preview(previewdiv);
+		var previewer = new MorebitsGlobal.wiki.Preview(previewdiv);
 		previewer.beginRender(TwinkleGlobal.welcome.getTemplateWikitext(form.getChecked('template'), form.article.value), 'User talk:' + mw.config.get('wgRelevantUserName')); // Force wikitext/correct username
 
 		var submit = document.createElement('input');
@@ -751,7 +751,7 @@ TwinkleGlobal.welcome.callbacks = {
 
 		// abort if mode is auto and form is not empty
 		if (pageobj.exists() && params.mode === 'auto') {
-			MorebitsGlobal.status.info('Warning', 'User talk page not empty; aborting automatic welcome');
+			MorebitsGlobal.Status.info('Warning', 'User talk page not empty; aborting automatic welcome');
 			MorebitsGlobal.wiki.actionCompleted.event();
 			return;
 		}
@@ -782,14 +782,14 @@ TwinkleGlobal.welcome.callback.evaluate = function twinklewelcomeCallbackEvaluat
 		mode: 'manual'
 	};
 
-	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-	MorebitsGlobal.status.init(form);
+	MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.Status.init(form);
 
 	var userTalkPage = mw.config.get('wgFormattedNamespaces')[3] + ':' + mw.config.get('wgRelevantUserName');
 	MorebitsGlobal.wiki.actionCompleted.redirect = userTalkPage;
 	MorebitsGlobal.wiki.actionCompleted.notice = 'Welcoming complete, reloading talk page in a few seconds';
 
-	var wikipedia_page = new MorebitsGlobal.wiki.page(userTalkPage, 'User talk page modification');
+	var wikipedia_page = new MorebitsGlobal.wiki.Page(userTalkPage, 'User talk page modification');
 	wikipedia_page.setFollowRedirect(true);
 	wikipedia_page.setCallbackParameters(params);
 	wikipedia_page.load(TwinkleGlobal.welcome.callbacks.main);

@@ -34,23 +34,23 @@ TwinkleGlobal.xfd.num2order = function twinklexfdNum2order(num) {
 
 TwinkleGlobal.xfd.currentRationale = null;
 
-// error callback on MorebitsGlobal.status.object
+// error callback on MorebitsGlobal.Status.object
 TwinkleGlobal.xfd.printRationale = function twinklexfdPrintRationale() {
 	if (TwinkleGlobal.xfd.currentRationale) {
-		MorebitsGlobal.status.printUserText(TwinkleGlobal.xfd.currentRationale, 'Your deletion rationale is provided below, which you can copy and paste into a new XFD dialog if you wish to try again:');
+		MorebitsGlobal.Status.printUserText(TwinkleGlobal.xfd.currentRationale, 'Your deletion rationale is provided below, which you can copy and paste into a new XFD dialog if you wish to try again:');
 		// only need to print the rationale once
 		TwinkleGlobal.xfd.currentRationale = null;
 	}
 };
 
 TwinkleGlobal.xfd.callback = function twinklexfdCallback() {
-	var Window = new MorebitsGlobal.simpleWindow(600, 350);
+	var Window = new MorebitsGlobal.SimpleWindow(600, 350);
 	Window.setTitle('Start a deletion discussion (XfD)');
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('About deletion discussions', 'WP:XFD');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#xfd');
 
-	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.xfd.callback.evaluate);
+	var form = new MorebitsGlobal.QuickForm(TwinkleGlobal.xfd.callback.evaluate);
 	var categories = form.append({
 		type: 'select',
 		name: 'category',
@@ -134,7 +134,7 @@ TwinkleGlobal.xfd.callback = function twinklexfdCallback() {
 	var result = form.render();
 	Window.setContent(result);
 	Window.display();
-	result.previewer = new MorebitsGlobal.wiki.preview($(result).find('div#twinklexfd-previewbox').last()[0]);
+	result.previewer = new MorebitsGlobal.wiki.Preview($(result).find('div#twinklexfd-previewbox').last()[0]);
 
 	// We must init the controls
 	var evt = document.createEvent('Event');
@@ -147,7 +147,7 @@ TwinkleGlobal.xfd.previousNotify = true;
 TwinkleGlobal.xfd.callback.change_category = function twinklexfdCallbackChangeCategory(e) {
 	var value = e.target.value;
 	var form = e.target.form;
-	var old_area = MorebitsGlobal.quickForm.getElements(e.target.form, 'work_area')[0];
+	var old_area = MorebitsGlobal.QuickForm.getElements(e.target.form, 'work_area')[0];
 	var work_area = null;
 
 	var oldreasontextbox = form.getElementsByTagName('textarea')[0];
@@ -167,7 +167,7 @@ TwinkleGlobal.xfd.callback.change_category = function twinklexfdCallbackChangeCa
 
 	switch (value) {
 		case 'afd':
-			work_area = new MorebitsGlobal.quickForm.element({
+			work_area = new MorebitsGlobal.QuickForm.Element({
 				type: 'field',
 				label: 'Articles for deletion',
 				name: 'work_area'
@@ -262,7 +262,7 @@ TwinkleGlobal.xfd.callback.change_category = function twinklexfdCallbackChangeCa
 
 			break;
 		case 'tfd':
-			work_area = new MorebitsGlobal.quickForm.element({
+			work_area = new MorebitsGlobal.QuickForm.Element({
 				type: 'field',
 				label: 'Templates for discussion',
 				name: 'work_area'
@@ -280,14 +280,14 @@ TwinkleGlobal.xfd.callback.change_category = function twinklexfdCallbackChangeCa
 					var target = e.target;
 					// add/remove extra input box
 					if (target.value === 'tfm' && !target.form.xfdtarget) { // $(target.parentNode).find("input[name='xfdtarget']").length === 0 ) {
-						var xfdtarget = new MorebitsGlobal.quickForm.element({
+						var xfdtarget = new MorebitsGlobal.QuickForm.Element({
 							name: 'xfdtarget',
 							type: 'input',
 							label: 'Other ' + templateOrModule + ' to be merged: '
 						});
 						target.parentNode.appendChild(xfdtarget.render());
 					} else {
-						$(MorebitsGlobal.quickForm.getElementContainer(target.form.xfdtarget)).remove();
+						$(MorebitsGlobal.QuickForm.getElementContainer(target.form.xfdtarget)).remove();
 						target.form.xfdtarget = null;
 						// $(target.parentNode).find("input[name='xfdtarget']").remove();
 					}
@@ -330,7 +330,7 @@ TwinkleGlobal.xfd.callback.change_category = function twinklexfdCallbackChangeCa
 			old_area.parentNode.replaceChild(work_area, old_area);
 			break;
 		case 'mfd':
-			work_area = new MorebitsGlobal.quickForm.element({
+			work_area = new MorebitsGlobal.QuickForm.Element({
 				type: 'field',
 				label: 'Miscellany for deletion',
 				name: 'work_area'
@@ -365,7 +365,7 @@ TwinkleGlobal.xfd.callback.change_category = function twinklexfdCallbackChangeCa
 			old_area.parentNode.replaceChild(work_area, old_area);
 			break;
 		case 'ffd':
-			work_area = new MorebitsGlobal.quickForm.element({
+			work_area = new MorebitsGlobal.QuickForm.Element({
 				type: 'field',
 				label: 'Discussion venues for files',
 				name: 'work_area'
@@ -375,7 +375,7 @@ TwinkleGlobal.xfd.callback.change_category = function twinklexfdCallbackChangeCa
 			old_area.parentNode.replaceChild(work_area, old_area);
 			break;
 		case 'cfd':
-			work_area = new MorebitsGlobal.quickForm.element({
+			work_area = new MorebitsGlobal.QuickForm.Element({
 				type: 'field',
 				label: 'Categories for discussion',
 				name: 'work_area'
@@ -430,7 +430,7 @@ TwinkleGlobal.xfd.callback.change_category = function twinklexfdCallbackChangeCa
 			old_area.parentNode.replaceChild(work_area, old_area);
 			break;
 		case 'cfds':
-			work_area = new MorebitsGlobal.quickForm.element({
+			work_area = new MorebitsGlobal.QuickForm.Element({
 				type: 'field',
 				label: 'Categories for speedy renaming',
 				name: 'work_area'
@@ -467,7 +467,7 @@ TwinkleGlobal.xfd.callback.change_category = function twinklexfdCallbackChangeCa
 			old_area.parentNode.replaceChild(work_area, old_area);
 			break;
 		case 'rfd':
-			work_area = new MorebitsGlobal.quickForm.element({
+			work_area = new MorebitsGlobal.QuickForm.Element({
 				type: 'field',
 				label: 'Redirects for discussion',
 				name: 'work_area'
@@ -490,7 +490,7 @@ TwinkleGlobal.xfd.callback.change_category = function twinklexfdCallbackChangeCa
 			old_area.parentNode.replaceChild(work_area, old_area);
 			break;
 		default:
-			work_area = new MorebitsGlobal.quickForm.element({
+			work_area = new MorebitsGlobal.QuickForm.Element({
 				type: 'field',
 				label: 'Nothing for anything',
 				name: 'work_area'
@@ -603,7 +603,7 @@ TwinkleGlobal.xfd.callbacks = {
 
 		if (venue === 'ffd') {
 			// Fetch the uploader
-			var page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
+			var page = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'));
 			page.lookupCreation(function() {
 				params.uploader = page.getCreator();
 				TwinkleGlobal.xfd.callbacks.showPreview(form, venue, params);
@@ -655,14 +655,14 @@ TwinkleGlobal.xfd.callbacks = {
 			}
 			apiobj.params.discussionpage = 'Wikipedia:Articles for deletion/' + MorebitsGlobal.pageNameNorm + apiobj.params.numbering;
 
-			MorebitsGlobal.status.info('Next discussion page', '[[' + apiobj.params.discussionpage + ']]');
+			MorebitsGlobal.Status.info('Next discussion page', '[[' + apiobj.params.discussionpage + ']]');
 
 			// Updating data for the action completed event
 			MorebitsGlobal.wiki.actionCompleted.redirect = apiobj.params.discussionpage;
 			MorebitsGlobal.wiki.actionCompleted.notice = 'Nomination completed, now redirecting to the discussion page';
 
 			// Tagging article
-			var wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Adding deletion tag to article');
+			var wikipedia_page = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'), 'Adding deletion tag to article');
 			wikipedia_page.setFollowRedirect(true);  // should never be needed, but if the article is moved, we would want to follow the redirect
 			wikipedia_page.setCallbackParameters(apiobj.params);
 			wikipedia_page.load(TwinkleGlobal.xfd.callbacks.afd.taggingArticle);
@@ -698,13 +698,13 @@ TwinkleGlobal.xfd.callbacks = {
 			}
 
 			// Starting discussion page
-			var wikipedia_page = new MorebitsGlobal.wiki.page(params.discussionpage, 'Creating article deletion discussion page');
+			var wikipedia_page = new MorebitsGlobal.wiki.Page(params.discussionpage, 'Creating article deletion discussion page');
 			wikipedia_page.setCallbackParameters(params);
 			wikipedia_page.load(TwinkleGlobal.xfd.callbacks.afd.discussionPage);
 
 			// Today's list
 			var date = new Date(pageobj.getLoadTime());
-			wikipedia_page = new MorebitsGlobal.wiki.page('Wikipedia:Articles for deletion/Log/' + date.getUTCFullYear() + ' ' +
+			wikipedia_page = new MorebitsGlobal.wiki.Page('Wikipedia:Articles for deletion/Log/' + date.getUTCFullYear() + ' ' +
 				date.getUTCMonthName() + ' ' + date.getUTCDate(), "Adding discussion to today's list");
 			wikipedia_page.setFollowRedirect(true);
 			wikipedia_page.setCallbackParameters(params);
@@ -712,7 +712,7 @@ TwinkleGlobal.xfd.callbacks = {
 
 			// Notification to first contributor
 			if (params.usertalk) {
-				var thispage = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
+				var thispage = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'));
 				thispage.setCallbackParameters(params);
 				thispage.lookupCreation(TwinkleGlobal.xfd.callbacks.afd.userNotification);
 			}
@@ -720,7 +720,7 @@ TwinkleGlobal.xfd.callbacks = {
 			// List at deletion sorting pages
 			if (params.delsort_cats) {
 				params.delsort_cats.forEach(function (cat) {
-					var delsortPage = new MorebitsGlobal.wiki.page('Wikipedia:WikiProject Deletion sorting/' + cat, 'Adding to list of ' + cat + '-related deletion discussions');
+					var delsortPage = new MorebitsGlobal.wiki.Page('Wikipedia:WikiProject Deletion sorting/' + cat, 'Adding to list of ' + cat + '-related deletion discussions');
 					delsortPage.setCallbackParameters({discussionPage: params.discussionpage});
 					delsortPage.load(TwinkleGlobal.xfd.callbacks.afd.delsortListing);
 				});
@@ -781,7 +781,7 @@ TwinkleGlobal.xfd.callbacks = {
 				return;
 			}
 
-			var usertalkpage = new MorebitsGlobal.wiki.page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')');
+			var usertalkpage = new MorebitsGlobal.wiki.Page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')');
 			var notifytext = '\n{{subst:AFDWarning|1=' + MorebitsGlobal.pageNameNorm + (params.numbering !== '' ? '|order=&#32;' + params.numbering : '') + '}} ~~~~';
 			usertalkpage.setAppendText(notifytext);
 			usertalkpage.setEditSummary('Notification: [[' + params.discussionpage + '|nomination]] of [[:' + MorebitsGlobal.pageNameNorm + ']]  at [[WP:AFD|articles for deletion]].' + TwinkleGlobal.getPref('summaryAd'));
@@ -857,7 +857,7 @@ TwinkleGlobal.xfd.callbacks = {
 				return;
 			}
 
-			var usertalkpage = new MorebitsGlobal.wiki.page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')');
+			var usertalkpage = new MorebitsGlobal.wiki.Page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')');
 			var notifytext = '\n';
 			var modNotice = mw.config.get('wgPageContentModel') === 'Scribunto' ? '|module=yes' : '';
 			switch (params.xfdcat) {
@@ -922,7 +922,7 @@ TwinkleGlobal.xfd.callbacks = {
 			apiobj.statelem.info('next in order is [[' + apiobj.params.discussionpage + ']]');
 
 			// Tagging page
-			var wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Tagging page with deletion tag');
+			var wikipedia_page = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'), 'Tagging page with deletion tag');
 			wikipedia_page.setFollowRedirect(true);  // should never be needed, but if the page is moved, we would want to follow the redirect
 			wikipedia_page.setCallbackParameters(apiobj.params);
 			wikipedia_page.load(TwinkleGlobal.xfd.callbacks.mfd.taggingPage);
@@ -932,12 +932,12 @@ TwinkleGlobal.xfd.callbacks = {
 			MorebitsGlobal.wiki.actionCompleted.notice = 'Nomination completed, now redirecting to the discussion page';
 
 			// Discussion page
-			wikipedia_page = new MorebitsGlobal.wiki.page(apiobj.params.discussionpage, 'Creating deletion discussion page');
+			wikipedia_page = new MorebitsGlobal.wiki.Page(apiobj.params.discussionpage, 'Creating deletion discussion page');
 			wikipedia_page.setCallbackParameters(apiobj.params);
 			wikipedia_page.load(TwinkleGlobal.xfd.callbacks.mfd.discussionPage);
 
 			// Today's list
-			wikipedia_page = new MorebitsGlobal.wiki.page('Wikipedia:Miscellany for deletion', "Adding discussion to today's list");
+			wikipedia_page = new MorebitsGlobal.wiki.Page('Wikipedia:Miscellany for deletion', "Adding discussion to today's list");
 			// wikipedia_page.setPageSection(2);
 			// pageSection has been disabled - the API seems to throw up with nonexistent edit conflicts
 			// it can be turned on again once the problem is fixed, to save bandwidth
@@ -947,7 +947,7 @@ TwinkleGlobal.xfd.callbacks = {
 
 			// Notification to first contributor, and notification to owner of userspace (if applicable and required)
 			if (apiobj.params.usertalk) {
-				var thispage = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
+				var thispage = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'));
 				thispage.setCallbackParameters(apiobj.params);
 				thispage.lookupCreation(TwinkleGlobal.xfd.callbacks.mfd.userNotification);
 			}
@@ -1020,7 +1020,7 @@ TwinkleGlobal.xfd.callbacks = {
 			}
 		},
 		userNotificationMain: function(params, initialContrib, actionName) {
-			var usertalkpage = new MorebitsGlobal.wiki.page('User talk:' + initialContrib, actionName + ' (' + initialContrib + ')');
+			var usertalkpage = new MorebitsGlobal.wiki.Page('User talk:' + initialContrib, actionName + ' (' + initialContrib + ')');
 			var notifytext = '\n{{subst:MFDWarning|1=' + MorebitsGlobal.pageNameNorm + (params.numbering !== '' ? '|order=&#32;' + params.numbering : '') + '}} ~~~~';
 			usertalkpage.setAppendText(notifytext);
 			usertalkpage.setEditSummary('Notification: [[' + params.discussionpage + '|nomination]] of [[:' + MorebitsGlobal.pageNameNorm + ']] at [[WP:MFD|miscellany for deletion]].' + TwinkleGlobal.getPref('summaryAd'));
@@ -1040,7 +1040,7 @@ TwinkleGlobal.xfd.callbacks = {
 			params.uploader = initialContrib;
 
 			// Adding discussion
-			var wikipedia_page = new MorebitsGlobal.wiki.page(params.logpage, "Adding discussion to today's list");
+			var wikipedia_page = new MorebitsGlobal.wiki.Page(params.logpage, "Adding discussion to today's list");
 			wikipedia_page.setFollowRedirect(true);
 			wikipedia_page.setCallbackParameters(params);
 			wikipedia_page.load(TwinkleGlobal.xfd.callbacks.ffd.todaysList);
@@ -1051,7 +1051,7 @@ TwinkleGlobal.xfd.callbacks = {
 				if (initialContrib === mw.config.get('wgUserName')) {
 					pageobj.getStatusElement().warn('You (' + initialContrib + ') created this page; skipping user notification');
 				} else {
-					var usertalkpage = new MorebitsGlobal.wiki.page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')');
+					var usertalkpage = new MorebitsGlobal.wiki.Page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')');
 					var notifytext = '\n{{subst:fdw|1=' + mw.config.get('wgTitle') + '}}';
 					usertalkpage.setAppendText(notifytext);
 					usertalkpage.setEditSummary('Notification: [[' + params.discussionpage + '|listing]] of [[:' + MorebitsGlobal.pageNameNorm + ']] at [[WP:FFD|files for discussion]].' + TwinkleGlobal.getPref('summaryAd'));
@@ -1172,7 +1172,7 @@ TwinkleGlobal.xfd.callbacks = {
 				return;
 			}
 
-			var usertalkpage = new MorebitsGlobal.wiki.page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')');
+			var usertalkpage = new MorebitsGlobal.wiki.Page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')');
 			var notifytext = '\n{{subst:cfd-notify|1=' + MorebitsGlobal.pageNameNorm + '}} ~~~~';
 			usertalkpage.setAppendText(notifytext);
 			usertalkpage.setEditSummary('Notification: [[' + params.discussionpage + '|listing]] of [[:' + MorebitsGlobal.pageNameNorm + ']] at [[WP:CFD|categories for discussion]].' + TwinkleGlobal.getPref('summaryAd'));
@@ -1233,7 +1233,7 @@ TwinkleGlobal.xfd.callbacks = {
 					redirects: true,
 					curtimestamp: true
 				};
-				var wikipedia_api = new MorebitsGlobal.wiki.api('Finding target of redirect', query, TwinkleGlobal.xfd.callbacks.rfd.findTargetCallback(callback));
+				var wikipedia_api = new MorebitsGlobal.wiki.Api('Finding target of redirect', query, TwinkleGlobal.xfd.callbacks.rfd.findTargetCallback(callback));
 				wikipedia_api.params = params;
 				wikipedia_api.post();
 			}
@@ -1261,7 +1261,7 @@ TwinkleGlobal.xfd.callbacks = {
 			params.discussionpage = params.logpage + '#' + MorebitsGlobal.pageNameNorm;
 
 			// Tagging redirect
-			var wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Adding deletion tag to redirect');
+			var wikipedia_page = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'), 'Adding deletion tag to redirect');
 			wikipedia_page.setFollowRedirect(false);
 			wikipedia_page.setCallbackParameters(params);
 			wikipedia_page.load(TwinkleGlobal.xfd.callbacks.rfd.taggingRedirect);
@@ -1271,14 +1271,14 @@ TwinkleGlobal.xfd.callbacks = {
 			MorebitsGlobal.wiki.actionCompleted.notice = "Nomination completed, now redirecting to today's log";
 
 			// Adding discussion
-			wikipedia_page = new MorebitsGlobal.wiki.page(params.logpage, "Adding discussion to today's log");
+			wikipedia_page = new MorebitsGlobal.wiki.Page(params.logpage, "Adding discussion to today's log");
 			wikipedia_page.setFollowRedirect(true);
 			wikipedia_page.setCallbackParameters(params);
 			wikipedia_page.load(TwinkleGlobal.xfd.callbacks.rfd.todaysList);
 
 			// Notifications
 			if (params.usertalk || params.relatedpage) {
-				var thispage = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
+				var thispage = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'));
 				thispage.setCallbackParameters(params);
 				thispage.lookupCreation(TwinkleGlobal.xfd.callbacks.rfd.sendNotifications);
 			}
@@ -1348,7 +1348,7 @@ TwinkleGlobal.xfd.callbacks = {
 			}
 		},
 		userNotification: function(params, initialContrib) {
-			var usertalkpage = new MorebitsGlobal.wiki.page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')');
+			var usertalkpage = new MorebitsGlobal.wiki.Page('User talk:' + initialContrib, 'Notifying initial contributor (' + initialContrib + ')');
 			var notifytext = '\n{{subst:RFDNote|1=' + MorebitsGlobal.pageNameNorm + '}} ~~~~';
 			usertalkpage.setAppendText(notifytext);
 			usertalkpage.setEditSummary('Notification: [[' + params.discussionpage + '|listing]] of [[:' + MorebitsGlobal.pageNameNorm + ']] at [[WP:RFD|redirects for discussion]].' + TwinkleGlobal.getPref('summaryAd'));
@@ -1358,7 +1358,7 @@ TwinkleGlobal.xfd.callbacks = {
 			usertalkpage.append();
 		},
 		targetNotification: function(params, targetTalk) {
-			var targettalkpage = new MorebitsGlobal.wiki.page(targetTalk, 'Notifying redirect target of the discussion');
+			var targettalkpage = new MorebitsGlobal.wiki.Page(targetTalk, 'Notifying redirect target of the discussion');
 			var notifytext = '\n{{subst:RFDNote|1=' + MorebitsGlobal.pageNameNorm + '}} ~~~~';
 			targettalkpage.setAppendText(notifytext);
 			targettalkpage.setEditSummary('Notification: [[' + params.discussionpage + '|listing]] of [[:' + MorebitsGlobal.pageNameNorm + ']] at [[WP:RFD|redirects for discussion]].' + TwinkleGlobal.getPref('summaryAd'));
@@ -1387,14 +1387,14 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 	var notifyuserspace = form.notifyuserspace && form.notifyuserspace.checked; // mfd
 	var relatedpage = form.relatedpage && form.relatedpage.checked; // rfd
 
-	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-	MorebitsGlobal.status.init(form);
+	MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.Status.init(form);
 
 	TwinkleGlobal.xfd.currentRationale = reason;
-	MorebitsGlobal.status.onError(TwinkleGlobal.xfd.printRationale);
+	MorebitsGlobal.Status.onError(TwinkleGlobal.xfd.printRationale);
 
 	if (!type) {
-		MorebitsGlobal.status.error('Error', 'no action given');
+		MorebitsGlobal.Status.error('Error', 'no action given');
 		return;
 	}
 
@@ -1411,7 +1411,7 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 				apfilterredir: 'nonredirects',
 				aplimit: MorebitsGlobal.userIsSysop ? 5000 : 500
 			};
-			wikipedia_api = new MorebitsGlobal.wiki.api('Tagging article with deletion tag', query, TwinkleGlobal.xfd.callbacks.afd.main);
+			wikipedia_api = new MorebitsGlobal.wiki.Api('Tagging article with deletion tag', query, TwinkleGlobal.xfd.callbacks.afd.main);
 			wikipedia_api.params = { usertalk: usertalk, reason: reason, noinclude: noinclude,
 				xfdcat: xfdcat, delsort_cats: delsort_cats };
 			wikipedia_api.post();
@@ -1436,10 +1436,10 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 			if (xfdcat === 'tfm') { // Merge
 			// Tag this template/module
 				if (isScribunto) {
-					wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName') + '/doc', 'Tagging this module documentation with merge tag');
+					wikipedia_page = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName') + '/doc', 'Tagging this module documentation with merge tag');
 					params.otherTemplateName = 'Module:' + xfdtarget;
 				} else {
-					wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Tagging this template with merge tag');
+					wikipedia_page = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'), 'Tagging this template with merge tag');
 					params.otherTemplateName = 'Template:' + xfdtarget;
 				}
 				wikipedia_page.setFollowRedirect(true);
@@ -1448,9 +1448,9 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 
 				// Tag other template/module
 				if (isScribunto) {
-					wikipedia_page = new MorebitsGlobal.wiki.page('Module:' + xfdtarget + '/doc', 'Tagging other module documentation with merge tag');
+					wikipedia_page = new MorebitsGlobal.wiki.Page('Module:' + xfdtarget + '/doc', 'Tagging other module documentation with merge tag');
 				} else {
-					wikipedia_page = new MorebitsGlobal.wiki.page('Template:' + xfdtarget, 'Tagging other template with merge tag');
+					wikipedia_page = new MorebitsGlobal.wiki.Page('Template:' + xfdtarget, 'Tagging other template with merge tag');
 				}
 				wikipedia_page.setFollowRedirect(true);
 				params = $.extend(params);
@@ -1459,9 +1459,9 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 				wikipedia_page.load(TwinkleGlobal.xfd.callbacks.tfd.taggingTemplateForMerge);
 			} else { // delete
 				if (isScribunto) {
-					wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName') + '/doc', 'Tagging module documentation with deletion tag');
+					wikipedia_page = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName') + '/doc', 'Tagging module documentation with deletion tag');
 				} else {
-					wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Tagging template with deletion tag');
+					wikipedia_page = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'), 'Tagging template with deletion tag');
 				}
 				wikipedia_page.setFollowRedirect(true);  // should never be needed, but if the page is moved, we would want to follow the redirect
 				wikipedia_page.setCallbackParameters(params);
@@ -1473,7 +1473,7 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 			MorebitsGlobal.wiki.actionCompleted.notice = "Nomination completed, now redirecting to today's log";
 
 			// Adding discussion
-			wikipedia_page = new MorebitsGlobal.wiki.page(logpage, "Adding discussion to today's log");
+			wikipedia_page = new MorebitsGlobal.wiki.Page(logpage, "Adding discussion to today's log");
 			wikipedia_page.setFollowRedirect(true);
 			wikipedia_page.setCallbackParameters(params);
 			wikipedia_page.load(TwinkleGlobal.xfd.callbacks.tfd.todaysList);
@@ -1482,12 +1482,12 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 			if (usertalk) {
 				var involvedpages = [];
 				var seenusers = [];
-				involvedpages.push(new MorebitsGlobal.wiki.page(mw.config.get('wgPageName')));
+				involvedpages.push(new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName')));
 				if (xfdcat === 'tfm') {
 					if (isScribunto) {
-						involvedpages.push(new MorebitsGlobal.wiki.page('Module:' + xfdtarget));
+						involvedpages.push(new MorebitsGlobal.wiki.Page('Module:' + xfdtarget));
 					} else {
-						involvedpages.push(new MorebitsGlobal.wiki.page('Template:' + xfdtarget));
+						involvedpages.push(new MorebitsGlobal.wiki.Page('Template:' + xfdtarget));
 					}
 				}
 				involvedpages.forEach(function(page) {
@@ -1514,7 +1514,7 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 				apfilterredir: 'nonredirects',
 				aplimit: MorebitsGlobal.userIsSysop ? 5000 : 500
 			};
-			wikipedia_api = new MorebitsGlobal.wiki.api('Looking for prior nominations of this page', query, TwinkleGlobal.xfd.callbacks.mfd.main);
+			wikipedia_api = new MorebitsGlobal.wiki.Api('Looking for prior nominations of this page', query, TwinkleGlobal.xfd.callbacks.mfd.main);
 			wikipedia_api.params = { usertalk: usertalk, notifyuserspace: notifyuserspace, reason: reason, noinclude: noinclude, xfdcat: xfdcat };
 			wikipedia_api.post();
 			break;
@@ -1532,13 +1532,13 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 			MorebitsGlobal.wiki.actionCompleted.notice = 'Nomination completed, now redirecting to the discussion page';
 
 			// Tagging file
-			wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Adding deletion tag to file page');
+			wikipedia_page = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'), 'Adding deletion tag to file page');
 			wikipedia_page.setFollowRedirect(true);
 			wikipedia_page.setCallbackParameters(params);
 			wikipedia_page.load(TwinkleGlobal.xfd.callbacks.ffd.taggingImage);
 
 			// Contributor specific edits
-			wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
+			wikipedia_page = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'));
 			wikipedia_page.setCallbackParameters(params);
 			wikipedia_page.lookupCreation(TwinkleGlobal.xfd.callbacks.ffd.main);
 
@@ -1568,12 +1568,12 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 			MorebitsGlobal.wiki.actionCompleted.notice = "Nomination completed, now redirecting to today's log";
 
 			// Tagging category
-			wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Tagging category with deletion tag');
+			wikipedia_page = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'), 'Tagging category with deletion tag');
 			wikipedia_page.setCallbackParameters(params);
 			wikipedia_page.load(TwinkleGlobal.xfd.callbacks.cfd.taggingCategory);
 
 			// Adding discussion to list
-			wikipedia_page = new MorebitsGlobal.wiki.page(logpage, "Adding discussion to today's list");
+			wikipedia_page = new MorebitsGlobal.wiki.Page(logpage, "Adding discussion to today's list");
 			// wikipedia_page.setPageSection(2);
 			// pageSection has been disabled - the API seems to throw up with nonexistent edit conflicts
 			// it can be turned on again once the problem is fixed, to save bandwidth
@@ -1583,7 +1583,7 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 
 			// Notification to first contributor
 			if (usertalk) {
-				wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
+				wikipedia_page = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'));
 				wikipedia_page.setCallbackParameters(params);
 				wikipedia_page.lookupCreation(TwinkleGlobal.xfd.callbacks.cfd.userNotification);
 			}
@@ -1602,12 +1602,12 @@ TwinkleGlobal.xfd.callback.evaluate = function(e) {
 			MorebitsGlobal.wiki.actionCompleted.notice = 'Nomination completed, now redirecting to the discussion page';
 
 			// Tagging category
-			wikipedia_page = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Tagging category with rename tag');
+			wikipedia_page = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'), 'Tagging category with rename tag');
 			wikipedia_page.setCallbackParameters(params);
 			wikipedia_page.load(TwinkleGlobal.xfd.callbacks.cfds.taggingCategory);
 
 			// Adding discussion to list
-			wikipedia_page = new MorebitsGlobal.wiki.page(logpage, 'Adding discussion to the list');
+			wikipedia_page = new MorebitsGlobal.wiki.Page(logpage, 'Adding discussion to the list');
 			wikipedia_page.setCallbackParameters(params);
 			wikipedia_page.load(TwinkleGlobal.xfd.callbacks.cfds.addToList);
 

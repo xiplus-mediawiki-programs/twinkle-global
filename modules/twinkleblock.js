@@ -32,7 +32,7 @@ TwinkleGlobal.block.callback = function twinkleblockCallback() {
 	TwinkleGlobal.block.field_block_options = {};
 	TwinkleGlobal.block.field_template_options = {};
 
-	var Window = new MorebitsGlobal.simpleWindow(650, 530);
+	var Window = new MorebitsGlobal.SimpleWindow(650, 530);
 	// need to be verbose about who we're blocking
 	Window.setTitle('Block or issue block template to ' + mw.config.get('wgRelevantUserName'));
 	Window.setScriptName('Twinkle');
@@ -40,7 +40,7 @@ TwinkleGlobal.block.callback = function twinkleblockCallback() {
 	Window.addFooterLink('Block policy', 'WP:BLOCK');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#block');
 
-	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.block.callback.evaluate);
+	var form = new MorebitsGlobal.QuickForm(TwinkleGlobal.block.callback.evaluate);
 	var actionfield = form.append({
 		type: 'field',
 		label: 'Type of action'
@@ -122,8 +122,8 @@ TwinkleGlobal.block.fetchUserInfo = function twinkleblockFetchUserInfo(fn) {
 				return fn();
 			}
 		}, function(msg) {
-			MorebitsGlobal.status.init($('div[name="currentblock"] span').last()[0]);
-			MorebitsGlobal.status.warn('Error fetching user info', msg);
+			MorebitsGlobal.Status.init($('div[name="currentblock"] span').last()[0]);
+			MorebitsGlobal.Status.warn('Error fetching user info', msg);
 		});
 };
 
@@ -141,7 +141,7 @@ TwinkleGlobal.block.callback.change_action = function twinkleblockCallbackChange
 	TwinkleGlobal.block.callback.saveFieldset($('[name=field_template_options]'));
 
 	if ($form.find('[name=actiontype][value=block]').is(':checked')) {
-		field_preset = new MorebitsGlobal.quickForm.element({ type: 'field', label: 'Preset', name: 'field_preset' });
+		field_preset = new MorebitsGlobal.QuickForm.Element({ type: 'field', label: 'Preset', name: 'field_preset' });
 		field_preset.append({
 			type: 'select',
 			name: 'preset',
@@ -150,7 +150,7 @@ TwinkleGlobal.block.callback.change_action = function twinkleblockCallbackChange
 			list: TwinkleGlobal.block.callback.filtered_block_groups()
 		});
 
-		field_block_options = new MorebitsGlobal.quickForm.element({ type: 'field', label: 'Block options', name: 'field_block_options' });
+		field_block_options = new MorebitsGlobal.QuickForm.Element({ type: 'field', label: 'Block options', name: 'field_block_options' });
 		field_block_options.append({ type: 'div', name: 'hasblocklog', label: ' ' });
 		field_block_options.append({ type: 'div', name: 'currentblock', label: ' ' });
 		field_block_options.append({
@@ -282,7 +282,7 @@ TwinkleGlobal.block.callback.change_action = function twinkleblockCallbackChange
 	}
 
 	if ($form.find('[name=actiontype][value=template]').is(':checked')) {
-		field_template_options = new MorebitsGlobal.quickForm.element({ type: 'field', label: 'Template options', name: 'field_template_options' });
+		field_template_options = new MorebitsGlobal.QuickForm.Element({ type: 'field', label: 'Template options', name: 'field_template_options' });
 		field_template_options.append({
 			type: 'select',
 			name: 'template',
@@ -369,7 +369,7 @@ TwinkleGlobal.block.callback.change_action = function twinkleblockCallbackChange
 	if (field_template_options) {
 		oldfield = $form.find('fieldset[name="field_template_options"]')[0];
 		oldfield.parentNode.replaceChild(field_template_options.render(), oldfield);
-		e.target.form.root.previewer = new MorebitsGlobal.wiki.preview($(e.target.form.root).find('#twinkleblock-previewbox').last()[0]);
+		e.target.form.root.previewer = new MorebitsGlobal.wiki.Preview($(e.target.form.root).find('#twinkleblock-previewbox').last()[0]);
 	} else {
 		$form.find('fieldset[name="field_template_options"]').hide();
 	}
@@ -377,13 +377,13 @@ TwinkleGlobal.block.callback.change_action = function twinkleblockCallbackChange
 	if (TwinkleGlobal.block.hasBlockLog) {
 		var $blockloglink = $('<a target="_blank" href="' + mw.util.getUrl('Special:Log', {action: 'view', page: mw.config.get('wgRelevantUserName'), type: 'block'}) + '">block log</a>)');
 
-		MorebitsGlobal.status.init($('div[name="hasblocklog"] span').last()[0]);
-		MorebitsGlobal.status.warn('This user has been blocked in the past', $blockloglink[0]);
+		MorebitsGlobal.Status.init($('div[name="hasblocklog"] span').last()[0]);
+		MorebitsGlobal.Status.warn('This user has been blocked in the past', $blockloglink[0]);
 	}
 
 	if (TwinkleGlobal.block.currentBlockInfo) {
-		MorebitsGlobal.status.init($('div[name="currentblock"] span').last()[0]);
-		MorebitsGlobal.status.warn(relevantUserName + ' is already blocked', 'Submit query to reblock with supplied options');
+		MorebitsGlobal.Status.init($('div[name="currentblock"] span').last()[0]);
+		MorebitsGlobal.Status.warn(relevantUserName + ' is already blocked', 'Submit query to reblock with supplied options');
 		TwinkleGlobal.block.callback.update_form(e, TwinkleGlobal.block.currentBlockInfo);
 	} else if ($form.find('[name=actiontype][value=template]').is(':checked')) {
 		// make sure all the fields are correct based on defaults
@@ -980,9 +980,9 @@ TwinkleGlobal.block.callback.change_preset = function twinkleblockCallbackChange
 TwinkleGlobal.block.callback.change_expiry = function twinkleblockCallbackChangeExpiry(e) {
 	var expiry = e.target.form.expiry;
 	if (e.target.value === 'custom') {
-		MorebitsGlobal.quickForm.setElementVisibility(expiry.parentNode, true);
+		MorebitsGlobal.QuickForm.setElementVisibility(expiry.parentNode, true);
 	} else {
-		MorebitsGlobal.quickForm.setElementVisibility(expiry.parentNode, false);
+		MorebitsGlobal.QuickForm.setElementVisibility(expiry.parentNode, false);
 		expiry.value = e.target.value;
 	}
 };
@@ -1025,9 +1025,9 @@ TwinkleGlobal.block.callback.update_form = function twinkleblockCallbackUpdateFo
 
 		form.expiry.value = expiry;
 		if (form.expiry_preset.value === 'custom') {
-			MorebitsGlobal.quickForm.setElementVisibility(form.expiry.parentNode, true);
+			MorebitsGlobal.QuickForm.setElementVisibility(form.expiry.parentNode, true);
 		} else {
-			MorebitsGlobal.quickForm.setElementVisibility(form.expiry.parentNode, false);
+			MorebitsGlobal.QuickForm.setElementVisibility(form.expiry.parentNode, false);
 		}
 	}
 
@@ -1077,16 +1077,16 @@ TwinkleGlobal.block.callback.change_template = function twinkleblockcallbackChan
 		if (TwinkleGlobal.block.prev_template_expiry) {
 			form.expiry.value = TwinkleGlobal.block.prev_template_expiry;
 		}
-		MorebitsGlobal.quickForm.setElementVisibility(form.notalk.parentNode, !settings.nonstandard);
+		MorebitsGlobal.QuickForm.setElementVisibility(form.notalk.parentNode, !settings.nonstandard);
 	} else {
-		MorebitsGlobal.quickForm.setElementVisibility(
+		MorebitsGlobal.QuickForm.setElementVisibility(
 			form.blank_duration.parentNode,
 			!settings.indefinite && !settings.nonstandard
 		);
 	}
 
-	MorebitsGlobal.quickForm.setElementVisibility(form.article.parentNode, !!settings.pageParam);
-	MorebitsGlobal.quickForm.setElementVisibility(form.block_reason.parentNode, !!settings.reasonParam);
+	MorebitsGlobal.QuickForm.setElementVisibility(form.article.parentNode, !!settings.pageParam);
+	MorebitsGlobal.QuickForm.setElementVisibility(form.block_reason.parentNode, !!settings.reasonParam);
 
 	form.root.previewer.closePreview();
 };
@@ -1140,9 +1140,9 @@ TwinkleGlobal.block.callback.evaluate = function twinkleblockCallbackEvaluate(e)
 			return alert('Please provide a reason for the block!');
 		}
 
-		MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-		MorebitsGlobal.status.init(e.target);
-		var statusElement = new MorebitsGlobal.status('Executing block');
+		MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+		MorebitsGlobal.Status.init(e.target);
+		var statusElement = new MorebitsGlobal.Status('Executing block');
 		blockoptions.action = 'block';
 		blockoptions.user = mw.config.get('wgRelevantUserName');
 
@@ -1152,7 +1152,7 @@ TwinkleGlobal.block.callback.evaluate = function twinkleblockCallbackEvaluate(e)
 
 		// execute block
 		blockoptions.token = mw.user.tokens.get('csrfToken');
-		var mbApi = new MorebitsGlobal.wiki.api('Executing block', blockoptions, function() {
+		var mbApi = new MorebitsGlobal.wiki.Api('Executing block', blockoptions, function() {
 			statusElement.info('Completed');
 			if (toWarn) {
 				TwinkleGlobal.block.callback.issue_template(templateoptions);
@@ -1160,9 +1160,9 @@ TwinkleGlobal.block.callback.evaluate = function twinkleblockCallbackEvaluate(e)
 		});
 		mbApi.post();
 	} else if (toWarn) {
-		MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
+		MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
 
-		MorebitsGlobal.status.init(e.target);
+		MorebitsGlobal.Status.init(e.target);
 		TwinkleGlobal.block.callback.issue_template(templateoptions);
 	} else {
 		return alert('Please give Twinkle something to do!');
@@ -1181,7 +1181,7 @@ TwinkleGlobal.block.callback.issue_template = function twinkleblockCallbackIssue
 	MorebitsGlobal.wiki.actionCompleted.redirect = userTalkPage;
 	MorebitsGlobal.wiki.actionCompleted.notice = 'Actions complete, loading user talk page in a few seconds';
 
-	var wikipedia_page = new MorebitsGlobal.wiki.page(userTalkPage, 'User talk page modification');
+	var wikipedia_page = new MorebitsGlobal.wiki.Page(userTalkPage, 'User talk page modification');
 	wikipedia_page.setCallbackParameters(params);
 	wikipedia_page.setFollowRedirect(true);
 	wikipedia_page.load(TwinkleGlobal.block.callback.main);
@@ -1249,10 +1249,10 @@ TwinkleGlobal.block.callback.main = function twinkleblockcallbackMain(pageobj) {
 	params.indefinite = (/indef|infinit|never|\*|max/).test(params.expiry);
 
 	if (TwinkleGlobal.getPref('blankTalkpageOnIndefBlock') && params.template !== 'uw-lblock' && params.indefinite) {
-		MorebitsGlobal.status.info('Info', 'Blanking talk page per preferences and creating a new level 2 heading for the date');
+		MorebitsGlobal.Status.info('Info', 'Blanking talk page per preferences and creating a new level 2 heading for the date');
 		text = '== ' + date.getUTCMonthName() + ' ' + date.getUTCFullYear() + ' ==\n';
 	} else if (!dateHeaderRegexResult || dateHeaderRegexResult.index !== lastHeaderIndex) {
-		MorebitsGlobal.status.info('Info', 'Will create a new level 2 heading for the date, as none was found for this month');
+		MorebitsGlobal.Status.info('Info', 'Will create a new level 2 heading for the date, as none was found for this month');
 		text += '== ' + date.getUTCMonthName() + ' ' + date.getUTCFullYear() + ' ==\n';
 	}
 

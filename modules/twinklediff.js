@@ -61,8 +61,8 @@ TwinkleGlobal.diff.evaluate = function twinklediffEvaluate(me) {
 		rvstartid: mw.config.get('wgCurRevisionId') - 1, // i.e. not the current one
 		rvuser: user
 	};
-	MorebitsGlobal.status.init(document.getElementById('mw-content-text'));
-	var wikipedia_api = new MorebitsGlobal.wiki.api('Grabbing data of initial contributor', query, TwinkleGlobal.diff.callbacks.main);
+	MorebitsGlobal.Status.init(document.getElementById('mw-content-text'));
+	var wikipedia_api = new MorebitsGlobal.wiki.Api('Grabbing data of initial contributor', query, TwinkleGlobal.diff.callbacks.main);
 	wikipedia_api.params = { user: user };
 	wikipedia_api.post();
 };

@@ -35,12 +35,12 @@ TwinkleGlobal.unlink.getChecked2 = function twinkleunlinkGetChecked2(nodelist) {
 
 // the parameter is used when invoking unlink from admin speedy
 TwinkleGlobal.unlink.callback = function(presetReason) {
-	var Window = new MorebitsGlobal.simpleWindow(600, 440);
+	var Window = new MorebitsGlobal.SimpleWindow(600, 440);
 	Window.setTitle('Unlink backlinks' + (mw.config.get('wgNamespaceNumber') === 6 ? ' and file usages' : ''));
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#unlink');
 
-	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.unlink.callback.evaluate);
+	var form = new MorebitsGlobal.QuickForm(TwinkleGlobal.unlink.callback.evaluate);
 
 	// prepend some basic documentation
 	var node1 = MorebitsGlobal.htmlNode('code', '[[' + MorebitsGlobal.pageNameNorm + '|link text]]');
@@ -93,13 +93,13 @@ TwinkleGlobal.unlink.callback = function(presetReason) {
 			rawcontinue: true
 		};
 	}
-	var wikipedia_api = new MorebitsGlobal.wiki.api('Grabbing backlinks', query, TwinkleGlobal.unlink.callbacks.display.backlinks);
+	var wikipedia_api = new MorebitsGlobal.wiki.Api('Grabbing backlinks', query, TwinkleGlobal.unlink.callbacks.display.backlinks);
 	wikipedia_api.params = { form: form, Window: Window, image: mw.config.get('wgNamespaceNumber') === 6 };
 	wikipedia_api.post();
 
 	var root = document.createElement('div');
 	root.style.padding = '15px';  // just so it doesn't look broken
-	MorebitsGlobal.status.init(root);
+	MorebitsGlobal.Status.init(root);
 	wikipedia_api.statelem.status('loading...');
 	Window.setContent(root);
 	Window.display();
@@ -120,17 +120,17 @@ TwinkleGlobal.unlink.callback.evaluate = function twinkleunlinkCallbackEvaluate(
 		imageusage = TwinkleGlobal.unlink.getChecked2(event.target.imageusage);
 	}
 
-	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-	MorebitsGlobal.status.init(event.target);
+	MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.Status.init(event.target);
 
 	var pages = MorebitsGlobal.array.uniq(backlinks.concat(imageusage));
 
-	var unlinker = new MorebitsGlobal.batchOperation('Unlinking backlinks' + (imageusage ? ' and instances of file usage' : ''));
+	var unlinker = new MorebitsGlobal.BatchOperation('Unlinking backlinks' + (imageusage ? ' and instances of file usage' : ''));
 	unlinker.setOption('preserveIndividualStatusLines', true);
 	unlinker.setPageList(pages);
 	var params = { reason: reason, unlinker: unlinker };
 	unlinker.run(function(pageName) {
-		var wikipedia_page = new MorebitsGlobal.wiki.page(pageName, 'Unlinking in article "' + pageName + '"');
+		var wikipedia_page = new MorebitsGlobal.wiki.Page(pageName, 'Unlinking in article "' + pageName + '"');
 		wikipedia_page.setBotEdit(true);  // unlink considered a floody operation
 		var innerParams = $.extend({}, params);
 		innerParams.doBacklinks = backlinks && backlinks.indexOf(pageName) !== -1;
@@ -177,14 +177,14 @@ TwinkleGlobal.unlink.callbacks = {
 						type: 'button',
 						label: 'Select All',
 						event: function(e) {
-							$(MorebitsGlobal.quickForm.getElements(e.target.form, 'imageusage')).prop('checked', true);
+							$(MorebitsGlobal.QuickForm.getElements(e.target.form, 'imageusage')).prop('checked', true);
 						}
 					});
 					apiobj.params.form.append({
 						type: 'button',
 						label: 'Deselect All',
 						event: function(e) {
-							$(MorebitsGlobal.quickForm.getElements(e.target.form, 'imageusage')).prop('checked', false);
+							$(MorebitsGlobal.QuickForm.getElements(e.target.form, 'imageusage')).prop('checked', false);
 						}
 					});
 					apiobj.params.form.append({
@@ -223,14 +223,14 @@ TwinkleGlobal.unlink.callbacks = {
 					type: 'button',
 					label: 'Select All',
 					event: function(e) {
-						$(MorebitsGlobal.quickForm.getElements(e.target.form, 'backlinks')).prop('checked', true);
+						$(MorebitsGlobal.QuickForm.getElements(e.target.form, 'backlinks')).prop('checked', true);
 					}
 				});
 				apiobj.params.form.append({
 					type: 'button',
 					label: 'Deselect All',
 					event: function(e) {
-						$(MorebitsGlobal.quickForm.getElements(e.target.form, 'backlinks')).prop('checked', false);
+						$(MorebitsGlobal.QuickForm.getElements(e.target.form, 'backlinks')).prop('checked', false);
 					}
 				});
 				apiobj.params.form.append({
@@ -258,7 +258,7 @@ TwinkleGlobal.unlink.callbacks = {
 	unlinkBacklinks: function twinkleunlinkCallbackUnlinkBacklinks(pageobj) {
 		var oldtext = pageobj.getPageText();
 		var params = pageobj.getCallbackParameters();
-		var wikiPage = new MorebitsGlobal.wikitext.page(oldtext);
+		var wikiPage = new MorebitsGlobal.wikitext.Page(oldtext);
 
 		var summaryText = '', warningString = false;
 		var text;

@@ -499,7 +499,7 @@ TwinkleGlobal.load = function () {
 	}
 
 	// Set custom Api-User-Agent header, for server-side logging purposes
-	MorebitsGlobal.wiki.api.setApiUserAgent('Twinkle/2.0 (' + mw.config.get('wgDBname') + ')');
+	MorebitsGlobal.wiki.Api.setApiUserAgent('Twinkle/2.0 (' + mw.config.get('wgDBname') + ')');
 
 	// Load the modules in the order that the tabs should appear
 	// User/user talk-related

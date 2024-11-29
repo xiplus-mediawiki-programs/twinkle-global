@@ -77,7 +77,7 @@ TwinkleGlobal.arv.getProject = function () {
 
 TwinkleGlobal.arv.callback = function (usernames, defaultCategory) {
 	TwinkleGlobal.arv.usernames = usernames;
-	var Window = new MorebitsGlobal.simpleWindow(600, 500);
+	var Window = new MorebitsGlobal.SimpleWindow(600, 500);
 	Window.setTitle('Advance Reporting and Vetting'); // Backronym
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Add custom reason', TwinkleGlobal.getPref('configPage'));
@@ -89,7 +89,7 @@ TwinkleGlobal.arv.callback = function (usernames, defaultCategory) {
 		Window.addFooterLink('Global locks', 'm:Special:MyLanguage/Global locks');
 	}
 	// form initialise
-	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.arv.callback.evaluate);
+	var form = new MorebitsGlobal.QuickForm(TwinkleGlobal.arv.callback.evaluate);
 	var categories = form.append({
 		type: 'select',
 		name: 'category',
@@ -151,7 +151,7 @@ TwinkleGlobal.arv.callback = function (usernames, defaultCategory) {
 TwinkleGlobal.arv.callback.changeCategory = function (e) {
 	var value = e.target.value;
 	var root = e.target.form;
-	var old_area = MorebitsGlobal.quickForm.getElements(root, 'work_area')[0];
+	var old_area = MorebitsGlobal.QuickForm.getElements(root, 'work_area')[0];
 	var work_area = null;
 	var username = TwinkleGlobal.arv.usernames[0];
 
@@ -160,7 +160,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 		case 'globallock':
 		/* falls through */
 		default:
-			work_area = new MorebitsGlobal.quickForm.element({
+			work_area = new MorebitsGlobal.QuickForm.Element({
 				type: 'field',
 				label: value === 'global'
 					? 'Request for global block' : 'Request for global lock',
@@ -263,7 +263,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 			break;
 
 		case 'gsr':
-			work_area = new MorebitsGlobal.quickForm.element({
+			work_area = new MorebitsGlobal.QuickForm.Element({
 				type: 'field',
 				label: 'Report user to Global sysops/Requests',
 				name: 'work_area'
@@ -303,7 +303,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 			break;
 
 		case 'srcu':
-			work_area = new MorebitsGlobal.quickForm.element({
+			work_area = new MorebitsGlobal.QuickForm.Element({
 				type: 'field',
 				label: 'Request for checkuser',
 				name: 'work_area'
@@ -450,10 +450,10 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			}
 			reason += ' ~~~~';
 
-			MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-			MorebitsGlobal.status.init(form);
+			MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+			MorebitsGlobal.Status.init(form);
 
-			statusIndicator = new MorebitsGlobal.status('Reporting to Global sysops/Requests', 'Fetching page...');
+			statusIndicator = new MorebitsGlobal.Status('Reporting to Global sysops/Requests', 'Fetching page...');
 
 			metaapi = TwinkleGlobal.getPref('metaApi');
 			metaapi.edit('Global sysops/Requests', function(revision) {
@@ -511,10 +511,10 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 
 			summary = 'Requesting checkuser for ' + headerVal;
 
-			MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-			MorebitsGlobal.status.init(form);
+			MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+			MorebitsGlobal.Status.init(form);
 
-			statusIndicator = new MorebitsGlobal.status('Reporting to Steward requests/Checkuser', 'Fetching page...');
+			statusIndicator = new MorebitsGlobal.Status('Reporting to Steward requests/Checkuser', 'Fetching page...');
 
 			metaapi = TwinkleGlobal.getPref('metaApi');
 			metaapi.edit('Steward requests/Checkuser', function(revision) {
@@ -640,10 +640,10 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			}
 			reason += ' ~~~~';
 
-			MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-			MorebitsGlobal.status.init(form);
+			MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+			MorebitsGlobal.Status.init(form);
 
-			statusIndicator = new MorebitsGlobal.status('Reporting to Steward requests/Global', 'Fetching page...');
+			statusIndicator = new MorebitsGlobal.Status('Reporting to Steward requests/Global', 'Fetching page...');
 
 			metaapi = TwinkleGlobal.getPref('metaApi');
 			metaapi.edit('Steward requests/Global', function(revision) {
@@ -671,7 +671,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			}, function(e) {
 				statusIndicator.error(e);
 				var $srgLink = '<a target="_blank" href="/wiki/m:SRG">m:SRG</a>';
-				MorebitsGlobal.status.printUserText(header + reason, 'The comments you typed are provided below, in case you wish to manually post them under the existing report for this user at ' + $srgLink + ':');
+				MorebitsGlobal.Status.printUserText(header + reason, 'The comments you typed are provided below, in case you wish to manually post them under the existing report for this user at ' + $srgLink + ':');
 			});
 			break;
 	}

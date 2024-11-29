@@ -386,9 +386,9 @@ TwinkleGlobal.rollback.revert = function revertPage(type, vandal, rev, page) {
 			title: 'Rollback on ' + page,
 			tag: 'twinklerollback_' + rev // Shouldn't be necessary given disableLink
 		});
-		MorebitsGlobal.status.init(notifyStatus);
+		MorebitsGlobal.Status.init(notifyStatus);
 	} else {
-		MorebitsGlobal.status.init(document.getElementById('mw-content-text'));
+		MorebitsGlobal.Status.init(document.getElementById('mw-content-text'));
 		$('#catlinks').remove();
 	}
 
@@ -413,14 +413,14 @@ TwinkleGlobal.rollback.revert = function revertPage(type, vandal, rev, page) {
 		type: 'csrf',
 		format: 'json'
 	};
-	var wikipedia_api = new MorebitsGlobal.wiki.api('Grabbing data of earlier revisions', query, TwinkleGlobal.rollback.callbacks.main);
+	var wikipedia_api = new MorebitsGlobal.wiki.Api('Grabbing data of earlier revisions', query, TwinkleGlobal.rollback.callbacks.main);
 	wikipedia_api.params = params;
 	wikipedia_api.post();
 };
 
 TwinkleGlobal.rollback.revertToRevision = function revertToRevision(oldrev) {
 
-	MorebitsGlobal.status.init(document.getElementById('mw-content-text'));
+	MorebitsGlobal.Status.init(document.getElementById('mw-content-text'));
 
 	var query = {
 		action: 'query',
@@ -435,7 +435,7 @@ TwinkleGlobal.rollback.revertToRevision = function revertToRevision(oldrev) {
 		type: 'csrf',
 		format: 'json'
 	};
-	var wikipedia_api = new MorebitsGlobal.wiki.api('Grabbing data of the earlier revision', query, TwinkleGlobal.rollback.callbacks.toRevision);
+	var wikipedia_api = new MorebitsGlobal.wiki.Api('Grabbing data of the earlier revision', query, TwinkleGlobal.rollback.callbacks.toRevision);
 	wikipedia_api.params = { rev: oldrev };
 	wikipedia_api.post();
 };
@@ -503,7 +503,7 @@ TwinkleGlobal.rollback.callbacks = {
 		MorebitsGlobal.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
 		MorebitsGlobal.wiki.actionCompleted.notice = 'Reversion completed';
 
-		var wikipedia_api = new MorebitsGlobal.wiki.api('Saving reverted contents', query, TwinkleGlobal.rollback.callbacks.complete, apiobj.statelem);
+		var wikipedia_api = new MorebitsGlobal.wiki.Api('Saving reverted contents', query, TwinkleGlobal.rollback.callbacks.complete, apiobj.statelem);
 		wikipedia_api.params = apiobj.params;
 		wikipedia_api.post();
 	},
@@ -535,7 +535,7 @@ TwinkleGlobal.rollback.callbacks = {
 		var lastuser = top.user;
 
 		if (lastrevid < params.revid) {
-			MorebitsGlobal.status.error('Error', [ 'The most recent revision ID received from the server, ', MorebitsGlobal.htmlNode('strong', lastrevid), ', is less than the ID of the displayed revision. This could indicate that the current revision has been deleted, the server is lagging, or that bad data has been received. Stopping revert.' ]);
+			MorebitsGlobal.Status.error('Error', [ 'The most recent revision ID received from the server, ', MorebitsGlobal.htmlNode('strong', lastrevid), ', is less than the ID of the displayed revision. This could indicate that the current revision has been deleted, the server is lagging, or that bad data has been received. Stopping revert.' ]);
 			return;
 		}
 
@@ -543,17 +543,17 @@ TwinkleGlobal.rollback.callbacks = {
 		var userNorm = params.user || TwinkleGlobal.rollback.hiddenName;
 		var index = 1;
 		if (params.revid !== lastrevid) {
-			MorebitsGlobal.status.warn('Warning', [ 'Latest revision ', MorebitsGlobal.htmlNode('strong', lastrevid), ' doesn\'t equal our revision ', MorebitsGlobal.htmlNode('strong', params.revid) ]);
+			MorebitsGlobal.Status.warn('Warning', [ 'Latest revision ', MorebitsGlobal.htmlNode('strong', lastrevid), ' doesn\'t equal our revision ', MorebitsGlobal.htmlNode('strong', params.revid) ]);
 			// Treat ipv6 users on same 64 block as the same
 			if (lastuser === params.user || (mw.util.isIPv6Address(params.user) && MorebitsGlobal.ip.get64(lastuser) === MorebitsGlobal.ip.get64(params.user))) {
 				switch (params.type) {
 					case 'vand':
 						var diffUser = lastuser !== params.user;
-						MorebitsGlobal.status.info('Info', [ 'Latest revision was ' + (diffUser ? '' : 'also ') + 'made by ', MorebitsGlobal.htmlNode('strong', userNorm),
+						MorebitsGlobal.Status.info('Info', [ 'Latest revision was ' + (diffUser ? '' : 'also ') + 'made by ', MorebitsGlobal.htmlNode('strong', userNorm),
 							diffUser ? ', which is on the same /64 subnet' : '', '. As we assume vandalism, we will proceed to revert.' ]);
 						break;
 					default:
-						MorebitsGlobal.status.warn('Notice', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', userNorm), ', but we will stop the revert.' ]);
+						MorebitsGlobal.Status.warn('Notice', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', userNorm), ', but we will stop the revert.' ]);
 						return;
 				}
 			} else if (params.type === 'vand' &&
@@ -561,10 +561,10 @@ TwinkleGlobal.rollback.callbacks = {
 					// Besides, none of the trusted bots are going to be revdel'd
 					TwinkleGlobal.rollback.trustedBots.indexOf(top.user) !== -1 && revs.length > 1 &&
 					revs[1].revid === params.revid) {
-				MorebitsGlobal.status.info('Info', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', lastuser), ', a trusted bot, and the revision before was made by our vandal, so we will proceed with the revert.' ]);
+				MorebitsGlobal.Status.info('Info', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', lastuser), ', a trusted bot, and the revision before was made by our vandal, so we will proceed with the revert.' ]);
 				index = 2;
 			} else {
-				MorebitsGlobal.status.error('Error', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', lastuser), ', so it might have already been reverted, we will stop the revert.']);
+				MorebitsGlobal.Status.error('Error', [ 'Latest revision was made by ', MorebitsGlobal.htmlNode('strong', lastuser), ', so it might have already been reverted, we will stop the revert.']);
 				return;
 			}
 
@@ -578,7 +578,7 @@ TwinkleGlobal.rollback.callbacks = {
 		if (TwinkleGlobal.rollback.trustedBots.indexOf(params.user) !== -1) {
 			switch (params.type) {
 				case 'vand':
-					MorebitsGlobal.status.info('Info', [ 'Vandalism revert was chosen on ', MorebitsGlobal.htmlNode('strong', userNorm), '. As this is a trusted bot, we assume you wanted to revert vandalism made by the previous user instead.' ]);
+					MorebitsGlobal.Status.info('Info', [ 'Vandalism revert was chosen on ', MorebitsGlobal.htmlNode('strong', userNorm), '. As this is a trusted bot, we assume you wanted to revert vandalism made by the previous user instead.' ]);
 					index = 2;
 					params.user = revs[1].user;
 					params.userHidden = !!revs[1].userhidden;
@@ -588,13 +588,13 @@ TwinkleGlobal.rollback.callbacks = {
 				default:
 					var cont = confirm('Normal revert was chosen, but the most recent edit was made by a trusted bot (' + userNorm + '). Do you want to revert the revision before instead?');
 					if (cont) {
-						MorebitsGlobal.status.info('Info', [ 'Normal revert was chosen on ', MorebitsGlobal.htmlNode('strong', userNorm), '. This is a trusted bot, and per confirmation, we\'ll revert the previous revision instead.' ]);
+						MorebitsGlobal.Status.info('Info', [ 'Normal revert was chosen on ', MorebitsGlobal.htmlNode('strong', userNorm), '. This is a trusted bot, and per confirmation, we\'ll revert the previous revision instead.' ]);
 						index = 2;
 						params.user = revs[1].user;
 						params.userHidden = !!revs[1].userhidden;
 						userNorm = params.user || TwinkleGlobal.rollback.hiddenName;
 					} else {
-						MorebitsGlobal.status.warn('Notice', [ 'Normal revert was chosen on ', MorebitsGlobal.htmlNode('strong', userNorm), '. This is a trusted bot, but per confirmation, revert on selected revision will proceed.' ]);
+						MorebitsGlobal.Status.warn('Notice', [ 'Normal revert was chosen on ', MorebitsGlobal.htmlNode('strong', userNorm), '. This is a trusted bot, but per confirmation, revert on selected revision will proceed.' ]);
 					}
 					break;
 			}
@@ -609,7 +609,7 @@ TwinkleGlobal.rollback.callbacks = {
 				// Treat ipv6 users on same 64 block as the same
 				if (mw.util.isIPv6Address(revs[i].user) && MorebitsGlobal.ip.get64(revs[i].user) === MorebitsGlobal.ip.get64(params.user)) {
 					if (!seen64) {
-						new MorebitsGlobal.status('Note', 'Treating consecutive IPv6 addresses in the same /64 as the same user');
+						new MorebitsGlobal.Status('Note', 'Treating consecutive IPv6 addresses in the same /64 as the same user');
 						seen64 = true;
 					}
 					continue;
@@ -625,7 +625,7 @@ TwinkleGlobal.rollback.callbacks = {
 		}
 
 		if (!count) {
-			MorebitsGlobal.status.error('Error', 'As it is not possible to revert zero revisions, we will stop this revert. It could be that the edit has already been reverted, but the revision ID was still the same.');
+			MorebitsGlobal.Status.error('Error', 'As it is not possible to revert zero revisions, we will stop this revert. It could be that the edit has already been reverted, but the revision ID was still the same.');
 			return;
 		}
 
@@ -633,7 +633,7 @@ TwinkleGlobal.rollback.callbacks = {
 		var userHasAlreadyConfirmedAction = false;
 		if (params.type !== 'vand' && count > 1) {
 			if (!confirm(userNorm + ' has made ' + mw.language.convertNumber(count) + ' edits in a row. Are you sure you want to revert them all?')) {
-				MorebitsGlobal.status.info('Notice', 'Stopping revert.');
+				MorebitsGlobal.Status.info('Notice', 'Stopping revert.');
 				return;
 			}
 			userHasAlreadyConfirmedAction = true;
@@ -740,13 +740,13 @@ TwinkleGlobal.rollback.callbacks = {
 		}
 		MorebitsGlobal.wiki.actionCompleted.notice = 'Reversion completed';
 
-		var wikipedia_api = new MorebitsGlobal.wiki.api('Saving reverted contents', query, TwinkleGlobal.rollback.callbacks.complete, statelem);
+		var wikipedia_api = new MorebitsGlobal.wiki.Api('Saving reverted contents', query, TwinkleGlobal.rollback.callbacks.complete, statelem);
 		wikipedia_api.params = params;
 		wikipedia_api.post();
 
 	},
 	complete: function (apiobj) {
-		// TODO Most of this is copy-pasted from MorebitsGlobal.wiki.page#fnSaveSuccess. Unify it
+		// TODO Most of this is copy-pasted from MorebitsGlobal.wiki.Page#fnSaveSuccess. Unify it
 		var response = apiobj.getResponse();
 		var edit = response.edit;
 
@@ -759,7 +759,7 @@ TwinkleGlobal.rollback.callbacks = {
 			var params = apiobj.params;
 
 			if (params.notifyUser && !params.userHidden) { // notifyUser only from main, not from toRevision
-				MorebitsGlobal.status.info('Info', [ 'Opening user talk page edit form for user ', MorebitsGlobal.htmlNode('strong', params.user) ]);
+				MorebitsGlobal.Status.info('Info', [ 'Opening user talk page edit form for user ', MorebitsGlobal.htmlNode('strong', params.user) ]);
 
 				var windowQuery = {
 					title: 'User talk:' + params.user,
@@ -801,7 +801,7 @@ TwinkleGlobal.rollback.callbacks = {
 					comment: 'Automatically reviewing reversion' + TwinkleGlobal.summaryAd // until the below
 					// 'tags': TwinkleGlobal.changeTags // flaggedrevs tag support: [[phab:T247721]]
 				};
-				var wikipedia_api = new MorebitsGlobal.wiki.api('Automatically accepting your changes', query);
+				var wikipedia_api = new MorebitsGlobal.wiki.Api('Automatically accepting your changes', query);
 				wikipedia_api.post();
 			}
 		}

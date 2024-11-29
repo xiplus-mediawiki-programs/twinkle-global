@@ -65,7 +65,7 @@ html {
 	font-weight: bold;
 }
 
-/* MorebitsGlobal.quickForm */
+/* MorebitsGlobal.QuickForm */
 
 form.mgquickform
 {
@@ -176,7 +176,7 @@ form.mgquickform .morebitsglobal-tooltipButton
 }
 
 
-/* Scrollbox styles, for use within MorebitsGlobal.simpleWindow */
+/* Scrollbox styles, for use within MorebitsGlobal.SimpleWindow */
 
 div.morebitsglobal-scrollbox
 {
@@ -233,7 +233,7 @@ div.morebitsglobal-usertext {
 }
 
 
-/* MorebitsGlobal.simpleWindow */
+/* MorebitsGlobal.SimpleWindow */
 
 .morebitsglobal-dialog {
 	border: 1px #666 solid;

@@ -162,14 +162,14 @@ TwinkleGlobal.speedy.mode = {
 // Prepares the speedy deletion dialog and displays it
 TwinkleGlobal.speedy.initDialog = function twinklespeedyInitDialog(callbackfunc) {
 	var dialog;
-	TwinkleGlobal.speedy.dialog = new MorebitsGlobal.simpleWindow(TwinkleGlobal.getPref('speedyWindowWidth'), TwinkleGlobal.getPref('speedyWindowHeight'));
+	TwinkleGlobal.speedy.dialog = new MorebitsGlobal.SimpleWindow(TwinkleGlobal.getPref('speedyWindowWidth'), TwinkleGlobal.getPref('speedyWindowHeight'));
 	dialog = TwinkleGlobal.speedy.dialog;
 	dialog.setTitle('Choose criteria for speedy deletion');
 	dialog.setScriptName('Twinkle');
 	dialog.addFooterLink('Add custom reason', TwinkleGlobal.getPref('configPage'));
 	dialog.addFooterLink('Suggest useful reasons', TwinkleGlobal.getPref('bugReportLink'));
 
-	var form = new MorebitsGlobal.quickForm(callbackfunc, TwinkleGlobal.getPref('speedySelectionStyle') === 'radioClick' ? 'change' : null);
+	var form = new MorebitsGlobal.QuickForm(callbackfunc, TwinkleGlobal.getPref('speedySelectionStyle') === 'radioClick' ? 'change' : null);
 
 	var tagOptions = form.append({
 		type: 'div',
@@ -266,7 +266,7 @@ TwinkleGlobal.speedy.callback.modeChanged = function twinklespeedyCallbackModeCh
 	// first figure out what mode we're in
 	var mode = TwinkleGlobal.speedy.callback.getMode(form);
 
-	var work_area = new MorebitsGlobal.quickForm.element({
+	var work_area = new MorebitsGlobal.QuickForm.Element({
 		type: 'div',
 		name: 'work_area'
 	});
@@ -314,7 +314,7 @@ TwinkleGlobal.speedy.callback.modeChanged = function twinklespeedyCallbackModeCh
 		});
 	}
 
-	var old_area = MorebitsGlobal.quickForm.getElements(form, 'work_area')[0];
+	var old_area = MorebitsGlobal.QuickForm.getElements(form, 'work_area')[0];
 	form.replaceChild(work_area.render(), old_area);
 };
 
@@ -482,8 +482,8 @@ TwinkleGlobal.speedy.callbacks = {
 			title: mw.config.get('wgPageName')
 		};
 
-		var statusIndicator = new MorebitsGlobal.status('Building deletion summary');
-		var api = new MorebitsGlobal.wiki.api('Parsing deletion template', query, function(apiObj) {
+		var statusIndicator = new MorebitsGlobal.Status('Building deletion summary');
+		var api = new MorebitsGlobal.wiki.Api('Parsing deletion template', query, function(apiObj) {
 			var reason = decodeURIComponent($(apiObj.getXML().querySelector('text').childNodes[0].nodeValue).find('#delete-reason').text()).replace(/\+/g, ' ');
 			if (!reason) {
 				statusIndicator.warn('Unable to generate summary from deletion template');
@@ -514,14 +514,14 @@ TwinkleGlobal.speedy.callbacks = {
 				code = buildData[0],
 				reason = buildData[1];
 
-			var thispage = new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'));
+			var thispage = new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'));
 			// patrol the page, if reached from Special:NewPages
 			if (TwinkleGlobal.getPref('markSpeedyPagesAsPatrolled')) {
 				thispage.patrol();
 			}
 
 			if (params.gsr) {
-				var statusIndicator = new MorebitsGlobal.status('Adding request at Global sysops/Requests', 'Fetching page...');
+				var statusIndicator = new MorebitsGlobal.Status('Adding request at Global sysops/Requests', 'Fetching page...');
 
 				var metaapi = TwinkleGlobal.getPref('metaApi');
 				metaapi.edit('Global sysops/Requests', function(revision) {
@@ -599,7 +599,7 @@ TwinkleGlobal.speedy.callbacks = {
 						titles: mw.config.get('wgPageName'),
 						token: mw.user.tokens.get('watchToken')
 					};
-					new MorebitsGlobal.wiki.api('Adding Module to watchlist', watch_query).post();
+					new MorebitsGlobal.wiki.Api('Adding Module to watchlist', watch_query).post();
 				}
 			}
 			pageobj.save();
@@ -679,15 +679,15 @@ TwinkleGlobal.speedy.callback.evaluateUser = function twinklespeedyCallbackEvalu
 		return;
 	}
 
-	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-	MorebitsGlobal.status.init(form);
+	MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.Status.init(form);
 
 	MorebitsGlobal.wiki.actionCompleted.redirect = mw.config.get('wgPageName');
 	MorebitsGlobal.wiki.actionCompleted.notice = 'Tagging complete';
 
 	// Modules can't be tagged, follow standard at TfD and place on /doc subpage
 	params.scribunto = mw.config.get('wgPageContentModel') === 'Scribunto';
-	var wikipedia_page = params.scribunto ? new MorebitsGlobal.wiki.page(mw.config.get('wgPageName') + '/doc', 'Tagging module documentation page') : new MorebitsGlobal.wiki.page(mw.config.get('wgPageName'), 'Tagging page');
+	var wikipedia_page = params.scribunto ? new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName') + '/doc', 'Tagging module documentation page') : new MorebitsGlobal.wiki.Page(mw.config.get('wgPageName'), 'Tagging page');
 	wikipedia_page.setCallbackParameters(params);
 	wikipedia_page.load(TwinkleGlobal.speedy.callbacks.user.main);
 };

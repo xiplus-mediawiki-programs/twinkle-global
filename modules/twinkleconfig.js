@@ -452,7 +452,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 		contentdiv.appendChild(contentnotice);
 
 		// look and see if the user does in fact have any old settings in their skin JS file
-		var skinjs = new MorebitsGlobal.wiki.page('User:' + mw.config.get('wgUserName') + '/' + mw.config.get('skin') + '.js');
+		var skinjs = new MorebitsGlobal.wiki.Page('User:' + mw.config.get('wgUserName') + '/' + mw.config.get('skin') + '.js');
 		skinjs.setCallbackParameters(contentnotice);
 		skinjs.load(TwinkleGlobal.config.legacyPrefsNotice);
 
@@ -805,7 +805,7 @@ TwinkleGlobal.config.init = function twinkleconfigInit() {
 	}
 };
 
-// MorebitsGlobal.wiki.page callback from init code
+// MorebitsGlobal.wiki.Page callback from init code
 TwinkleGlobal.config.legacyPrefsNotice = function twinkleconfigLegacyPrefsNotice(pageobj) {
 	var text = pageobj.getPageText();
 	var contentnotice = pageobj.getCallbackParameters();
@@ -869,7 +869,7 @@ TwinkleGlobal.config.listDialog.display = function twinkleconfigListDialogDispla
 	var curvalue = $prefbutton.data('value');
 	var curpref = $prefbutton.data('pref');
 
-	var dialog = new MorebitsGlobal.simpleWindow(720, 400);
+	var dialog = new MorebitsGlobal.SimpleWindow(720, 400);
 	dialog.setTitle(curpref.label);
 	dialog.setScriptName('Twinkle preferences');
 
@@ -932,7 +932,7 @@ TwinkleGlobal.config.listDialog.display = function twinkleconfigListDialogDispla
 
 	// buttonpane buttons: [Save changes] [Reset] [Cancel]
 	var button = document.createElement('button');
-	button.setAttribute('type', 'submit');  // so MorebitsGlobal.simpleWindow puts the button in the button pane
+	button.setAttribute('type', 'submit');  // so MorebitsGlobal.SimpleWindow puts the button in the button pane
 	button.addEventListener('click', function() {
 		TwinkleGlobal.config.listDialog.save($prefbutton, dlgtbody);
 		dialog.close();
@@ -940,14 +940,14 @@ TwinkleGlobal.config.listDialog.display = function twinkleconfigListDialogDispla
 	button.textContent = 'Save changes';
 	dialogcontent.appendChild(button);
 	button = document.createElement('button');
-	button.setAttribute('type', 'submit');  // so MorebitsGlobal.simpleWindow puts the button in the button pane
+	button.setAttribute('type', 'submit');  // so MorebitsGlobal.SimpleWindow puts the button in the button pane
 	button.addEventListener('click', function() {
 		TwinkleGlobal.config.listDialog.reset($prefbutton, dlgtbody);
 	}, false);
 	button.textContent = 'Reset';
 	dialogcontent.appendChild(button);
 	button = document.createElement('button');
-	button.setAttribute('type', 'submit');  // so MorebitsGlobal.simpleWindow puts the button in the button pane
+	button.setAttribute('type', 'submit');  // so MorebitsGlobal.SimpleWindow puts the button in the button pane
 	button.addEventListener('click', function() {
 		dialog.close();  // the event parameter on this function seems to be broken
 	}, false);
@@ -1074,10 +1074,10 @@ TwinkleGlobal.config.resetAllPrefs = function twinkleconfigResetAllPrefs() {
 };
 
 TwinkleGlobal.config.save = function twinkleconfigSave(e) {
-	MorebitsGlobal.status.init(document.getElementById('twinkleglobal-config-content'));
+	MorebitsGlobal.Status.init(document.getElementById('twinkleglobal-config-content'));
 
 	var userjs = mw.config.get('wgFormattedNamespaces')[mw.config.get('wgNamespaceIds').user] + ':' + mw.config.get('wgUserName') + '/' + TwinkleGlobal.defaultConfig.optionsPage + '.js';
-	var wikipedia_page = new MorebitsGlobal.wiki.page(userjs, 'Saving preferences to ' + userjs);
+	var wikipedia_page = new MorebitsGlobal.wiki.Page(userjs, 'Saving preferences to ' + userjs);
 	wikipedia_page.setCallbackParameters(e.target);
 	wikipedia_page.load(TwinkleGlobal.config.writePrefs);
 
@@ -1142,7 +1142,7 @@ TwinkleGlobal.config.writePrefs = function twinkleconfigWritePrefs(pageobj) {
 						case 'integer':  // read from the input box
 							userValue = parseInt(form[pref.name].value, 10);
 							if (isNaN(userValue)) {
-								MorebitsGlobal.status.warn('Saving', 'The value you specified for ' + pref.name + ' (' + pref.value + ') was invalid.  The save will continue, but the invalid data value will be skipped.');
+								MorebitsGlobal.Status.warn('Saving', 'The value you specified for ' + pref.name + ' (' + pref.value + ') was invalid.  The save will continue, but the invalid data value will be skipped.');
 								userValue = null;
 							}
 							break;
@@ -1222,11 +1222,11 @@ TwinkleGlobal.config.saveSuccess = function twinkleconfigSaveSuccess(pageobj) {
 	noticebox.style.fontSize = '100%';
 	noticebox.innerHTML = '<p><b>Your Twinkle preferences have been saved.</b> To see the changes, you will need to clear your browser cache entirely (see <a href="' + mw.util.getUrl('en:WP:BYPASS') + '" title="en:WP:BYPASS">en:WP:BYPASS</a> for instructions).</p>';
 	mw.loader.using('mediawiki.htmlform.codex.styles', function() {
-		MorebitsGlobal.status.root.appendChild(noticebox);
+		MorebitsGlobal.Status.root.appendChild(noticebox);
 	});
 	var noticeclear = document.createElement('br');
 	noticeclear.style.clear = 'both';
-	MorebitsGlobal.status.root.appendChild(noticeclear);
+	MorebitsGlobal.Status.root.appendChild(noticeclear);
 };
 })(jQuery);
 

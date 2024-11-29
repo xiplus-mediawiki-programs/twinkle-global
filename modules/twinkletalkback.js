@@ -26,13 +26,13 @@ TwinkleGlobal.talkback.callback = function() {
 		return;
 	}
 
-	var Window = new MorebitsGlobal.simpleWindow(600, 350);
+	var Window = new MorebitsGlobal.SimpleWindow(600, 350);
 	Window.setTitle('Talkback');
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('About {{talkback}}', 'Template:Talkback');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#talkback');
 
-	var form = new MorebitsGlobal.quickForm(callback_evaluate);
+	var form = new MorebitsGlobal.QuickForm(callback_evaluate);
 
 	form.append({ type: 'radio', name: 'tbtarget',
 		list: [
@@ -90,7 +90,7 @@ TwinkleGlobal.talkback.callback = function() {
 		elquery: 'userjs.invalid/noTalkback',
 		ellimit: '1'
 	};
-	var wpapi = new MorebitsGlobal.wiki.api('Fetching talkback opt-out status', query, TwinkleGlobal.talkback.callback.optoutStatus);
+	var wpapi = new MorebitsGlobal.wiki.Api('Fetching talkback opt-out status', query, TwinkleGlobal.talkback.callback.optoutStatus);
 	wpapi.post();
 };
 
@@ -125,7 +125,7 @@ var prev_message = '';
 var callback_change_target = function(e) {
 	var value = e.target.values;
 	var root = e.target.form;
-	var old_area = MorebitsGlobal.quickForm.getElements(root, 'work_area')[0];
+	var old_area = MorebitsGlobal.QuickForm.getElements(root, 'work_area')[0];
 
 	if (root.section) {
 		prev_section = root.section.value;
@@ -137,7 +137,7 @@ var callback_change_target = function(e) {
 		prev_page = root.page.value;
 	}
 
-	var work_area = new MorebitsGlobal.quickForm.element({
+	var work_area = new MorebitsGlobal.QuickForm.Element({
 		type: 'field',
 		label: 'Talkback information',
 		name: 'work_area'
@@ -191,11 +191,11 @@ var callback_change_target = function(e) {
 				label: 'Noticeboard:',
 				event: function(e) {
 					if (e.target.value === 'afchd') {
-						MorebitsGlobal.quickForm.overrideElementLabel(e.target.form.section, 'Title of draft (excluding the prefix): ');
-						MorebitsGlobal.quickForm.setElementTooltipVisibility(e.target.form.section, false);
+						MorebitsGlobal.QuickForm.overrideElementLabel(e.target.form.section, 'Title of draft (excluding the prefix): ');
+						MorebitsGlobal.QuickForm.setElementTooltipVisibility(e.target.form.section, false);
 					} else {
-						MorebitsGlobal.quickForm.resetElementLabel(e.target.form.section);
-						MorebitsGlobal.quickForm.setElementTooltipVisibility(e.target.form.section, true);
+						MorebitsGlobal.QuickForm.resetElementLabel(e.target.form.section);
+						MorebitsGlobal.QuickForm.setElementTooltipVisibility(e.target.form.section, true);
 					}
 				}
 			});
@@ -348,13 +348,13 @@ var callback_evaluate = function(e) {
 		message = e.target.message.value;
 	}
 
-	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-	MorebitsGlobal.status.init(e.target);
+	MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.Status.init(e.target);
 
 	MorebitsGlobal.wiki.actionCompleted.redirect = fullUserTalkPageName;
 	MorebitsGlobal.wiki.actionCompleted.notice = 'Talkback complete; reloading talk page in a few seconds';
 
-	var talkpage = new MorebitsGlobal.wiki.page(fullUserTalkPageName, 'Adding talkback');
+	var talkpage = new MorebitsGlobal.wiki.Page(fullUserTalkPageName, 'Adding talkback');
 	var tbPageName = tbtarget === 'mytalk' ? mw.config.get('wgUserName') : page;
 
 	var text;

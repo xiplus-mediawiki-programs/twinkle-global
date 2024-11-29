@@ -24,13 +24,13 @@ TwinkleGlobal.batchprotect = function twinklebatchprotect() {
 
 TwinkleGlobal.batchprotect.unlinkCache = {};
 TwinkleGlobal.batchprotect.callback = function twinklebatchprotectCallback() {
-	var Window = new MorebitsGlobal.simpleWindow(600, 400);
+	var Window = new MorebitsGlobal.SimpleWindow(600, 400);
 	Window.setTitle('Batch protection');
 	Window.setScriptName('Twinkle');
 	Window.addFooterLink('Protection policy', 'WP:PROT');
 	Window.addFooterLink('Twinkle help', 'WP:TW/DOC#protect');
 
-	var form = new MorebitsGlobal.quickForm(TwinkleGlobal.batchprotect.callback.evaluate);
+	var form = new MorebitsGlobal.QuickForm(TwinkleGlobal.batchprotect.callback.evaluate);
 	form.append({
 		type: 'checkbox',
 		name: 'editmodify',
@@ -292,12 +292,12 @@ TwinkleGlobal.batchprotect.callback = function twinklebatchprotectCallback() {
 	var statusdiv = document.createElement('div');
 	statusdiv.style.padding = '15px';  // just so it doesn't look broken
 	Window.setContent(statusdiv);
-	MorebitsGlobal.status.init(statusdiv);
+	MorebitsGlobal.Status.init(statusdiv);
 	Window.display();
 
-	var statelem = new MorebitsGlobal.status('Grabbing list of pages');
+	var statelem = new MorebitsGlobal.Status('Grabbing list of pages');
 
-	var wikipedia_api = new MorebitsGlobal.wiki.api('loading...', query, function(apiobj) {
+	var wikipedia_api = new MorebitsGlobal.wiki.Api('loading...', query, function(apiobj) {
 		var xml = apiobj.responseXML;
 		var $pages = $(xml).find('page');
 		var list = [];
@@ -331,14 +331,14 @@ TwinkleGlobal.batchprotect.callback = function twinklebatchprotectCallback() {
 			type: 'button',
 			label: 'Select All',
 			event: function(e) {
-				$(MorebitsGlobal.quickForm.getElements(e.target.form, 'pages')).prop('checked', true);
+				$(MorebitsGlobal.QuickForm.getElements(e.target.form, 'pages')).prop('checked', true);
 			}
 		});
 		form.append({
 			type: 'button',
 			label: 'Deselect All',
 			event: function(e) {
-				$(MorebitsGlobal.quickForm.getElements(e.target.form, 'pages')).prop('checked', false);
+				$(MorebitsGlobal.QuickForm.getElements(e.target.form, 'pages')).prop('checked', false);
 			}
 		});
 		form.append({
@@ -362,7 +362,7 @@ TwinkleGlobal.batchprotect.callback.evaluate = function twinklebatchprotectCallb
 
 	var form = event.target;
 
-	var numProtected = $(MorebitsGlobal.quickForm.getElements(form, 'pages')).filter(function(index, element) {
+	var numProtected = $(MorebitsGlobal.QuickForm.getElements(form, 'pages')).filter(function(index, element) {
 		return element.checked && element.nextElementSibling.style.color === 'red';
 	}).length;
 	if (numProtected > 0 && !confirm('You are about to act on ' + numProtected + ' fully protected page(s). Are you sure?')) {
@@ -386,15 +386,15 @@ TwinkleGlobal.batchprotect.callback.evaluate = function twinklebatchprotectCallb
 		return;
 	}
 
-	MorebitsGlobal.simpleWindow.setButtonsEnabled(false);
-	MorebitsGlobal.status.init(form);
+	MorebitsGlobal.SimpleWindow.setButtonsEnabled(false);
+	MorebitsGlobal.Status.init(form);
 
 	if (!pages) {
-		MorebitsGlobal.status.error('Error', 'Nothing to protect, aborting');
+		MorebitsGlobal.Status.error('Error', 'Nothing to protect, aborting');
 		return;
 	}
 
-	var batchOperation = new MorebitsGlobal.batchOperation('Applying protection settings');
+	var batchOperation = new MorebitsGlobal.BatchOperation('Applying protection settings');
 	batchOperation.setOption('chunkSize', TwinkleGlobal.getPref('batchProtectChunks'));
 	batchOperation.setOption('preserveIndividualStatusLines', true);
 	batchOperation.setPageList(pages);
@@ -403,7 +403,7 @@ TwinkleGlobal.batchprotect.callback.evaluate = function twinklebatchprotectCallb
 			action: 'query',
 			titles: pageName
 		};
-		var wikipedia_api = new MorebitsGlobal.wiki.api('Checking if page ' + pageName + ' exists', query,
+		var wikipedia_api = new MorebitsGlobal.wiki.Api('Checking if page ' + pageName + ' exists', query,
 			TwinkleGlobal.batchprotect.callbacks.main, null, batchOperation.workerFailure);
 		wikipedia_api.params = {
 			page: pageName,
@@ -433,7 +433,7 @@ TwinkleGlobal.batchprotect.callbacks = {
 
 		var exists = $(xml).find('page').attr('missing') !== '';
 
-		var page = new MorebitsGlobal.wiki.page(apiobj.params.page, 'Protecting ' + apiobj.params.page);
+		var page = new MorebitsGlobal.wiki.Page(apiobj.params.page, 'Protecting ' + apiobj.params.page);
 		var takenAction = false;
 		if (exists && apiobj.params.editmodify) {
 			page.setEditProtection(apiobj.params.editlevel, apiobj.params.editexpiry);
@@ -448,7 +448,7 @@ TwinkleGlobal.batchprotect.callbacks = {
 			takenAction = true;
 		}
 		if (!takenAction) {
-			MorebitsGlobal.status.warn('Protecting ' + apiobj.params.page, 'page ' + (exists ? 'exists' : 'does not exist') + '; nothing to do, skipping');
+			MorebitsGlobal.Status.warn('Protecting ' + apiobj.params.page, 'page ' + (exists ? 'exists' : 'does not exist') + '; nothing to do, skipping');
 			apiobj.params.batchOperation.workerFailure(apiobj);
 			return;
 		}
