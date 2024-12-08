@@ -227,6 +227,10 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					{
 						label: 'Spam / spambot',
 						value: 'Spam / spambot'
+					},
+					{
+						label: 'Compromised',
+						value: 'Compromised'
 					}
 				].concat(TwinkleGlobal.getPref('customSRGReasonList'))
 			});
