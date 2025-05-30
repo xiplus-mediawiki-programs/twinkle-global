@@ -144,7 +144,6 @@ MorebitsGlobal.nonGSWikis = [
 	'dewiktionary',
 	'elwiki',
 	'enwiki',
-	'enwikiquote',
 	'enwikisource',
 	'enwiktionary',
 	'eowiki',
