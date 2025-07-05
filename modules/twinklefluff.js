@@ -31,16 +31,7 @@ TwinkleGlobal.fluff = function twinklefluff() {
 	// care of namespace/contentModel restrictions as well as explicit
 	// protections; it won't take care of cascading or TitleBlacklist.
 	if (mw.config.get('wgIsProbablyEditable')) {
-		// wgDiffOldId included for clarity in if else loop [[phab:T214985]]
-		if (mw.config.get('wgDiffNewId') || mw.config.get('wgDiffOldId')) {
-			// Reload alongside the revision slider
-			mw.hook('wikipage.diff').add(function ($context) {
-				if (!$context) {
-					return;
-				}
-				TwinkleGlobal.fluff.addLinks.diff($context);
-			});
-		} else if (mw.config.get('wgAction') === 'view' && mw.config.get('wgRevisionId') && mw.config.get('wgCurRevisionId') !== mw.config.get('wgRevisionId')) {
+		if (mw.config.get('wgAction') === 'view' && mw.config.get('wgRevisionId') && mw.config.get('wgCurRevisionId') !== mw.config.get('wgRevisionId')) {
 			TwinkleGlobal.fluff.addLinks.oldid();
 		} else if (mw.config.get('wgAction') === 'history' && mw.config.get('wgArticleId')) {
 			TwinkleGlobal.fluff.addLinks.history();
@@ -62,6 +53,17 @@ TwinkleGlobal.fluff = function twinklefluff() {
 			});
 		}
 	}
+	// Reload when revision slider or other scripts dynamically load diff content.
+	mw.hook('wikipage.diff').add(function($context) {
+		if (!$context) {
+			return;
+		}
+		// Only proceed if the user can actually edit the page in question,
+		// wgDiffOldId included for clarity in if else loop [[phab:T214985]]
+		if (mw.config.get('wgIsProbablyEditable') && (mw.config.get('wgDiffNewId') || mw.config.get('wgDiffOldId'))) {
+			TwinkleGlobal.fluff.addLinks.diff($context);
+		}
+	});
 };
 
 // A list of usernames, usually only bots, that vandalism revert is jumped
