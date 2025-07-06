@@ -31,13 +31,7 @@ TwinkleGlobal.fluff = function twinklefluff() {
 	// care of namespace/contentModel restrictions as well as explicit
 	// protections; it won't take care of cascading or TitleBlacklist.
 	if (mw.config.get('wgIsProbablyEditable')) {
-		// wgDiffOldId included for clarity in if else loop [[phab:T214985]]
-		if (mw.config.get('wgDiffNewId') || mw.config.get('wgDiffOldId')) {
-			// Reload alongside the revision slider
-			mw.hook('wikipage.diff').add(function () {
-				TwinkleGlobal.fluff.addLinks.diff();
-			});
-		} else if (mw.config.get('wgAction') === 'view' && mw.config.get('wgRevisionId') && mw.config.get('wgCurRevisionId') !== mw.config.get('wgRevisionId')) {
+		if (mw.config.get('wgAction') === 'view' && mw.config.get('wgRevisionId') && mw.config.get('wgCurRevisionId') !== mw.config.get('wgRevisionId')) {
 			TwinkleGlobal.fluff.addLinks.oldid();
 		} else if (mw.config.get('wgAction') === 'history' && mw.config.get('wgArticleId')) {
 			TwinkleGlobal.fluff.addLinks.history();
@@ -51,13 +45,25 @@ TwinkleGlobal.fluff = function twinklefluff() {
 		} else if (mw.config.get('wgCanonicalSpecialPageName') === 'Recentchanges' || mw.config.get('wgCanonicalSpecialPageName') === 'Recentchangeslinked') {
 			// Reload with recent changes updates
 			// structuredChangeFilters.ui.initialized is just on load
-			mw.hook('wikipage.content').add(function(item) {
-				if (item.is('div')) {
-					TwinkleGlobal.fluff.addLinks.recentchanges();
+			mw.hook('wikipage.content').add(function($context) {
+				if (!$context || !$context.is('div')) {
+					return;
 				}
+				TwinkleGlobal.fluff.addLinks.recentchanges($context);
 			});
 		}
 	}
+	// Reload when revision slider or other scripts dynamically load diff content.
+	mw.hook('wikipage.diff').add(function($context) {
+		if (!$context) {
+			return;
+		}
+		// Only proceed if the user can actually edit the page in question,
+		// wgDiffOldId included for clarity in if else loop [[phab:T214985]]
+		if (mw.config.get('wgIsProbablyEditable') && (mw.config.get('wgDiffNewId') || mw.config.get('wgDiffOldId'))) {
+			TwinkleGlobal.fluff.addLinks.diff($context);
+		}
+	});
 };
 
 // A list of usernames, usually only bots, that vandalism revert is jumped
@@ -216,10 +222,16 @@ TwinkleGlobal.fluff.addLinks = {
 		}
 	},
 
-	recentchanges: function() {
+	recentchanges: function($context) {
 		if (TwinkleGlobal.getPref('showRollbackLinks').indexOf('recent') !== -1) {
 			// Latest and revertable (not page creations, logs, categorizations, etc.)
-			var $list = $('.mw-changeslist .mw-changeslist-last.mw-changeslist-src-mw-edit');
+			var selector = '.mw-changeslist-last.mw-changeslist-src-mw-edit';
+			var $list = $context.hasClass('mw-changeslist')
+				? $context.find(selector)
+				: $context.find('.mw-changeslist ' + selector);
+			if (!$list.length) {
+				return;
+			}
 			// Exclude top-level header if "group changes" preference is used
 			// and find only individual lines or nested lines
 			$list = $list.not('.mw-rcfilters-ui-highlights-enhanced-toplevel').find('.mw-changeslist-line-inner, td.mw-enhanced-rc-nested');
@@ -274,10 +286,10 @@ TwinkleGlobal.fluff.addLinks = {
 		}
 	},
 
-	diff: function() {
+	diff: function($context) {
 		// Autofill user talk links on diffs with vanarticle for easy warning, but don't autowarn
 		var warnFromTalk = function(xtitle) {
-			var talkLink = $('#mw-diff-' + xtitle + '2 .mw-usertoollinks a').first();
+			var talkLink = $context.find('#mw-diff-' + xtitle + '2 .mw-usertoollinks a').first();
 			if (talkLink.length) {
 				var extraParams = 'vanarticle=' + mw.util.rawurlencode(MorebitsGlobal.pageNameNorm) + '&' + 'noautowarn=true';
 				// diffIDs for vanarticlerevid
@@ -298,19 +310,23 @@ TwinkleGlobal.fluff.addLinks = {
 		// Don't load if there's a single revision or weird diff (cur on latest)
 		if (mw.config.get('wgDiffOldId') && (mw.config.get('wgDiffOldId') !== mw.config.get('wgDiffNewId'))) {
 			// Add a [restore this revision] link to the older revision
-			var oldTitle = document.getElementById('mw-diff-otitle1').parentNode;
-			oldTitle.insertBefore(TwinkleGlobal.fluff.linkBuilder.restoreThisRevisionLink('wgDiffOldId'), oldTitle.firstChild);
+			var oldTitle = $context.find('#mw-diff-otitle1').parent().get(0);
+			if (oldTitle) {
+				oldTitle.insertBefore(TwinkleGlobal.fluff.linkBuilder.restoreThisRevisionLink('wgDiffOldId'), oldTitle.firstChild);
+			}
 		}
 
 		// Newer revision
 		warnFromTalk('ntitle'); // Add quick-warn link to user talk link
 		// Add either restore or rollback links to the newer revision
 		// Don't show if there's a single revision or weird diff (prev on first)
-		if (document.getElementById('differences-nextlink')) {
+		if ($context.find('#differences-nextlink').length) {
 			// Not latest revision, add [restore this revision] link to newer revision
-			var newTitle = document.getElementById('mw-diff-ntitle1').parentNode;
-			newTitle.insertBefore(TwinkleGlobal.fluff.linkBuilder.restoreThisRevisionLink('wgDiffNewId'), newTitle.firstChild);
-		} else if (TwinkleGlobal.getPref('showRollbackLinks').indexOf('diff') !== -1 && mw.config.get('wgDiffOldId') && (mw.config.get('wgDiffOldId') !== mw.config.get('wgDiffNewId') || document.getElementById('differences-prevlink'))) {
+			var newTitle = $context.find('#mw-diff-ntitle1').parent().get(0);
+			if (newTitle) {
+				newTitle.insertBefore(TwinkleGlobal.fluff.linkBuilder.restoreThisRevisionLink('wgDiffNewId'), newTitle.firstChild);
+			}
+		} else if (TwinkleGlobal.getPref('showRollbackLinks').indexOf('diff') !== -1 && mw.config.get('wgDiffOldId') && (mw.config.get('wgDiffOldId') !== mw.config.get('wgDiffNewId') || $context.find('#differences-prevlink').length)) {
 			// Normally .mw-userlink is a link, but if the
 			// username is hidden, it will be a span with
 			// .history-deleted as well. When a sysop views the
@@ -324,12 +340,13 @@ TwinkleGlobal.fluff.addLinks = {
 			// &unhide=1), since the username will be available by
 			// checking a.mw-userlink instead, but revert() will
 			// need reworking around userHidden
-			var vandal = $('#mw-diff-ntitle2').find('.mw-userlink')[0];
+			var vandal = $context.find('#mw-diff-ntitle2').find('.mw-userlink')[0];
 			// See #1337
 			vandal = vandal ? vandal.text : '';
-			var ntitle = document.getElementById('mw-diff-ntitle1').parentNode;
-
-			ntitle.insertBefore(TwinkleGlobal.fluff.linkBuilder.rollbackLinks(vandal), ntitle.firstChild);
+			var ntitle = $context.find('#mw-diff-ntitle1').parent().get(0);
+			if (ntitle) {
+				ntitle.insertBefore(TwinkleGlobal.fluff.linkBuilder.rollbackLinks(vandal), ntitle.firstChild);
+			}
 		}
 	},
 
