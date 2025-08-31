@@ -197,7 +197,6 @@ MorebitsGlobal.nonGSWikis = [
 	'thwiki',
 	'trwiki',
 	'urwiki',
-	'viwiki',
 	'wikidatawiki',
 	'zh_yuewiki',
 	'zhwiki',
