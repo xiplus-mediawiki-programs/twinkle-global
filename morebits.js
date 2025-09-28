@@ -171,7 +171,6 @@ MorebitsGlobal.nonGSWikis = [
 	'mkwiki',
 	'mlwiki',
 	'mrwiki',
-	'mswiki',
 	'nlwiki',
 	'nlwiktionary',
 	'nnwiki',
