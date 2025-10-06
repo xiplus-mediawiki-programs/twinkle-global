@@ -13,7 +13,7 @@
  */
 
 TwinkleGlobal.arv = function twinklearv() {
-	var username = mw.config.get('wgRelevantUserName');
+	var username = mw.config.get('wgRelevantUserName') || mw.config.get('wgIPRangeTarget');
 	if (!username || username === mw.config.get('wgUserName')) {
 		return;
 	}
