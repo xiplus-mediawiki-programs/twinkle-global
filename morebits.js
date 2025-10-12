@@ -189,7 +189,6 @@ MorebitsGlobal.nonGSWikis = [
 	'sourceswiki',
 	'specieswiki',
 	'svwiki',
-	'svwiktionary',
 	'tawiki',
 	'testwiki',
 	'tewiki',
