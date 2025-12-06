@@ -28,7 +28,7 @@ if result['query']['wikisets'][0]['id'] != '7' or result['query']['wikisets'][0]
     print('API error')
     exit()
 
-fullFilename = os.path.join(BASEDIR, '..', 'morebits.js')
+fullFilename = os.path.join(BASEDIR, '..', 'src', 'morebits.js')
 
 with open(fullFilename, 'r', encoding='utf8') as f:
     jsText = f.read()

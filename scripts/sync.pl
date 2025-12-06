@@ -81,7 +81,7 @@ if (@files) {
     if ($page =~ /^LoadTwinkle.js$/) {
       $page = "load.js";
     } else {
-      $page =~ s/\w+\///;       # Remove directories (modules/, lib/)
+      $page =~ s/.*\///;        # Remove directories (src/, src/modules/, lib/)
     }
     $page = $conf{base}.$page; # base set to MediaWiki:Gadget- for deploy in &forReal
 
@@ -424,13 +424,13 @@ USAGE
 ## compiler.  Rather, they are used by the --all option to simplify bulk
 ## updating all files.
 __DATA__
-twinkle.js
-  twinkle.css
-  morebits.js
-  morebits.css
-  modules/twinkleconfig.js
-  modules/twinklearv.js
-  modules/twinklediff.js
-  modules/twinklerollback.js
-  modules/twinklespeedy.js
+src/twinkle.js
+  src/twinkle.css
+  src/morebits.js
+  src/morebits.css
+  src/modules/twinkleconfig.js
+  src/modules/twinklearv.js
+  src/modules/twinklediff.js
+  src/modules/twinklerollback.js
+  src/modules/twinklespeedy.js
   LoadTwinkle.js

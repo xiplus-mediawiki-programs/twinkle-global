@@ -1,27 +1,27 @@
 all:
 
-modules = modules/twinklearv.js \
-		  modules/twinklebatchdelete.js \
-		  modules/twinklebatchprotect.js \
-		  modules/twinklebatchundelete.js \
-		  modules/twinkleblock.js \
-		  modules/twinkleconfig.js \
-		  modules/twinkledeprod.js \
-		  modules/twinklediff.js \
-		  modules/twinklerollback.js \
-		  modules/twinkleimage.js \
-		  modules/twinkleprod.js \
-		  modules/twinkleprotect.js \
-		  modules/twinklespeedy.js \
-		  modules/twinkleunlink.js \
-		  modules/twinklewarn.js \
-		  modules/twinklexfd.js \
-		  modules/twinkleshared.js \
-		  modules/twinkletag.js \
-		  modules/twinkletalkback.js \
-		  modules/twinklewelcome.js
+modules = src/modules/twinklearv.js \
+		  src/modules/twinklebatchdelete.js \
+		  src/modules/twinklebatchprotect.js \
+		  src/modules/twinklebatchundelete.js \
+		  src/modules/twinkleblock.js \
+		  src/modules/twinkleconfig.js \
+		  src/modules/twinkledeprod.js \
+		  src/modules/twinklediff.js \
+		  src/modules/twinklerollback.js \
+		  src/modules/twinkleimage.js \
+		  src/modules/twinkleprod.js \
+		  src/modules/twinkleprotect.js \
+		  src/modules/twinklespeedy.js \
+		  src/modules/twinkleunlink.js \
+		  src/modules/twinklewarn.js \
+		  src/modules/twinklexfd.js \
+		  src/modules/twinkleshared.js \
+		  src/modules/twinkletag.js \
+		  src/modules/twinkletalkback.js \
+		  src/modules/twinklewelcome.js
 
-deploy: twinkle.js twinkle.css twinkle-pagestyles.css morebits.js morebits.css $(modules)
+deploy: src/twinkle.js src/twinkle.css src/twinkle-pagestyles.css src/morebits.js src/morebits.css $(modules)
 	./sync.pl ${ARGS} --deploy $^
 
 .PHONY: deploy all

@@ -9,5 +9,5 @@ require(__dirname + '/mb_repl_head.js');
 // Load mw.config data
 require(__dirname + '/mw_config_data.js');
 
-require(__dirname + '/../../morebits.js');
+require(__dirname + '/../../src/morebits.js');
 global.MorebitsGlobal = window.MorebitsGlobal;

@@ -3,11 +3,11 @@ name: Morebits function tests
 on:
   push:
     paths:
-    - 'morebits.js'
+    - 'src/morebits.js'
     - 'tests/**'
   pull_request:
     paths:
-    - 'morebits.js'
+    - 'src/morebits.js'
     - 'tests/**'
 
 jobs:
