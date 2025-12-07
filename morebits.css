@@ -1,11 +1,11 @@
 /**
- * morebitsglobal.css
+ * morebits.css
  * ===========
  * Styles to support morebitsglobal.js.
  *
- * The morebitsglobal library is maintained by the maintainers of Twinkle.
+ * The morebits library is maintained by the maintainers of Twinkle.
  * For queries, suggestions, help, etc., head to [[WT:TW]].
- * The latest development source is available at [https://github.com/wikimedia-gadgets/twinkle/blob/master/morebitsglobal.css].
+ * The latest development source is available at [https://github.com/wikimedia-gadgets/twinkle/blob/master/morebits.css].
  */
 
 /* Define CSS variables */
@@ -65,7 +65,7 @@ html {
 	font-weight: bold;
 }
 
-/* Morebits.QuickForm */
+/* MorebitsGlobal.quickForm */
 
 form.mgquickform
 {
@@ -176,7 +176,7 @@ form.mgquickform .morebitsglobal-tooltipButton
 }
 
 
-/* Scrollbox styles, for use within Morebits.SimpleWindow */
+/* Scrollbox styles, for use within MorebitsGlobal.simpleWindow */
 
 div.morebitsglobal-scrollbox
 {
@@ -233,7 +233,7 @@ div.morebitsglobal-usertext {
 }
 
 
-/* Morebits.SimpleWindow */
+/* MorebitsGlobal.simpleWindow */
 
 .morebitsglobal-dialog {
 	border: 1px #666 solid;
