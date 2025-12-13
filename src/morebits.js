@@ -722,7 +722,7 @@ MorebitsGlobal.quickForm.element.prototype.compute = function QuickFormElementCo
 				}
 			});
 			if (data.event) {
-				subnode.addEventListener('keyup', data.event, false);
+				subnode.addEventListener('input', data.event, false);
 			}
 
 			childContainder = subnode;
@@ -802,7 +802,7 @@ MorebitsGlobal.quickForm.element.prototype.compute = function QuickFormElementCo
 				subnode.setAttribute('maxlength', data.maxlength);
 			}
 			if (data.event) {
-				subnode.addEventListener('keyup', data.event, false);
+				subnode.addEventListener('input', data.event, false);
 			}
 			if (data.remove) {
 				var remove = this.compute({
