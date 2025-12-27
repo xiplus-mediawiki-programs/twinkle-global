@@ -438,7 +438,8 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				return {
 					text: text,
 					summary: 'Reporting user' + TwinkleGlobal.getPref('summaryAd'),
-					assert: 'user'
+					assert: 'user',
+					discussiontoolsautosubscribe: 'no'
 				};
 			}).then(function() {
 				statusIndicator.info('Done');
@@ -499,7 +500,8 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				return {
 					text: text,
 					summary: summary + TwinkleGlobal.getPref('summaryAd'),
-					assert: 'user'
+					assert: 'user',
+					discussiontoolsautosubscribe: 'no'
 				};
 			}).then(function() {
 				statusIndicator.info('Done. Remember to review your edits.');
@@ -634,7 +636,8 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				return {
 					text: text,
 					summary: summary + TwinkleGlobal.getPref('summaryAd'),
-					assert: 'user'
+					assert: 'user',
+					discussiontoolsautosubscribe: 'no'
 				};
 			}).then(function() {
 				statusIndicator.info('Done');
