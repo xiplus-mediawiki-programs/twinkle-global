@@ -96,9 +96,17 @@ TwinkleGlobal.arv.callback = function (usernames, defaultCategory) {
 		label: 'Select report type: ',
 		event: TwinkleGlobal.arv.callback.changeCategory
 	});
+	if (!isIP) {
+		categories.append({
+			type: 'option',
+			label: 'Global lock (m:SRG)',
+			value: 'globallock',
+			selected: defaultCategory === 'globallock'
+		});
+	}
 	categories.append({
 		type: 'option',
-		label: isIP ? 'Global block (m:SRG)' : 'Global lock (m:SRG)',
+		label: 'Global block (m:SRG)',
 		value: 'global',
 		selected: defaultCategory === 'global'
 	});
@@ -149,15 +157,16 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 
 	switch (value) {
 		case 'global':
+		case 'globallock':
 		/* falls through */
 		default:
 			work_area = new MorebitsGlobal.quickForm.element({
 				type: 'field',
-				label: MorebitsGlobal.ip.isIPOrTemp(username, true)
+				label: value === 'global'
 					? 'Request for global block' : 'Request for global lock',
 				name: 'work_area'
 			});
-			if (MorebitsGlobal.ip.isIPOrTemp(username, true)) {
+			if (value === 'global') {
 				work_area.append({
 					type: 'input',
 					name: 'header',
@@ -168,8 +177,8 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 				work_area.append({
 					type: 'dyninput',
 					name: 'username',
-					label: 'IPs',
-					sublabel: 'IP: ',
+					label: MorebitsGlobal.ip.isIPOrTemp(username, true) ? 'IPs' : 'Usernames',
+					sublabel: MorebitsGlobal.ip.isIPOrTemp(username, true) ? 'IP: ' : 'Username: ',
 					tooltip: 'Without the User:-prefix',
 					min: 1,
 					size: 50
@@ -380,9 +389,10 @@ TwinkleGlobal.arv.callback.changeHidename = function(e) {
 
 TwinkleGlobal.arv.callback.evaluate = function(e) {
 	var form = e.target;
+	var category = form.category.value;
 	var header, summary, reason, comment, types, statusIndicator, metaapi;
 	var uid = form.uid.value;
-	switch (form.category.value) {
+	switch (category) {
 		case 'gsr':
 			reason = '';
 			comment = '';
@@ -511,6 +521,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 			break;
 
 		case 'global':
+		case 'globallock':
 		/* falls through */
 		default:
 			reason = '';
@@ -534,7 +545,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				return;
 			}
 
-			if (MorebitsGlobal.ip.isIPOrTemp(uid, true)) {
+			if (category === 'global') {
 				header = '=== Global block ';
 				if (form.header.value.trim()) {
 					header += 'for ' + form.header.value.trim();
@@ -624,7 +635,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				if (new RegExp('{{\\s*([Ll]uxotool|[Ll]ock[Hh]ide|[Ll][Hh]|[Mm]ulti[Ll]ock)[^}]*?\\|\\s*(\\d+\\s*=\\s*)?' + RegExp.escape(usernames[0], true) + '\\s*(\\||}})').test(text)) {
 					return $.Deferred().reject('Report already present, will not add a new one');
 				}
-				if (MorebitsGlobal.ip.isIPOrTemp(uid, true)) {
+				if (category === 'global') {
 					text = text.replace(/\n+(== Requests for global \(un\)lock and \(un\)hiding == *\n)/, function(_, p1) {
 						return '\n\n' + header + reason + '\n\n' + p1;
 					});
