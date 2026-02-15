@@ -138,7 +138,6 @@ MorebitsGlobal.nonGSWikis = [
 	'cywiki',
 	'dawiki',
 	'dewiki',
-	'dewikibooks',
 	'dewikisource',
 	'dewikivoyage',
 	'dewiktionary',
