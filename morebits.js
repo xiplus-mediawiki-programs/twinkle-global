@@ -133,7 +133,6 @@ MorebitsGlobal.nonGSWikis = [
 	'cawiki',
 	'commonswiki',
 	'cswiki',
-	'cswikisource',
 	'cswiktionary',
 	'cywiki',
 	'dawiki',
