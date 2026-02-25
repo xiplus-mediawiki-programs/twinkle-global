@@ -2393,15 +2393,20 @@ MorebitsGlobal.wiki.api.prototype = {
 		}).join('&').replace(/^(.*?)(\btoken=[^&]*)&(.*)/, '$1$3&$2');
 		// token should always be the last item in the query string (bug TW-B-0013)
 
+		var headers = {
+			'Api-User-Agent': morebitsWikiApiUserAgent
+		};
+		if (this.query.action === 'parse') {
+			// Per https://www.mediawiki.org/wiki/API:Etiquette
+			headers['Promise-Non-Write-API-Action'] = 'true';
+		}
 		var ajaxparams = $.extend({}, {
 			context: this,
 			type: this.query.action === 'query' ? 'GET' : 'POST',
 			url: mw.util.wikiScript('api'),
 			data: queryString,
 			dataType: this.query.format,
-			headers: {
-				'Api-User-Agent': morebitsWikiApiUserAgent
-			}
+			headers: headers
 		}, callerAjaxParameters);
 
 		return $.ajax(ajaxparams).then(
