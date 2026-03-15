@@ -177,8 +177,8 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 				work_area.append({
 					type: 'dyninput',
 					name: 'username',
-					label: MorebitsGlobal.ip.isIPOrTemp(username, true) ? 'IPs' : 'Usernames',
-					sublabel: MorebitsGlobal.ip.isIPOrTemp(username, true) ? 'IP: ' : 'Username: ',
+					label: 'Users',
+					sublabel: 'User: ',
 					tooltip: 'Without the User:-prefix',
 					min: 1,
 					size: 50
@@ -557,7 +557,7 @@ TwinkleGlobal.arv.callback.evaluate = function(e) {
 				});
 				summary = 'Reporting [[Special:Contributions/' + usernames[0] + '|' + usernames[0] + ']]';
 				if (usernames.length > 1) {
-					summary += ' and ' + (usernames.length - 1) + ' other IP';
+					summary += ' and ' + (usernames.length - 1) + ' other user';
 					if (usernames.length > 2) {
 						summary += 's';
 					}
