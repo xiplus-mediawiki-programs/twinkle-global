@@ -230,6 +230,14 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 						value: 'Cross-wiki abuse'
 					},
 					{
+						label: 'Lock/ban evasion',
+						value: 'Lock/ban evasion'
+					},
+					{
+						label: 'Open proxy',
+						value: 'Open proxy'
+					},
+					{
 						label: 'Abusive username',
 						value: 'Abusive username'
 					},
@@ -275,6 +283,10 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					{
 						label: 'Spam / spambot',
 						value: 'Spam / spambot'
+					},
+					{
+						label: 'Block evasion',
+						value: 'Block evasion'
 					}
 				].concat(TwinkleGlobal.getPref('customGARVGSRReasonList'))
 			});
