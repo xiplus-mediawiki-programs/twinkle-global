@@ -281,6 +281,10 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 						value: 'Vandalism'
 					},
 					{
+						label: 'Long-term abuse',
+						value: 'Long-term abuse'
+					},
+					{
 						label: 'Spam / spambot',
 						value: 'Spam / spambot'
 					},
