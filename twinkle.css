@@ -6,6 +6,11 @@
 	width: 3.24em;
 }
 
+.skin-vector-2022 #p-twinkle {
+	display: flex;
+	min-width: 40px;
+}
+
 /* twinklefluff.js */
 .twg-rollback-link-wrapper {
 	color: black;
