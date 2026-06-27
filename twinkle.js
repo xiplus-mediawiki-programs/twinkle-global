@@ -397,6 +397,16 @@ TwinkleGlobal.addPortlet = function(navigation, id, text, type, nextnodeid) {
 		outerNav.appendChild(ul);
 	}
 
+	if (skin === 'vector-2022') {
+		var $landmark = $('#right-navigation > .vector-page-tools-landmark');
+		$(outerNav).insertBefore($landmark);
+
+		// .vector-page-tools-landmark is unstable and could change. If so, log it to console, to hopefully get someone's attention.
+		if (!$landmark) {
+			mw.log.warn('Unexpected change in DOM');
+		}
+	}
+
 	return outerNav;
 };
 
