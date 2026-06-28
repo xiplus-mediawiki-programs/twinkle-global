@@ -111,7 +111,14 @@ switch (MorebitsGlobal.wikiFamily) {
 		MorebitsGlobal.interwikiPrefix = 's:' + MorebitsGlobal.wikiLang;
 		break;
 	case 'wikiversity':
-		MorebitsGlobal.interwikiPrefix = 'v:' + MorebitsGlobal.wikiLang;
+		switch (MorebitsGlobal.wikiLang) {
+			case 'beta':
+				MorebitsGlobal.interwikiPrefix = 'betawikiversity';
+				break;
+			default:
+				MorebitsGlobal.interwikiPrefix = 'v:' + MorebitsGlobal.wikiLang;
+				break;
+		}
 		break;
 	case 'wikivoyage':
 		MorebitsGlobal.interwikiPrefix = 'voy:' + MorebitsGlobal.wikiLang;
