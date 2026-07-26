@@ -638,7 +638,7 @@ TwinkleGlobal.xfd.callbacks = {
 					}
 
 					var order_re = new RegExp('^' +
-						RegExp.escape('Wikipedia:Articles for deletion/' + MorebitsGlobal.pageNameNorm, true) +
+						MorebitsGlobal.string.escapeRegExp('Wikipedia:Articles for deletion/' + MorebitsGlobal.pageNameNorm) +
 						'\\s*\\(\\s*(\\d+)(?:(?:th|nd|rd|st) nom(?:ination)?)?\\s*\\)\\s*$');
 					var match = order_re.exec(title);
 
@@ -902,7 +902,7 @@ TwinkleGlobal.xfd.callbacks = {
 					}
 
 					var order_re = new RegExp('^' +
-							RegExp.escape('Wikipedia:Miscellany for deletion/' + MorebitsGlobal.pageNameNorm, true) +
+							MorebitsGlobal.string.escapeRegExp('Wikipedia:Miscellany for deletion/' + MorebitsGlobal.pageNameNorm) +
 							'\\s*\\(\\s*(\\d+)(?:(?:th|nd|rd|st) nom(?:ination)?)?\\s*\\)\\s*$');
 					var match = order_re.exec(title);
 
