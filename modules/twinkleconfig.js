@@ -134,6 +134,15 @@ TwinkleGlobal.config.sections = [
 				name: 'showPrefLink',
 				label: 'Include a link to the preference page in the dropdown menu',
 				type: 'boolean'
+			},
+
+			// TwinkleConfig.disabledModules (array)
+			{
+				name: 'disabledModules',
+				label: 'Turn off the selected Twinkle modules',
+				helptip: 'Anything you select here will NOT be available for use on any wiki.',
+				type: 'set',
+				setValues: { arv: 'GARV', fluff: 'Revert and rollback', speedy: 'CSD', diff: 'Diff' }
 			}
 		]
 	},

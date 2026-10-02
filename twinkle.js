@@ -27,8 +27,8 @@ window.TwinkleGlobal = TwinkleGlobal;  // allow global access
 
 // for use by custom modules (normally empty)
 TwinkleGlobal.initCallbacks = [];
-TwinkleGlobal.addInitCallback = function twinkleAddInitCallback(func) {
-	TwinkleGlobal.initCallbacks.push(func);
+TwinkleGlobal.addInitCallback = function twinkleAddInitCallback(func, name) {
+	TwinkleGlobal.initCallbacks.push({ func: func, name: name });
 };
 
 TwinkleGlobal.defaultConfig = {};
@@ -48,6 +48,7 @@ TwinkleGlobal.defaultConfig = {
 	userTalkPageMode: 'tab',
 	dialogLargeFont: false,
 	showPrefLink: true,
+	disabledModules: [],
 
 	// GARV
 	spiWatchReport: 'yes',
@@ -488,7 +489,14 @@ TwinkleGlobal.load = function () {
 
 	// Load the modules in the order that the tabs should appear
 	// User/user talk-related
-	TwinkleGlobal.arv();
+	var disabledModules = TwinkleGlobal.getPref('disabledModules');
+	var isModuleDisabled = function (name) {
+		return disabledModules.indexOf(name) !== -1;
+	};
+
+	if (!isModuleDisabled('arv')) {
+		TwinkleGlobal.arv();
+	}
 	// TwinkleGlobal.warn();
 	if (MorebitsGlobal.userIsSysop) {
 		// TwinkleGlobal.block();
@@ -497,7 +505,9 @@ TwinkleGlobal.load = function () {
 	// TwinkleGlobal.shared();
 	// TwinkleGlobal.talkback();
 	// Deletion
-	TwinkleGlobal.speedy();
+	if (!isModuleDisabled('speedy')) {
+		TwinkleGlobal.speedy();
+	}
 	// TwinkleGlobal.prod();
 	// TwinkleGlobal.xfd();
 	// TwinkleGlobal.image();
@@ -505,7 +515,9 @@ TwinkleGlobal.load = function () {
 	// TwinkleGlobal.protect();
 	// TwinkleGlobal.tag();
 	// Misc. ones last
-	TwinkleGlobal.diff();
+	if (!isModuleDisabled('diff')) {
+		TwinkleGlobal.diff();
+	}
 	// TwinkleGlobal.unlink();
 	TwinkleGlobal.config.init();
 	if (MorebitsGlobal.userIsSysop) {
@@ -520,11 +532,15 @@ TwinkleGlobal.load = function () {
 	}
 
 	// Run the initialization callbacks for any custom modules
-	TwinkleGlobal.initCallbacks.forEach(function (func) {
-		func();
+	TwinkleGlobal.initCallbacks.forEach(function (module) {
+		if (!module.name || !isModuleDisabled(module.name)) {
+			module.func();
+		}
 	});
-	TwinkleGlobal.addInitCallback = function (func) {
-		func();
+	TwinkleGlobal.addInitCallback = function (func, name) {
+		if (!name || !isModuleDisabled(name)) {
+			func();
+		}
 	};
 
 	// Increases text size in Twinkle dialogs, if so configured
