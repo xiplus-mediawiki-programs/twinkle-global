@@ -239,6 +239,8 @@ TwinkleGlobal.getPref = function twinkleGetPref(name) {
 		return TwinkleGlobal.prefs.confirmOnFluff;
 	} else if (name === 'confirmOnMobileRollback' && typeof TwinkleGlobal.prefs === 'object' && TwinkleGlobal.prefs.confirmOnMobileFluff !== undefined) {
 		return TwinkleGlobal.prefs.confirmOnMobileFluff;
+	} else if (name === 'rollbackDisabledWikis' && typeof TwinkleGlobal.prefs === 'object' && TwinkleGlobal.prefs.fluffDisabledWikis !== undefined) {
+		return TwinkleGlobal.prefs.fluffDisabledWikis;
 	}
 
 	return TwinkleGlobal.defaultConfig[name];
@@ -461,6 +463,13 @@ mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.ge
 
 		if (TwinkleGlobal.prefs.twinkle || TwinkleGlobal.prefs.friendly) { // Old preferences format
 			TwinkleGlobal.prefs = $.extend(TwinkleGlobal.prefs, TwinkleGlobal.prefs.twinkle, TwinkleGlobal.prefs.friendly);
+		}
+
+		// Backwards compatibility code because we renamed the fluff module to rollback
+		if (Array.isArray(TwinkleGlobal.prefs.disabledModules)) {
+			TwinkleGlobal.prefs.disabledModules = TwinkleGlobal.prefs.disabledModules.map(function (name) {
+				return name === 'fluff' ? 'rollback' : name;
+			});
 		}
 	})
 	.always(function () {
