@@ -452,7 +452,7 @@ var scriptpathbefore = '//meta.wikimedia.org/w/index.php?title=',
 // Retrieve the user's Twinkle preferences
 mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.get('wgUserName')) + '/' + TwinkleGlobal.defaultConfig.optionsPage + '.js' + scriptpathafter)
 	.fail(function () {
-		mw.notify('Could not load your Twinkle preferences', {type: 'error'});
+		mw.notify('Could not load your Twinkle preferences, resorting to default preferences', {type: 'error'});
 	})
 	.done(function () {
 		// Quick pass if user has no options
@@ -473,6 +473,8 @@ mw.loader.getScript(scriptpathbefore + 'User:' + encodeURIComponent(mw.config.ge
 		}
 	})
 	.always(function () {
+		// Fall back to default preferences if they could not be loaded
+		TwinkleGlobal.prefs = TwinkleGlobal.prefs || {};
 		// v2 established after unification of Twinkle/Friendly objects
 		TwinkleGlobal.prefs.optionsVersion = TwinkleGlobal.prefs.optionsVersion || 1;
 		$(TwinkleGlobal.load);
