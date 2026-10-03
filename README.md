@@ -19,5 +19,7 @@ Files are deployed to subpages of [User:Xiplus/TwinkleGlobal][] on the Meta-Wiki
 
 Then run `npm run deploy`. Use `npm run deploy -- --dry` to only show the differences, or pass file paths (e.g. `npm run deploy -- src/morebits.js`) to deploy only those files.
 
+The credentials file may also set `site` and `base` to deploy elsewhere. To use another credentials file, e.g. `scripts/credentials-test.json`, run `npm run deploy -- --credentials scripts/credentials-test.json`. Command line options override the credentials file.
+
 [User:Xiplus/TwinkleGlobal]: https://meta.wikimedia.org/wiki/User:Xiplus/TwinkleGlobal
 [AzaToth]: https://en.wikipedia.org/wiki/User:AzaToth

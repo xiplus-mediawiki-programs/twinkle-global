@@ -10,11 +10,12 @@ const simpleGit = require('simple-git');
 
 program
     .description('Deploy TwinkleGlobal files to Meta-Wiki')
-    .option('-s, --site <site>', 'Wiki site: meta, testwiki, or a full MediaWiki API URL', 'meta')
+    .option('-s, --site <site>', 'Wiki site: meta, testwiki, or a full MediaWiki API URL (default: "meta")')
     .option('-u, --username <username>', 'Username (for bot password login)')
     .option('-p, --password <password>', 'Password (for bot password login)')
     .option('--accessToken <accessToken>', 'OAuth2 access token')
-    .option('-b, --base <base>', 'Base page prefix', 'User:Xiplus/TwinkleGlobal/')
+    .option('-b, --base <base>', 'Base page prefix (default: "User:Xiplus/TwinkleGlobal/")')
+    .option('--credentials <file>', 'Credentials file (default: scripts/credentials.json)')
     .option('-d, --dry', 'Dry run: show diffs of changes instead of deploying')
     .option('-c, --create', 'Create pages onwiki if they are missing')
     .option('-y, --yes', 'Skip all prompts and proceed (for CI)')
@@ -46,20 +47,25 @@ const DEFAULT_CONF = {
     username: '',
     password: '',
     accessToken: '',
-    apiUrl: '',
+    site: 'meta',
     base: 'User:Xiplus/TwinkleGlobal/'
 };
 
 const repoRoot = path.resolve(__dirname, '..');
 
-function loadCredentials() {
-    const credsPath = path.join(__dirname, 'credentials.json');
+function loadCredentials(file) {
+    const credsPath = file ? path.resolve(process.cwd(), file) : path.join(__dirname, 'credentials.json');
     if (fs.existsSync(credsPath)) {
         try {
             return JSON.parse(fs.readFileSync(credsPath, 'utf8'));
         } catch (e) {
-            console.error(chalk.red('Error reading credentials.json: ' + e.message));
+            console.error(chalk.red(`Error reading ${credsPath}: ${e.message}`));
+            process.exit(1);
         }
+    }
+    if (file) {
+        console.error(chalk.red(`Credentials file not found: ${credsPath}`));
+        process.exit(1);
     }
     return {};
 }
@@ -140,7 +146,8 @@ async function promptInput(promptText) {
 }
 
 async function main() {
-    let conf = { ...DEFAULT_CONF, ...loadCredentials(), ...program.opts() };
+    // Precedence: defaults < credentials file < command line options
+    let conf = { ...DEFAULT_CONF, ...loadCredentials(program.opts().credentials), ...program.opts() };
 
     // Set apiUrl from --site
     let apiUrl = resolveApiUrl(conf.site);
