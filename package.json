@@ -8,15 +8,21 @@
 		"lint:fix": "eslint . --fix",
 		"patchtest": "node scripts/patch-test.js",
 		"server": "node scripts/server.js",
-		"sync": "perl scripts/sync.pl",
 		"test": "qunit --require ./tests/mocking/mb_repl.js ./tests/*",
-		"deployall": "perl scripts/sync.pl --mode=deploy --all"
+		"deploy": "node scripts/deploy.js",
+		"deploy:cd": "node scripts/deploy.js -y"
 	},
 	"devDependencies": {
+		"chalk": "^4.1.2",
+		"commander": "^14.0.3",
+		"diff": "^8.0.4",
 		"eslint": "^7.32.0",
 		"eslint-plugin-es5": "^1.5.0",
+		"fs-extra": "^11.4.1",
 		"jquery": "^3.6.0",
 		"jsdom": "^17.0.0",
-		"qunit": "^2.17.2"
+		"mwn": "^3.0.3",
+		"qunit": "^2.17.2",
+		"simple-git": "^3.36.0"
 	}
 }
