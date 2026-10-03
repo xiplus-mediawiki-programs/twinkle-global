@@ -21,5 +21,19 @@ Then run `npm run deploy`. Use `npm run deploy -- --dry` to only show the differ
 
 The credentials file may also set `site` and `base` to deploy elsewhere. To use another credentials file, e.g. `scripts/credentials-test.json`, run `npm run deploy -- --credentials scripts/credentials-test.json`. Command line options override the credentials file.
 
+To deploy to a test environment, the credentials file may also set text replacements that are applied to the files before deploying. Deployment stops if a replacement text is not found.
+
+```json
+{
+	"site": "https://meta.wikimedia.beta.wmcloud.org/w/api.php",
+	"base": "User:Example/Twinkle/",
+	"replace": {
+		"LoadTwinkle.js": [
+			{ "from": "var PREFIX = 'User:Xiplus/TwinkleGlobal/';", "to": "var PREFIX = 'User:Example/Twinkle/';" }
+		]
+	}
+}
+```
+
 [User:Xiplus/TwinkleGlobal]: https://meta.wikimedia.org/wiki/User:Xiplus/TwinkleGlobal
 [AzaToth]: https://en.wikipedia.org/wiki/User:AzaToth

@@ -70,6 +70,20 @@ function loadCredentials(file) {
     return {};
 }
 
+// Read a file to deploy, applying the replacements set in the credentials file, e.g.
+// "replace": { "src/twinkle.js": [ { "from": "old text", "to": "new text" } ] }
+async function readDeployText(file, conf) {
+    // Normalize line endings, as the working copy may use CRLF on Windows
+    let text = (await fs.readFile(path.join(repoRoot, file), 'utf8')).replace(/\r\n/g, '\n');
+    for (const { from, to } of (conf.replace && conf.replace[file]) || []) {
+        if (!text.includes(from)) {
+            throw new Error(`Replacement text not found in ${file}: ${from}`);
+        }
+        text = text.split(from).join(to);
+    }
+    return text;
+}
+
 function usage() {
     program.outputHelp();
     process.exit(1);
@@ -187,6 +201,23 @@ async function main() {
         usage();
     }
 
+    // Check that all replacements apply before doing anything
+    for (const file of Object.keys(conf.replace || {})) {
+        if (!GADGET_FILES.includes(file)) {
+            console.log(chalk.red(`Replacements set for ${file}, which is not a deployable file`));
+            process.exit(1);
+        }
+        try {
+            await readDeployText(file, conf);
+        } catch (e) {
+            console.log(chalk.red(e.message));
+            process.exit(1);
+        }
+    }
+    if (conf.replace) {
+        console.log(chalk.yellow('Applying replacements from the credentials file to: ' + Object.keys(conf.replace).join(', ')));
+    }
+
     // Confirm
     if (!conf.dry) {
         console.log('Attempting to deploy');
@@ -250,8 +281,7 @@ async function main() {
             continue;
         }
 
-        // Normalize line endings, as the working copy may use CRLF on Windows
-        const fileText = (await fs.readFile(path.join(repoRoot, file), 'utf8')).replace(/\r\n/g, '\n');
+        const fileText = await readDeployText(file, conf);
         const wpText = (wikiPage.revisions?.[0]?.content ?? '') + '\n';
         const oldSummary = wikiPage.revisions?.[0]?.comment || '';
         const oldTimestamp = wikiPage.revisions?.[0]?.timestamp || '';
