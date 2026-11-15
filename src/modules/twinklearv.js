@@ -352,8 +352,7 @@ TwinkleGlobal.arv.callback.changeCategory = function (e) {
 					label: 'Users to compare',
 					sublabel: 'Username :',
 					tooltip: 'Usernames of suspected sockpuppets. Without the User:-prefix.',
-					min: Math.max(TwinkleGlobal.arv.usernames.length, 2),
-					max: 10
+					min: Math.max(TwinkleGlobal.arv.usernames.length, 2)
 				});
 			work_area.append({
 				type: 'input',
